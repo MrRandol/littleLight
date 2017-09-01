@@ -7,7 +7,8 @@ import * as Actions from '../actions';
 function mapStateToProps(state) { return {user: state.user.user}; }
 function mapDispatchToProps(dispatch) { return bindActionCreators(Actions, dispatch); }
 
-import Login from './Login';
+var styles = require('../styles/LittleLight')
+import GuardianSelect from './GuardianSelect';
 
 class LittleLight extends React.Component {
 
@@ -21,32 +22,10 @@ class LittleLight extends React.Component {
         <Text style={styles.welcome}>
           Welcome to Little Light !
         </Text>
-        <Login />
+        <GuardianSelect style={styles.guardianSelect}/>
       </View>
   	)
   } 
 }
-
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
-  },
-  welcome: {
-    flex: 3,
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
-  },
-  instructions: {
-    flex: 1,
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5,
-  },
-});
 
 export default connect(mapStateToProps, mapDispatchToProps)(LittleLight);
