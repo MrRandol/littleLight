@@ -12,7 +12,7 @@ import {
   View
 } from 'react-native';
 
-export default class little_light extends Component {
+export default class littleLight extends Component {
   render() {
     return (
       <View style={styles.container}>
@@ -50,4 +50,4 @@ const styles = StyleSheet.create({
   },
 });
 
-AppRegistry.registerComponent('little_light', () => little_light);
+AppRegistry.registerComponent('littleLight', () => littleLight);

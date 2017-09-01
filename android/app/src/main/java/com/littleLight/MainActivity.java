@@ -1,4 +1,4 @@
-package com.little_light;
+package com.littleLight;
 
 import com.facebook.react.ReactActivity;
 
@@ -10,6 +10,6 @@ public class MainActivity extends ReactActivity {
      */
     @Override
     protected String getMainComponentName() {
-        return "little_light";
+        return "littleLight";
     }
 }

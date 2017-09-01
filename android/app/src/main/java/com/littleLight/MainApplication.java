@@ -1,4 +1,4 @@
-package com.little_light;
+package com.littleLight;
 
 import android.app.Application;
 
