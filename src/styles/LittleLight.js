@@ -8,13 +8,13 @@ module.exports = StyleSheet.create({
     backgroundColor: '#F5FCFF',
   },
   welcome: {
-    flex: 3,
+    flex: 1,
     fontSize: 20,
     textAlign: 'center',
     margin: 10,
   },
   guardianSelect: {
-    flex: 1,
+    flex: 3,
     marginBottom: 5
   },
 });

@@ -1,17 +1,32 @@
 import { StyleSheet } from 'react-native';
 
 module.exports = StyleSheet.create({
-    textWrapper: {
+    // guardian infos
+    infosWrapper: {
         flex: 1,
         flexDirection: 'column',
-        justifyContent: 'center',
-        alignItems: 'stretch'
+        justifyContent: 'space-around',
+        alignItems: 'center',
+        padding: 5
     },
     changeButton: {
         flex: 1
     },
     textBox: {
-        flex: 1
+        flex: 1,
+        textAlign: 'center'
+    },
+    avatar: {
+        width: 100, 
+        height: 100
+    },
+
+    // Form
+    formWrapper: {
+        flex: 1,
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'stretch'
     },
     textInput: {
         height: 50,

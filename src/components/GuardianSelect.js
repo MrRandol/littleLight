@@ -2,7 +2,7 @@
   REACT IMPORTS
 **/
 import React from 'react';
-import { View, Text, TextInput, Button } from 'react-native';
+import { View, Text, TextInput, Button, Image } from 'react-native';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
@@ -27,7 +27,7 @@ class GuardianSelect extends React.Component {
         this.state = { 
             loading: true,
             text: '',
-            guardian: ''
+            guardian: null
         };
     }
 
@@ -35,7 +35,9 @@ class GuardianSelect extends React.Component {
         Store.getGuardian().then(result => {
             if (result.status ==="SUCCESS") {
                 this.setState({loading: false});
-                this.setState({guardian: result.data.psnDisplayName});
+                if (result.data) {
+                  this.setState({guardian: result.data});
+                }
             } else {
                 Message.debug(T.translate("GuardianSelect.errorRetreive"));
             }
@@ -53,7 +55,7 @@ class GuardianSelect extends React.Component {
     }
 
     refetchGuardian() {
-        this.searchForGuardian(this.state.guardian);
+        this.searchForGuardian(this.state.guardian.psnDisplayName);
     }
 
     searchForGuardian(guardianName) {
@@ -62,7 +64,7 @@ class GuardianSelect extends React.Component {
                 var account = result.Response[0];
                 Store.saveGuardian(account).then(result => {
                     if (result.status ==="SUCCESS") {
-                        this.setState({guardian: result.data.psnDisplayName});
+                        this.setState({guardian: result.data});
                     } else {
                         Message.debug(T.translate("GuardianSelect.errorSave") + " : " + account.psnDisplayName);
                     }
@@ -75,16 +77,16 @@ class GuardianSelect extends React.Component {
 
     resetGuardian() {
         Store.resetGuardian();
-        this.setState({guardian: ''});
+        this.setState({guardian: null});
     }
 
     render() {
         if (this.state.loading === true) {
             return (<View><Text>T.translate('GuardianSelect.loading')</Text></View>);
         }
-        if (this.state.guardian === '' || this.state.guardian === null) {
+        if (this.state.guardian === null) {
         return (
-            <View>
+            <View style={styles.formWrapper}>
                 <TextInput 
                     style={styles.textInput}
                     editable={this.state.editable}
@@ -97,8 +99,9 @@ class GuardianSelect extends React.Component {
         } else {
             /**<Button style={styles.changeButton} onPress={this.resetGuardian.bind(this)} title={T.translate('GuardianSelect.changeAccount')} />**/
             return (
-            <View style={styles.textWrapper} >
-                <Text style={styles.textBox}>{T.translate('GuardianSelect.greetings')} {this.state.guardian}</Text>
+            <View style={styles.infosWrapper} >
+               <Image source={{uri: Bungie.HOST + this.state.guardian.profilePicturePath}} style={styles.avatar} />
+                <Text style={styles.textBox}>{T.translate('GuardianSelect.greetings')} {this.state.guardian.psnDisplayName}</Text>
                 <Button style={styles.changeButton} onPress={this.refetchGuardian.bind(this)} title="FETCH!" />
             </View>
 

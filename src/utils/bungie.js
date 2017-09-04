@@ -1,7 +1,7 @@
 import React from 'react';
 
 const APIKEY = "ca9b21b2df144c04a0d4434e6ffe1aed";
-const HOST = "https://www.bungie.net/platform/";
+export const HOST = "https://www.bungie.net/";
 
 var defaultHeaders = new Headers();
 defaultHeaders.append('X-API-Key', APIKEY);
@@ -14,7 +14,7 @@ var defaultParams = {
 
 export function searchGuardian(guardianName) {
     try {
-        var url = HOST + "/User/SearchUsers/?q=" + guardianName;
+        var url = HOST + "platform/User/SearchUsers/?q=" + guardianName;
         return fetch(url, defaultParams)
             .then(function (resp) {
                 return resp.json();
