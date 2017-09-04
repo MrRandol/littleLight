@@ -1,0 +1,19 @@
+{ "LittleLight":
+  {
+    "welcome": "Welcome To Little Light !",
+    "miours": "misanglier"
+  },
+  "GuardianSelect":
+  {
+    "enterName": "What is you name guardian ?",
+    "greetings": "Hello",
+    "search": "SEARCH",
+    "loading": "LOADING...",
+    "changeAccount": "CHANGE ACCOUNT",
+    "enterNameEmpty": "Please provide a name to perform search",
+    "errorSave": "Error while saving guardian name",
+    "errorRetreive": "Error while retreiving guardian name from storage",
+    "errorFetch": "Error while fetching guardian on Bungie platform :("
+  }
+  
+}

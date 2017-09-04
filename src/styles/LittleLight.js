@@ -3,8 +3,8 @@ import { StyleSheet } from 'react-native';
 module.exports = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: 'space-around',
+    alignItems: 'stretch',
     backgroundColor: '#F5FCFF',
   },
   welcome: {
@@ -15,8 +15,6 @@ module.exports = StyleSheet.create({
   },
   guardianSelect: {
     flex: 1,
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5,
+    marginBottom: 5
   },
 });

@@ -7,8 +7,10 @@
     "test": "jest"
   },
   "dependencies": {
+    "i18n-react": "^0.4.0",
     "react": "16.0.0-alpha.12",
     "react-native": "0.47.2",
+    "react-native-full-screen": "0.0.2",
     "react-redux": "^5.0.6",
     "redux": "^3.7.2"
   },
