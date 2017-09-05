@@ -36,16 +36,3 @@ export async function getCurrentBungieUser() {
        return null;
     }
 }
-
-export function searchGuardian(guardianName) {
-    try {
-        var url = HOST + "platform/User/SearchUsers/?q=" + guardianName;
-        return fetch(url, defaultParams)
-            .then(function (resp) {
-                return resp.json();
-            })
-            .catch(() => { alert("Error While fetching!")});
-    } catch (error) {
-       return {status: "ERROR", data: guardianName}
-    }
-}
