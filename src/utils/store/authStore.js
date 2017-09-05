@@ -32,3 +32,13 @@ export async function resetAuthData() {
        return {status: "ERROR"}
     }
 }
+
+export function getAccessToken() {
+    try {
+      return AsyncStorage.getItem('@AuthStore:Oauth').then((oauth => {
+        return JSON.parse(oauth).access_token;
+      }));
+    } catch (error) {
+       return null
+    }
+}

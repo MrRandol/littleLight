@@ -32,6 +32,7 @@ import * as Message from '../utils/message';
 const NO_AUTH = 'NO_AUTH';
 const IN_PROGRESS = 'IN_PROGRESS';
 const AUTHENTICATED = 'AUTHENTICATED';
+const AUTH_FAILED = 'AUTH_FAILED';
 
 class OauthLogin extends React.Component {
 
@@ -43,14 +44,20 @@ class OauthLogin extends React.Component {
   }
 
   componentDidMount() {
-    BungieAuth.getAuthentication(this.handleAuthenticationCallback);
     this.setState({auth_status: IN_PROGRESS});
+    BungieAuth.getAuthentication(this.handleAuthenticationCallback.bind(this));
   }
 
   handleAuthenticationCallback(authentication) {
     Message.debug("Got authentication callback")
-    Message.debug(JSON.stringify(authentication))
-    this.setState({auth_status: AUTHENTICATED});
+    if (authentication.status === "ERROR") {
+      Message.error("An error occured when authenticating");
+      Message.error("Error code : " + authentication.code);
+      this.setState({auth_status: AUTH_FAILED});
+    } else {
+      Message.debug("Authentication successful !");
+      this.setState({auth_status: AUTHENTICATED});
+    }
   }
 
 
