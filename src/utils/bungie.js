@@ -1,6 +1,6 @@
 import React from 'react';
 
-const APIKEY = "ca9b21b2df144c04a0d4434e6ffe1aed";
+const APIKEY = "1a9bb6274ca14361a735c9aa188994f7";
 export const HOST = "https://www.bungie.net/";
 
 var defaultHeaders = new Headers();

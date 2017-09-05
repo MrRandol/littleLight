@@ -52,10 +52,5 @@
 			</dict>
 		</dict>
 	</dict>
-	<string>com.randol.littlelight</string>
-	<key>CFBundleURLSchemes</key>
-	<array>
-		<string>LittleLight</string>
-	</array>
 </dict>
 </plist>

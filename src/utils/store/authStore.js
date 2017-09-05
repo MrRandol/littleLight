@@ -24,11 +24,11 @@ export async function getAuthData() {
     }
 }
 
-/*export async function resetGuardian() {
+export async function resetAuthData() {
     try {
-      await AsyncStorage.removeItem('@GuardianStore:guardian');
+      await AsyncStorage.removeItem('@AuthStore:Oauth');
       return {status: "SUCCESS"}
     } catch (error) {
        return {status: "ERROR"}
     }
-}*/
+}
