@@ -7,7 +7,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as Actions from '../actions';
 
-function mapStateToProps(state) { return {loading: state.loading.loading}; }
+function mapStateToProps(state) { return {user: state.user.user}; }
 function mapDispatchToProps(dispatch) { return bindActionCreators(Actions, dispatch); }
 
 /**
@@ -19,40 +19,25 @@ T.setTexts(require('../i18n/en.json'));
 //Styles
 var styles = require('../styles/LittleLight');
 
-import SplashScreen from './SplashScreen';
-import UserStatus from './UserStatus';
-
 // Internal
-import * as Message from '../utils/message';
+import GuardianSelect from './GuardianSelect';
 
 class LittleLight extends React.Component {
+
   constructor(props) {
     super(props);
   }
 
   render() {
-
-    var content = (<Text>This should not be visible</Text>);
-
-    if (this.props.loading === false) {
-      content = (
-        <View>
-          <Text style={styles.welcome} >
-             // {T.translate("LittleLight.welcome")} //
-          </Text>
-          <UserStatus />
-        </View>
-      )
-    } else {
-      content = (<SplashScreen style={{flex: 1}} />);
-    }
-
-    return (
-      <View style={styles.container}>
+  	return (
+  		<View style={styles.container}>
         <StatusBar hidden={true} />
-        { content }
+        <Text style={styles.welcome}>
+           {T.translate("LittleLight.welcome")}
+        </Text>
+        <GuardianSelect style={styles.guardianSelect}/>
       </View>
-    )
+  	)
   } 
 }
 

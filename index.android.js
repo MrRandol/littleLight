@@ -14,7 +14,10 @@ import { Provider } from 'react-redux';
 const rootReducer = require('./src/reducers/root').default;
 let store = createStore(rootReducer);
 
-import LittleLight from './src/components/LittleLight';
+import LittleLight  from './src/components/LittleLight';
+import OauthLogin  from './src/components/OauthLogin';
+
+
 
 class littleLightWrapper extends React.Component {
 
@@ -22,7 +25,7 @@ class littleLightWrapper extends React.Component {
         //<LittleLight />
         return (
         <Provider style={{flex: 1}} store={store}>
-            <LittleLight style={{flex: 1}} />
+            <OauthLogin style={{flex: 1}} />
         </Provider>
         );
     }
