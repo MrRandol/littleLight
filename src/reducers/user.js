@@ -1,18 +1,17 @@
-import { LOGIN_SUCCESS } from '../actions/';
+import { SET_USER } from '../actions/';
 
 let cloneObject = function(obj) {
-	return JSON.parse(JSON.stringify(obj));
+  return JSON.parse(JSON.stringify(obj));
 }
 
-let newState = { user: {loggedIn: false } };
+let newState = null;
 
 export default function user(state = newState, action) {
-	switch (action.type) {
-		case LOGIN_SUCCESS:
-			newState = cloneObject(state);
-			newState.user.loggedIn = true;
-			return newState
-		default:
-			return state || newState;
-	}
+  switch (action.type) {
+    case SET_USER:
+      newState = action.user;
+      return newState
+    default:
+      return state || newState;
+  }
 };

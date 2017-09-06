@@ -13,8 +13,10 @@ module.exports = StyleSheet.create({
     textAlign: 'center',
     margin: 10,
   },
-  guardianSelect: {
-    flex: 3,
-    marginBottom: 5
+  loading: {
+    flex: 1,
+    fontSize: 17,
+    textAlign: 'center',
+    margin: 10,
   },
 });

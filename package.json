@@ -7,6 +7,7 @@
     "test": "jest"
   },
   "dependencies": {
+    "Base64": "^1.0.1",
     "bungie-auth": "^1.0.1",
     "i18n-react": "^0.4.0",
     "react": "16.0.0-alpha.12",
