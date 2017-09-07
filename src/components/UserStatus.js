@@ -28,24 +28,13 @@ class UserStatus extends React.Component {
     super(props);
   }
 
-  componentWillMount() {
-    // Handle more than one membership ?
-    Bungie.getProfile(
-      2,//this.props.user.destinyMemberships[0].membershipType,
-      4611686018437985950,//this.props.user.destinyMemberships[0].membershipId,
-      "Profiles")
-      .then(function (profile) {
-        Message.debug(JSON.stringify(profile));
-      });
-  }
-
   render() {
     return(
       <View>
         <Image
           style={{width: 50, height: 50}}
-          source={{uri: 'https://www.bungie.net/' + this.props.user.bungieNetUser.profilePicturePath}} />
-        <Text>Hello {this.props.user.bungieNetUser.displayName} !</Text>
+          source={{uri: 'https://www.bungie.net/' + this.props.user.user.bungieNetUser.profilePicturePath}} />
+        <Text>Hello {this.props.user.user.bungieNetUser.displayName} !</Text>
       </View>
     )
   }
