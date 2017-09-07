@@ -1,4 +1,15 @@
 /**
+  BUNGIE OAuth
+
+  Process is the folowwing :
+
+  1/ Call code redeem from app code & oauth url
+  2/ Extract code from return url and call for access Token
+  3/ Extract & save access & refresh token
+
+**/
+
+/**
   REACT IMPORTS & INITS
 **/
 import { Linking } from 'react-native';
@@ -34,7 +45,6 @@ const AUTH_TOKEN = 'AUTH_TOKEN';
 **/
 export function getAuthentication(callback) {
   Store.getAuthData().then(result => {
-    
     if (result.status ==="SUCCESS" && result.data && result.data.access_token && result.data.refresh_token) {
       Message.debug("Token exists, checking token validity.")
       checkTokenValidity(result.data.access_token, result.data.refresh_token, callback);
@@ -46,7 +56,7 @@ export function getAuthentication(callback) {
   })
 }
 
-function checkTokenValidity(access_token, refresh_token,callback, tried) {
+function checkTokenValidity(access_token, refresh_token, callback, tried) {
   // Validity check is simply a current user request
   Bungie.getCurrentBungieUser().then((user) => {
     if (!user) {
@@ -62,7 +72,7 @@ function checkTokenValidity(access_token, refresh_token,callback, tried) {
     } else {
       Message.debug("We have a user. Token is valid");
       Message.debug(access_token);
-      Message.debug(JSON.stringify(user));
+      //Message.debug(JSON.stringify(user));
       callback.call(this, {status: "SUCCESS", authenticated: true, user: user});
     }
   })
