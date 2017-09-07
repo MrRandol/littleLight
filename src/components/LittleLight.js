@@ -20,6 +20,8 @@ T.setTexts(require('../i18n/en.json'));
 var styles = require('../styles/LittleLight');
 
 import SplashScreen from './SplashScreen';
+import CharacterSelector from './CharacterSelector';
+import ArmorManager from './ArmorManager';
 import UserStatus from './UserStatus';
 
 // Internal
@@ -36,23 +38,22 @@ class LittleLight extends React.Component {
 
     if (this.props.loading === false) {
       content = (
-        <View>
-          <Text style={styles.welcome} >
-             // {T.translate("LittleLight.welcome")} //
-          </Text>
-          <UserStatus />
+        <View style={styles.container}>
+          <StatusBar hidden={true} />
+          <CharacterSelector />
+          <ArmorManager />
         </View>
-      )
+      );
     } else {
-      content = (<SplashScreen style={{flex: 1}} />);
+      content = (
+        <View style={styles.container}>
+          <StatusBar hidden={true} />
+          <SplashScreen style={{flex: 1}} />
+        </View>
+      );
     }
 
-    return (
-      <View style={styles.container}>
-        <StatusBar hidden={true} />
-        { content }
-      </View>
-    )
+    return ( content );
   } 
 }
 

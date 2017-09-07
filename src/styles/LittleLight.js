@@ -11,12 +11,6 @@ module.exports = StyleSheet.create({
     flex: 1,
     fontSize: 20,
     textAlign: 'center',
-    margin: 10,
-  },
-  loading: {
-    flex: 1,
-    fontSize: 17,
-    textAlign: 'center',
-    margin: 10,
+    color: "#000000"
   },
 });
