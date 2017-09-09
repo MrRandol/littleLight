@@ -1,10 +1,5 @@
 var React = require('react-native');
-var {
-  AsyncStorage,
-  PickerIOS,
-  Text,
-  View
-} = React;
+var { AsyncStorage } = React;
 
 export async function saveAuthData(oauth) {
     try {

@@ -24,15 +24,14 @@ function mapDispatchToProps(dispatch) { return bindActionCreators(Actions, dispa
 /**
   CUSTOM IMPORTS
 **/
-//I18N
 import T from 'i18n-react';
 T.setTexts(require('../i18n/en.json'));
-//Styles
 var styles = require('../styles/SplashScreen');
 
 // Internal
 import * as BungieAuth from '../utils/auth/auth';
 import * as Bungie from '../utils/bungie/profile';
+import * as Manifest from '../utils/manifest/manifest';
 import * as Message from '../utils/message';
 
 class SplashScreen extends React.Component {
@@ -43,8 +42,8 @@ class SplashScreen extends React.Component {
   }
 
   componentDidMount() {
-    this.forceUpdate();
-    BungieAuth.getAuthentication(this.handleAuthenticationCallback.bind(this));
+    //BungieAuth.getAuthentication(this.handleAuthenticationCallback.bind(this));
+    this.getManifest();
   }
 
   handleAuthenticationCallback(authentication) {
@@ -70,6 +69,17 @@ class SplashScreen extends React.Component {
       //Message.debug(JSON.stringify(profile));
       self.props.setCharacters(profile.Response.characters.data);
       self.props.setLoadingState(false);
+    })
+  }
+
+  getManifest() {
+    Manifest.checkManifestVersion().then(function(manifestCheck) {
+      if (manifestCheck && manifestCheck.isUpdated) {
+        Message.debug("Version " + manifestCheck.version + " is already stored; nothing to do.");
+      } else {
+        Message.debug("A new version (" + manifestCheck.version + ") of the manifest is out. Downloading it");
+        Manifest.updateManifestContent(manifestCheck.contentPath);
+      }
     })
   }
 
