@@ -30,8 +30,9 @@ export async function checkManifestVersion() {
     })
     .then(function (manifest) {
       var version =  manifest.Response.version;
+      Message.debug("Current manifest version    : " + currentVersion.data);
       Message.debug("Bungie.net manifest version : " + version);
-      if ( version === currentVersion ) {
+      if ( version === currentVersion.data ) {
         return {isUpdated: true, version: version};
       } else {
         return {isUpdated: false, version: version, contentPath: manifest.Response.mobileWorldContentPaths.en};
@@ -43,17 +44,20 @@ export async function checkManifestVersion() {
   }
 }
 
-export async function updateManifestContent(path) {
+
+export function insertManifestContent(path, version, insertCallback) {
   try {
+    var self = this;
 
     var dir = Platform.OS === 'ios' ? RNFS.MainBundlePath : RNFS.DocumentDirectoryPath;
-    var sqlName = 'world_sql_content_281de46e3cd73e5747595936fd2dffa9.content';
+    var sqlName = path.substring(path.lastIndexOf('/')+1);
     var zipPath = dir + '/worldContent.zip';
 
     Message.debug("Fetching new manifest content")
     Message.debug(HOST + path)
     
-    RNFetchBlob
+    // 1/ fetch zip and save it locally
+    return RNFetchBlob
     .config({
       fileCache : true,
     })
@@ -62,44 +66,67 @@ export async function updateManifestContent(path) {
       console.log('The file saved to ', res.path());
       return res.path();
     })
+    // 2/ Unzip it
     .then(function(zipPath) {
       return unzip(zipPath, dir)
     })
-    .then((path) => {
-      console.log('unzip completed at ' + path)
-      return path + sqlName;
-    })
+    // 3/ open prepopulated database 
     .then((sqlFilename) => {
-      Message.debug("sqlite path : " + sqlFilename);
-      SQLite.openDatabase({name : "main", createFromLocation : sqlName}, onSqliteOpenSuccess, onSqliteOpenError);
+      Message.debug("Unzip complete : " + sqlFilename);
+      // Here we have to use callback and not promise due to the way the sqlite plugin is constructed.
+      return SQLite.openDatabase({name : "main", createFromLocation : sqlName});
+    })
+    .then(function(db) {
+      Message.debug("SQLite Open Success !!");
+      var status = insertDbIntoStore(db, version, insertCallback);
+      return status;
     })
     .catch((error) => { 
-      Message.error("Error While fetching new manifest data !"); 
-      Message.error(error) ;
+      Message.error("Error while fetching new manifest data !"); 
+      Message.error(error);
     })
+    //TODO : clean mess
   } catch (error) {
     Message.error("Error on fetch/unzip")
     Message.error(error);
     return {status: "ERROR", error: error};
   }
+}
 
-  function onSqliteOpenSuccess(db) {
-    Message.debug("SQLite Open Success !!");
-    extractDbInformation(db);
-  }
-
-  function onSqliteOpenError(event) {
-    Message.error("SQLite Open Error !!");
-  }
-
-  function extractDbInformation(db) {
-    db.transaction((tx) => {
-      tx.executeSql("SELECT name FROM sqlite_master WHERE type='table'", [], (tx, results) => {
-        console.log("Query completed");
-        console.log(tx)
-        console.log(results)
-
+function insertDbIntoStore(db, version, callback) {
+  var set = null;
+  var flag = false;
+  db.transaction((tx) => {
+    tx.executeSql("SELECT json FROM 'DestinyInventoryItemDefinition'", [], (tx, results) => {
+      console.log("Query completed");
+      console.log(results.rows.length + " rows returned");
+      var item = null;
+      var storedItem = null;
+      var set = [];
+      for (var i=0; i < results.rows.length; i++) {
+        item = JSON.parse(results.rows.item(i).json);
+        storedItem = {};
+        storedItem.hash              = item.hash;
+        storedItem.displayProperties = item.displayProperties;
+        storedItem.nonTransferrable  = item.nonTransferrable;
+        storedItem.itemType          = item.itemType;
+        storedItem.itemSubType       = item.itemSubType;
+        storedItem.classType         = item.classType;
+        storedItem.equippable        = item.equippable;
+        set.push(["@ManifestStore:Manifest.item." + item.hash, JSON.stringify(item)]);
+      }
+      Message.debug("Set contains " + set.length + " items");
+      set = Store.saveManifestItems(set).then(function(_set){
+        callback.call(this, {status: _set.status, data: version})
+        return _set;
       });
     });
-  }
+  });
+  return set;
+}
+
+export function updateManifestVersion(version) {
+  return Store.saveManifestVersion(version).then(function(version){
+    return version;
+  });
 }

@@ -21,27 +21,53 @@ var styles = require('../styles/ArmorManager')
 
 import * as Message from '../utils/message';
 import * as Bungie from '../utils/bungie/inventory';
+import * as Store from '../utils/store/manifest';
+import * as Enums from '../utils/bungie/enums';
 
 class ArmorManager extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      armors: []
+    };
   }
 
   componentWillMount() {
+    var self = this;
     var memberShip = this.props.user.destinyMemberships[0];
     Bungie.getGuardianInventory(memberShip.membershipType, memberShip.membershipId, Object.keys(this.props.characters)[0])
-    .then(function (inventory) {
+    .then(function (_inventory) {
       Message.debug("Got inventory !");
-      Message.debug(JSON.stringify(inventory));
+      var inventory = _inventory.Response.inventory.data.items;
+      var item = null;
+      var _armors = [];
+      for (var i=0; i < inventory.length; i++) {
+        Store.getManifestItem(inventory[i].itemHash)
+        .then(function(_item) {
+          var item = JSON.parse(_item.data);
+          if (item.itemType === 2) { //Armor 
+            _armors.push(<Text>item.displayProperties.name</Text>);
+          }
+        });
+      }
+      return _armors;
+    })
+    .then(function (armorsArray) {
+      self.setstate(armors: armorsArray);
     })
   }
 
   render() {
+
     return(
       <View style={styles.container}>
-        <Text>Here are your armor !</Text>
+        <Text>Here are your armors !</Text>
+        {
+          this.state.armors.map(armor => {
+            return ( <Text>armor.displayProperties.name</Text> )
+          })
+         }
       </View>
     )
   }

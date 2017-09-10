@@ -42,8 +42,11 @@ class SplashScreen extends React.Component {
   }
 
   componentDidMount() {
-    //BungieAuth.getAuthentication(this.handleAuthenticationCallback.bind(this));
     this.getManifest();
+  }
+
+  doAuthentication() {
+    BungieAuth.getAuthentication(this.handleAuthenticationCallback.bind(this));
   }
 
   handleAuthenticationCallback(authentication) {
@@ -66,21 +69,45 @@ class SplashScreen extends React.Component {
       memberShip.membershipId)
     .then(function(profile) {
       Message.debug("Got Profile Characters !");
-      //Message.debug(JSON.stringify(profile));
       self.props.setCharacters(profile.Response.characters.data);
       self.props.setLoadingState(false);
     })
   }
 
   getManifest() {
-    Manifest.checkManifestVersion().then(function(manifestCheck) {
+    var self = this;
+    Manifest.checkManifestVersion()
+    .then(function(manifestCheck) {
       if (manifestCheck && manifestCheck.isUpdated) {
         Message.debug("Version " + manifestCheck.version + " is already stored; nothing to do.");
+        self.doAuthentication();
       } else {
         Message.debug("A new version (" + manifestCheck.version + ") of the manifest is out. Downloading it");
-        Manifest.updateManifestContent(manifestCheck.contentPath);
+        Manifest.insertManifestContent(manifestCheck.contentPath, manifestCheck.version, self.updateManifestVersion.bind(self));
       }
     })
+  }
+
+  updateManifestVersion(manifestVersion){
+    var self = this;
+    Message.debug(JSON.stringify(manifestVersion));
+    if (manifestVersion.status === 'SUCCESS') {
+      Message.debug("Data is updated. Saving version");
+
+      Manifest.updateManifestVersion(manifestVersion.data)
+      .then(function(version) {
+        if (version.status === 'SUCCESS') {
+          Message.debug("Successfully saved Manifest version");
+          self.doAuthentication();
+        } else {
+          Message.error("Error while saving Manifest version");
+          // Handle error
+        }
+      });
+    } else {
+      Message.error("An error occured while saving the data.");
+      // Handle error 
+    }
   }
 
   render() {
