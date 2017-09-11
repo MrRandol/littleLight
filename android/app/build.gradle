@@ -134,7 +134,6 @@ android {
 
 dependencies {
     compile project(':react-native-zip-archive')
-    compile project(':react-native-full-screen')
     compile project(':react-native-fs')
     compile project(':react-native-fetch-blob')
     compile fileTree(dir: "libs", include: ["*.jar"])

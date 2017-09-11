@@ -6,5 +6,6 @@ module.exports = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#0000FF',
+    overflow: 'scroll'
   }
 });

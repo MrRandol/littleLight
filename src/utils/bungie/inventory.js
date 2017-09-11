@@ -1,7 +1,7 @@
 import React from 'react';
 
 import * as Message from '../message';
-import * as AuthStore from '../auth/authStore';
+import * as AuthStore from '../store/auth';
 
 const APIKEY = '1a9bb6274ca14361a735c9aa188994f7';
 export const HOST = "https://www.bungie.net/Platform/";

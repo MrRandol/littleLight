@@ -29,35 +29,57 @@ T.setTexts(require('../i18n/en.json'));
 var styles = require('../styles/SplashScreen');
 
 // Internal
-import * as BungieAuth from '../utils/auth/auth';
+import * as BungieAuth from '../utils/bungie/auth';
 import * as Bungie from '../utils/bungie/profile';
-import * as Manifest from '../utils/manifest/manifest';
+import * as Manifest from '../utils/bungie/manifest';
 import * as Message from '../utils/message';
 
 class SplashScreen extends React.Component {
 
-
   constructor(props) {
     super(props);
+    this.state = {
+      component: "",
+      message: ""
+    }
   }
 
   componentDidMount() {
     this.getManifest();
   }
 
-  doAuthentication() {
-    BungieAuth.getAuthentication(this.handleAuthenticationCallback.bind(this));
+  getManifest() {
+    try {
+      Manifest.checkVersionAndUpdate(this.manifestStatusCallback.bind(this));
+    } catch (error) {
+      Message.error("An error occured while handling manifest data.");
+      Message.error(error);
+    }
   }
 
-  handleAuthenticationCallback(authentication) {
-    if (authentication.status !== "ERROR" && authentication.user && authentication.user.Response) {
-      Message.debug("Authentication successful !");
-      this.props.setUser(authentication.user.Response);
+  manifestStatusCallback(status) {
+    Message.info("[MANIFEST STATUS] " + JSON.stringify(status));
+    this.setState({component: "Manifest", message: status.message});
+    if (status.status === 'SUCCESS') {
+      this.doAuthentication();
+    }
+  }
+
+  doAuthentication() {
+    try {
+      BungieAuth.getAuthentication(this.authenticationStatusCallback.bind(this));
+    } catch (error) {
+      Message.error("An error occured while authenticating you.");
+      Message.error(error);
+    }
+  }
+
+  authenticationStatusCallback(status) {
+    Message.info("[AUTHENTICATION STATUS] " + JSON.stringify(status));
+    this.setState({component: "OAuth", message: status.message});
+    if (status.status === 'SUCCESS') {
+      this.props.setUser(status.user.Response);
       this.getCharactersInfos();
-    } else {
-      Message.error("An error occured while authenticating you");
-      Message.error("Error code : " + authentication.code);
-      Message.error("Message : " + authentication.error);
     }
   }
 
@@ -74,41 +96,7 @@ class SplashScreen extends React.Component {
     })
   }
 
-  getManifest() {
-    var self = this;
-    Manifest.checkManifestVersion()
-    .then(function(manifestCheck) {
-      if (manifestCheck && manifestCheck.isUpdated) {
-        Message.debug("Version " + manifestCheck.version + " is already stored; nothing to do.");
-        self.doAuthentication();
-      } else {
-        Message.debug("A new version (" + manifestCheck.version + ") of the manifest is out. Downloading it");
-        Manifest.insertManifestContent(manifestCheck.contentPath, manifestCheck.version, self.updateManifestVersion.bind(self));
-      }
-    })
-  }
 
-  updateManifestVersion(manifestVersion){
-    var self = this;
-    Message.debug(JSON.stringify(manifestVersion));
-    if (manifestVersion.status === 'SUCCESS') {
-      Message.debug("Data is updated. Saving version");
-
-      Manifest.updateManifestVersion(manifestVersion.data)
-      .then(function(version) {
-        if (version.status === 'SUCCESS') {
-          Message.debug("Successfully saved Manifest version");
-          self.doAuthentication();
-        } else {
-          Message.error("Error while saving Manifest version");
-          // Handle error
-        }
-      });
-    } else {
-      Message.error("An error occured while saving the data.");
-      // Handle error 
-    }
-  }
 
   render() {
     return (
@@ -119,6 +107,8 @@ class SplashScreen extends React.Component {
         <Text style={styles.welcome} > LittleLight </Text>
         <View style={styles.loadingContainer} >
           <Text style={styles.loading}> Loading ... </Text>
+          <Text style={styles.loadingComponent}> {this.state.component}  </Text>
+          <Text style={styles.loadingMessage}> {this.state.message}  </Text>
         </View>
         </Image>
         </View>

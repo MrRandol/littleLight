@@ -33,4 +33,17 @@ module.exports = StyleSheet.create({
     color: '#DEDEDE',
     fontWeight: 'bold'
   },
+  loadingComponent: {
+    fontSize: 12,
+    textAlign: 'center',
+    margin: 3,
+    color: '#DEDEDE',
+  },
+  loadingMessage: {
+    fontSize: 11,
+    textAlign: 'center',
+    margin: 3,
+    color: '#DEDEDE',
+    fontStyle: 'italic'
+  },
 });

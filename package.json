@@ -10,17 +10,14 @@
     "Base64": "^1.0.1",
     "bungie-auth": "^1.0.1",
     "i18n-react": "^0.4.0",
-    "jszip": "^3.1.4",
     "react": "16.0.0-alpha.12",
     "react-native": "0.47.2",
     "react-native-fetch-blob": "^0.10.8",
     "react-native-fs": "^2.5.1",
-    "react-native-full-screen": "0.0.2",
     "react-native-sqlite-storage": "^3.3.3",
     "react-native-zip-archive": "^2.0.0",
     "react-redux": "^5.0.6",
     "redux": "^3.7.2",
-    "sqlite3": "^3.1.9",
     "stream": "0.0.2"
   },
   "devDependencies": {

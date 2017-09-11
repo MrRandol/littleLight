@@ -4,7 +4,6 @@ import android.app.Application;
 
 import com.facebook.react.ReactApplication;
 import com.rnziparchive.RNZipArchivePackage;
-import com.rn.full.screen.FullScreenModule;
 import com.rnfs.RNFSPackage;
 import com.RNFetchBlob.RNFetchBlobPackage;
 import com.facebook.react.ReactNativeHost;
@@ -33,7 +32,6 @@ public class MainApplication extends Application implements ReactApplication {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
             new RNZipArchivePackage(),
-            new FullScreenModule(),
             new RNFetchBlobPackage(), 
           new RNFSPackage(), // React native FS
           new SQLitePluginPackage() //React native sqlite

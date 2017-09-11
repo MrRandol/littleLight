@@ -41,7 +41,7 @@ class LittleLight extends React.Component {
         <View style={styles.container}>
           <StatusBar hidden={true} />
           <CharacterSelector />
-          <ArmorManager />
+          <ArmorManager style={{flex: 1}} />
         </View>
       );
     } else {

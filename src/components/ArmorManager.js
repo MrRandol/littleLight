@@ -22,7 +22,7 @@ var styles = require('../styles/ArmorManager')
 import * as Message from '../utils/message';
 import * as Bungie from '../utils/bungie/inventory';
 import * as Store from '../utils/store/manifest';
-import * as Enums from '../utils/bungie/enums';
+import * as Enums from '../utils/bungie/static';
 
 class ArmorManager extends React.Component {
 
@@ -41,31 +41,35 @@ class ArmorManager extends React.Component {
       Message.debug("Got inventory !");
       var inventory = _inventory.Response.inventory.data.items;
       var item = null;
-      var _armors = [];
+      var _armors = null;
       for (var i=0; i < inventory.length; i++) {
         Store.getManifestItem(inventory[i].itemHash)
         .then(function(_item) {
           var item = JSON.parse(_item.data);
           if (item.itemType === 2) { //Armor 
-            _armors.push(<Text>item.displayProperties.name</Text>);
+            _armors = self.state.armors;
+            _armors.push(item);
+            self.setState({armors: _armors});
           }
         });
       }
-      return _armors;
-    })
-    .then(function (armorsArray) {
-      self.setstate(armors: armorsArray);
     })
   }
 
   render() {
+    const HOST = 'https://www.bungie.net/';
 
     return(
       <View style={styles.container}>
         <Text>Here are your armors !</Text>
         {
           this.state.armors.map(armor => {
-            return ( <Text>armor.displayProperties.name</Text> )
+            return (
+              <View>
+                <Image key={"icon-"+armor.hash} style={{width: 50, height: 50}} source={{uri: HOST+armor.displayProperties.icon}} />
+                <Text key={"desc-"+armor.hash} >{ armor.displayProperties.name }</Text> 
+              </View>
+            )
           })
          }
       </View>
