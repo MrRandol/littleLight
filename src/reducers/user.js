@@ -1,4 +1,4 @@
-import { SET_USER, SET_CHARACTERS } from '../actions/';
+import { SET_USER, SET_GUARDIANS } from '../actions/';
 
 let cloneObject = function(obj) {
   return JSON.parse(JSON.stringify(obj));
@@ -12,9 +12,9 @@ export default function user(state = newState, action) {
       newState = cloneObject(state);
       newState.user = action.user;
       return newState
-    case SET_CHARACTERS:
+    case SET_GUARDIANS:
       newState = cloneObject(state);
-      newState.characters = action.characters;
+      newState.guardians = action.guardians;
       return newState
     default:
       return state || newState;

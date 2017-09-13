@@ -1,5 +1,5 @@
 export const SET_USER = 'SET_USER';
-export const SET_CHARACTERS = 'SET_CHARACTERS';
+export const SET_GUARDIANS = 'SET_GUARDIANS';
 
 export function setUser (user) {
   return {
@@ -8,9 +8,9 @@ export function setUser (user) {
   }
 }
 
-export function setCharacters (characters) {
+export function setGuardians (guardians) {
   return {
-    type: SET_CHARACTERS,
-    characters: characters
+    type: SET_GUARDIANS,
+    guardians: guardians
   }
 }

@@ -96,11 +96,31 @@ function fetchAndExtractManifest(path, version, statusCallback) {
 
 function insertDbIntoStore(db, version, statusCallback) {
   statusCallback.call(this, {status: "IN_PROGRESS", message: "manifestExtractData"});
+  doTransaction(
+    db, 
+    "SELECT json FROM 'DestinyInventoryItemDefinition'",
+    ['hash', 'displayProperties', 'itemCategoryHashes'], 
+    'item', 
+    function() {
+        doTransaction(
+        db, 
+        "SELECT json FROM 'DestinyItemCategoryDefinition'",
+        ['hash', 'displayProperties', 'itemTypeRegex'], 
+        'itemCategory',
+        function(itemsSet) {
+          statusCallback.call(this, {status: "IN_PROGRESS", message: "manifestSavedData"});
+          updateManifestVersion({status: itemsSet.status, data: version, error: itemsSet.error}, statusCallback);
+        }
+      );
+    }
+  );
+}
+
+function doTransaction(db, request, fieldsToMatch, storeKey, endOfTransactionCallback) {
   var self = this;
-  var flag = false;
   try {
     db.transaction((tx) => {
-      tx.executeSql("SELECT json FROM 'DestinyInventoryItemDefinition'", [], (tx, results) => {
+      tx.executeSql(request, [], (tx, results) => {
         console.log("Query completed");
         console.log(results.rows.length + " rows returned");
         var item = null;
@@ -111,20 +131,20 @@ function insertDbIntoStore(db, version, statusCallback) {
           // Reduction of data size
           // By filed manual selection
           storedItem = {};
-          storedItem.hash              = item.hash;
-          storedItem.displayProperties = item.displayProperties;
-          storedItem.nonTransferrable  = item.nonTransferrable;
-          storedItem.itemType          = item.itemType;
-          storedItem.itemSubType       = item.itemSubType;
-          storedItem.classType         = item.classType;
-          storedItem.equippable        = item.equippable;
-          itemsArray.push(["@ManifestStore:Manifest.item." + item.hash, JSON.stringify(item)]);
+          for (var field in fieldsToMatch) {
+            if (item.hasOwnProperty(field)) {
+              storedItem[field] = item[field];
+            }
+          }
+          itemsArray.push(["@ManifestStore:Manifest." + storeKey + "." + item.hash, JSON.stringify(item)]);
         }
-        Message.debug("Set contains " + itemsArray.length + " items");
+        Message.debug("Resulting Set contains " + itemsArray.length + " items");
         Store.saveManifestItems(itemsArray)
         .then( function(itemsSet){
-          statusCallback.call(this, {status: "IN_PROGRESS", message: "manifestSaveData"});
-          updateManifestVersion({status: itemsSet.status, data: version, error: itemsSet.error}, statusCallback);
+          if(itemsSet.status !== 'SUCCESS') {
+            throw itemsSet.error;
+          }
+          endOfTransactionCallback.call(this, itemsSet);
         });
       });
     });
@@ -161,9 +181,9 @@ function updateManifestVersion(manifestVersion, statusCallback){
 
 // Exception builder
 function manifestException(code, message) {
-   this.code = code;
-   this.message = message;
-   this.toString = function() {
-      return this.message + " (code " + this.code + ")";
-   };
+ this.code = code;
+ this.message = message;
+ this.toString = function() {
+  return this.message + " (code " + this.code + ")";
+};
 }

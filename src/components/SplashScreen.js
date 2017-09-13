@@ -30,7 +30,7 @@ var styles = require('../styles/SplashScreen');
 
 // Internal
 import * as BungieAuth from '../utils/bungie/auth';
-import * as Bungie from '../utils/bungie/profile';
+import * as Bungie from '../utils/bungie/inventory';
 import * as Manifest from '../utils/bungie/manifest';
 import * as Message from '../utils/message';
 
@@ -50,7 +50,7 @@ class SplashScreen extends React.Component {
 
   getManifest() {
     try {
-      Manifest.checkVersionAndUpdate(this.manifestStatusCallback.bind(this));
+      Manifest.checkVersionAndUpdate(this.manifestStatusCallback.bind(this))
     } catch (error) {
       Message.error("An error occured while handling manifest data.");
       Message.error(error);
@@ -67,7 +67,7 @@ class SplashScreen extends React.Component {
 
   doAuthentication() {
     try {
-      BungieAuth.getAuthentication(this.authenticationStatusCallback.bind(this));
+      BungieAuth.getAuthentication(this.authenticationStatusCallback.bind(this))
     } catch (error) {
       Message.error("An error occured while authenticating you.");
       Message.error(error);
@@ -75,43 +75,51 @@ class SplashScreen extends React.Component {
   }
 
   authenticationStatusCallback(status) {
-    Message.info("[AUTHENTICATION STATUS] " + JSON.stringify(status));
+    Message.info("[AUTHENTICATION STATUS] " + JSON.stringify(status.status) + " - " + JSON.stringify(status.message));
     this.setState({component: "OAuth", message: status.message});
     if (status.status === 'SUCCESS') {
       this.props.setUser(status.user.Response);
-      this.getCharactersInfos();
+      this.doFetchAllItemsAndGuardians();
     }
   }
 
-  getCharactersInfos() {
-    var self = this;
-    var memberShip = this.props.user.destinyMemberships[0];
-    Bungie.getProfileCharacters(
-      memberShip.membershipType, 
-      memberShip.membershipId)
-    .then(function(profile) {
-      Message.debug("Got Profile Characters !");
-      self.props.setCharacters(profile.Response.characters.data);
-      self.props.setLoadingState(false);
-    })
+  doFetchAllItemsAndGuardians() {
+    try {
+      Bungie.getAllItemsAndCharacters(
+        this.props.user.destinyMemberships[0].membershipType, 
+        this.props.user.destinyMemberships[0].membershipId, 
+        this.fetchItemsAndGuardiansStatusCallback.bind(this)
+      )
+    } catch (error) {
+      Message.error("An error occured while fetching your guardians informations.");
+      Message.error(error);
+    }
+    
   }
 
-
+  fetchItemsAndGuardiansStatusCallback(status) {
+    Message.info("[GUARDIANS_FETCH STATUS] " + JSON.stringify(status.status) + " - " + JSON.stringify(status.message));
+    this.setState({component: "guardiansFetch", message: status.message});
+    if (status.status === 'SUCCESS') {
+      //Message.debug(JSON.stringify(status.data));
+      this.props.setGuardians(status.data.guardians);
+      this.props.setItems( status.data );
+      this.props.setLoadingState(false);
+    }
+  }
 
   render() {
     return (
       <View style={styles.splashContainer}>
-        <Image
-          style={styles.splashImage}
-          source={require('../../assets/ghost.jpg')} >
-        <Text style={styles.welcome} > LittleLight </Text>
-        <View style={styles.loadingContainer} >
-          <Text style={styles.loading}> Loading ... </Text>
-          <Text style={styles.loadingComponent}> {this.state.component}  </Text>
-          <Text style={styles.loadingMessage}> {this.state.message}  </Text>
-        </View>
+        <Image style={styles.splashImage} source={require('../../assets/ghost.jpg')} >
+          <Text style={styles.welcome} > LittleLight </Text>
+          <View style={styles.loadingContainer} >
+            <Text style={styles.loading}> Loading ... </Text>
+            <Text style={styles.loadingComponent}> {this.state.component}  </Text>
+            <Text style={styles.loadingMessage}> {this.state.message}  </Text>
+          </View>
         </Image>
-        </View>
+      </View>
     )
   } 
 }

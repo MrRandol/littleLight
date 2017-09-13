@@ -28,10 +28,30 @@ export async function saveManifestItems(items) {
 }
 
 export async function getManifestItem(hash) {
-    try {
-      const item = await AsyncStorage.getItem('@ManifestStore:Manifest.item.' + hash);
-      return {status: "SUCCESS", data: item} 
-    } catch (error) {
-      return {status: "ERROR", error: error}
-    }
+  try {
+    const item = await AsyncStorage.getItem('@ManifestStore:Manifest.item.' + hash);
+    return {status: "SUCCESS", data: item} 
+  } catch (error) {
+    return {status: "ERROR", error: error}
+  }
+}
+
+export async function getManifestItemCategory(hash) {
+  try {
+    const category = await AsyncStorage.getItem('@ManifestStore:Manifest.itemCategory.' + hash);
+    return {status: "SUCCESS", data: category} 
+  } catch (error) {
+    return {status: "ERROR", error: error}
+  }
+}
+
+export async function getManifestItems(hashArray) {
+  try {
+    // hashArray items must be strings of form
+    // '@ManifestStore:Manifest.item.<hash>'
+    const items = await AsyncStorage.multiGet(hashArray);
+    return {status: "SUCCESS", data: items} 
+  } catch (error) {
+    return {status: "ERROR", error: error}
+  }
 }
