@@ -1,12 +1,12 @@
 import { combineReducers } from 'redux';
 import loading from './loading';
 import user from './user';
-import inventory from './inventory';
+import itemsManager from './itemsManager';
 
 export const rootReducer = combineReducers({
   loading,
   user,
-  inventory
+  itemsManager
 });
 
 export default rootReducer;

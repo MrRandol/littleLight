@@ -1,30 +1,27 @@
-/**
-  REACT IMPORTS
-**/
-import React from 'react';
-import { View, StatusBar, TouchableHighlight, Text, StyleSheet } from 'react-native';
+/**********************
+    REDUX COMPONENT
+**********************/
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as Actions from '../actions';
-
 function mapStateToProps(state) { return {loading: state.loading.loading}; }
 function mapDispatchToProps(dispatch) { return bindActionCreators(Actions, dispatch); }
 
-/**
+/******************
+   REACT IMPORTS
+******************/
+import React from 'react';
+import { View, StatusBar } from 'react-native';
+
+/*****************
   CUSTOM IMPORTS
-**/
-//I18N
+******************/
 import T from 'i18n-react';
 T.setTexts(require('../i18n/en.json'));
-//Styles
 var styles = require('../styles/LittleLight');
 
 import SplashScreen from './SplashScreen';
-import ArmorManager from './ArmorManager';
-import UserStatus from './UserStatus';
-
-// Internal
-import * as Message from '../utils/message';
+import ItemsManager from './itemsManager/ItemsManager';
 
 class LittleLight extends React.Component {
   constructor(props) {
@@ -33,25 +30,20 @@ class LittleLight extends React.Component {
 
   render() {
 
-    var content = (<Text>This should not be visible</Text>);
+    var content;
 
-    if (this.props.loading === false) {
-      content = (
-        <View style={styles.container}>
-          <StatusBar hidden={true} />
-          <ArmorManager style={{flex: 1}} />
-        </View>
-      );
+    if (this.props.loading !== false) {
+      content = ( <SplashScreen style={{flex: 1}} /> );
     } else {
-      content = (
-        <View style={styles.container}>
-          <StatusBar hidden={true} />
-          <SplashScreen style={{flex: 1}} />
-        </View>
-      );
+      content = ( <ItemsManager style={{flex: 1}} /> );
     }
 
-    return ( content );
+    return ( 
+      <View style={styles.container}>
+        <StatusBar hidden={true} />
+        { content }
+      </View>
+    );
   } 
 }
 

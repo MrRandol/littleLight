@@ -94,16 +94,15 @@ class SplashScreen extends React.Component {
       Message.error("An error occured while fetching your guardians informations.");
       Message.error(error);
     }
-    
   }
 
   fetchItemsAndGuardiansStatusCallback(status) {
     Message.info("[GUARDIANS_FETCH STATUS] " + JSON.stringify(status.status) + " - " + JSON.stringify(status.message));
     this.setState({component: "guardiansFetch", message: status.message});
     if (status.status === 'SUCCESS') {
-      //Message.debug(JSON.stringify(status.data));
+      this.props.switchGuardian(Object.keys(status.data.guardians)[0]);
       this.props.setGuardians(status.data.guardians);
-      this.props.setItems( status.data );
+      this.props.setItems(status.data);
       this.props.setLoadingState(false);
     }
   }
