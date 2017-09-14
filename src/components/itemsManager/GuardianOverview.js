@@ -1,17 +1,8 @@
-/**********************
-    REDUX COMPONENT
-**********************/
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
-import * as Actions from '../../actions';
-function mapStateToProps(state) { return {user: state.user, itemsManager: state.itemsManager}; }
-function mapDispatchToProps(dispatch) { return bindActionCreators(Actions, dispatch); }
-
 /******************
    REACT IMPORTS
 ******************/
 import React from 'react';
-import { View, Image } from 'react-native';
+import { View, Image, TouchableOpacity } from 'react-native';
 
 /*****************
   CUSTOM IMPORTS
@@ -22,11 +13,13 @@ var styles = require('../../styles/itemsManager/GuardianOverview');
 
 import * as BUNGIE from '../../utils/bungie/static';
 
-import GuardianOverview from './GuardianOverview';
-
-class ItemsManager extends React.Component {
+class GuardianOverview extends React.Component {
   constructor(props) {
     super(props);
+  }
+
+  onItemTypePress(itemType) {
+    this.props.itemTypePressCallback.call(this, 'ItemTypeManager', {itemType: itemType});
   }
 
   render() {
@@ -40,20 +33,20 @@ class ItemsManager extends React.Component {
           <View style={styles.guardianOverviewMenuContainer} >
 
             <View style={styles.guardianOverviewWeaponsContainer} >
-              <Image style={styles.guardianOverviewItemCategoryButton} source={{uri: BUNGIE.HOST + characterEquipment.kineticWeapons[0].displayProperties.icon}} />
-              <Image style={styles.guardianOverviewItemCategoryButton} source={{uri: BUNGIE.HOST + characterEquipment.energyWeapons[0].displayProperties.icon}} />
-              <Image style={styles.guardianOverviewItemCategoryButton} source={{uri: BUNGIE.HOST + characterEquipment.powerWeapons[0].displayProperties.icon}} />
-              <Image style={styles.guardianOverviewItemCategoryButton} source={{uri: BUNGIE.HOST + characterEquipment.ghost[0].displayProperties.icon}} />
+              <TouchableOpacity onPress={() => this.onItemTypePress("kineticWeapons")} ><Image style={styles.guardianOverviewItemCategoryButton} source={{uri: BUNGIE.HOST + characterEquipment.kineticWeapons[0].displayProperties.icon}} /></TouchableOpacity>
+              <TouchableOpacity onPress={() => this.onItemTypePress("energyWeapons")} ><Image style={styles.guardianOverviewItemCategoryButton} source={{uri: BUNGIE.HOST + characterEquipment.energyWeapons[0].displayProperties.icon}} /></TouchableOpacity>
+              <TouchableOpacity onPress={() => this.onItemTypePress("powerWeapons")} ><Image style={styles.guardianOverviewItemCategoryButton} source={{uri: BUNGIE.HOST + characterEquipment.powerWeapons[0].displayProperties.icon}} /></TouchableOpacity>
+              <TouchableOpacity onPress={() => this.onItemTypePress("ghost")} ><Image style={styles.guardianOverviewItemCategoryButton} source={{uri: BUNGIE.HOST + characterEquipment.ghost[0].displayProperties.icon}} /></TouchableOpacity>
             </View>
             <View style={styles.guardianOverviewSubclassContainer} >
               <Image style={styles.guardianOverviewSubclassCategoryButton} source={{uri: BUNGIE.HOST + characterEquipment.subclass[0].displayProperties.icon}} />
             </View>
             <View style={styles.guardianOverviewArmorContainer} >
-              <Image style={styles.guardianOverviewItemCategoryButton} source={{uri: BUNGIE.HOST + characterEquipment.helmet[0].displayProperties.icon}} />
-              <Image style={styles.guardianOverviewItemCategoryButton} source={{uri: BUNGIE.HOST + characterEquipment.gauntlets[0].displayProperties.icon}} />
-              <Image style={styles.guardianOverviewItemCategoryButton} source={{uri: BUNGIE.HOST + characterEquipment.chestArmor[0].displayProperties.icon}} />
-              <Image style={styles.guardianOverviewItemCategoryButton} source={{uri: BUNGIE.HOST + characterEquipment.legArmor[0].displayProperties.icon}} />
-              <Image style={styles.guardianOverviewItemCategoryButton} source={{uri: BUNGIE.HOST + characterEquipment.classArmor[0].displayProperties.icon}} />
+              <TouchableOpacity onPress={() => this.onItemTypePress("helmet")} ><Image style={styles.guardianOverviewItemCategoryButton} source={{uri: BUNGIE.HOST + characterEquipment.helmet[0].displayProperties.icon}} /></TouchableOpacity>
+              <TouchableOpacity onPress={() => this.onItemTypePress("gauntlets")} ><Image style={styles.guardianOverviewItemCategoryButton} source={{uri: BUNGIE.HOST + characterEquipment.gauntlets[0].displayProperties.icon}} /></TouchableOpacity>
+              <TouchableOpacity onPress={() => this.onItemTypePress("chestArmor")} ><Image style={styles.guardianOverviewItemCategoryButton} source={{uri: BUNGIE.HOST + characterEquipment.chestArmor[0].displayProperties.icon}} /></TouchableOpacity>
+              <TouchableOpacity onPress={() => this.onItemTypePress("legArmor")} ><Image style={styles.guardianOverviewItemCategoryButton} source={{uri: BUNGIE.HOST + characterEquipment.legArmor[0].displayProperties.icon}} /></TouchableOpacity>
+              <TouchableOpacity onPress={() => this.onItemTypePress("classArmor")} ><Image style={styles.guardianOverviewItemCategoryButton} source={{uri: BUNGIE.HOST + characterEquipment.classArmor[0].displayProperties.icon}} /></TouchableOpacity>
             </View>
 
           </View>
@@ -64,4 +57,4 @@ class ItemsManager extends React.Component {
   } 
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(ItemsManager);
+export default GuardianOverview;
