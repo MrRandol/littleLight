@@ -41,11 +41,15 @@ class ItemTypeRow extends React.Component {
     } else {
       item = this.props.guardianInventory ? this.props.guardianInventory[index] : null;
     }
-    return <Item key={"itemWrapper-" + uid()} item={item} equipped={false} />
+    return <Item itemOnPressCallback={this.itemOnPressCallback.bind(this)} key={"itemWrapper-" + uid()} item={item} equipped={false} />
   }
 
   getEquippedItem() {
-    return <Item key={"itemWrapper-" + uid()} item={this.props.guardianEquipped ? this.props.guardianEquipped[0] : null} equipped={true} />
+    return <Item itemOnPressCallback={this.itemOnPressCallback.bind(this)}  key={"itemWrapper-" + uid()} item={this.props.guardianEquipped ? this.props.guardianEquipped[0] : null} equipped={true} />
+  }
+
+  itemOnPressCallback(item) {
+    this.props.itemOnPressCallback.call(this, item);
   }
 
   render() {

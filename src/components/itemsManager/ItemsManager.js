@@ -39,7 +39,7 @@ class ItemsManager extends React.Component {
     switch(this.props.itemsManager.currentView.name) {
 
       case 'ItemTypeManager':
-        contentToRender = <ItemTypeManager style={{ flex: 9 }} guardians={this.props.user.guardians} itemType={this.props.itemsManager.currentView.additionalParams.itemType} itemsManager={this.props.itemsManager} />
+        contentToRender = <ItemTypeManager style={{ flex: 9 }} guardians={this.props.user.guardians} itemType={this.props.itemsManager.currentView.additionalParams.itemType} itemsManager={this.props.itemsManager} membershipType={this.props.user.user.destinyMemberships[0].membershipType}/>
         break;
 
       case 'GuardianOverview':

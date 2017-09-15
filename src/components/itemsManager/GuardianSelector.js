@@ -92,8 +92,6 @@ class GuardianSelector extends React.Component {
             </View>
           </View>
         </Modal>
-
-
         
 
         <TouchableOpacity onPress={ () => {this.setModalVisible(true)} } >

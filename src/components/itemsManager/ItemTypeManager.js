@@ -15,10 +15,27 @@ import * as BUNGIE from '../../utils/bungie/static';
 import * as Message from '../../utils/message';
 
 import ItemTypeRow from './ItemTypeRow';
+import ItemTransferModal from './ItemTransferModal';
 
 class ItemTypeManager extends React.Component {
   constructor(props) {
     super(props);
+    this.state = {
+      itemToTransfer: null,
+      modalVisible: false
+    }
+  }
+
+  itemOnPressCallback(item) {
+    console.log("Item has been pressed : " + item.displayProperties.name);
+    this.setState({
+      itemToTransfer: item,
+      modalVisible: true
+    });
+  }
+
+  closeModalCallback() {
+    this.setState({modalVisible: false})
   }
 
   render() {
@@ -38,9 +55,11 @@ class ItemTypeManager extends React.Component {
     var profileItemsManager = this.props.itemsManager.profileInventory;
     var itemType = this.props.itemType;
     var guardians = this.props.guardians;
+    var itemOnPressCallback = this.itemOnPressCallback.bind(this);
     var index;
     return(
       <ScrollView style={styles.itemTypeManagerContainer} >
+      <ItemTransferModal visible={this.state.modalVisible} item={this.state.itemToTransfer} characterId={currentGuardianId} membershipType={this.props.membershipType} closeModalCallback={this.closeModalCallback.bind(this)} />
       {
         guardianIds.map(function(guardianId, index) {
           return (
@@ -50,6 +69,7 @@ class ItemTypeManager extends React.Component {
               guardianId={guardianId} 
               itemType={itemType}
               guardians={guardians}
+              itemOnPressCallback={itemOnPressCallback}
               guardianEquipped={guardiansItemsManager[guardianId].characterEquipment[itemType]}
               guardianInventory={guardiansItemsManager[guardianId].characterInventories[itemType]}
             />
@@ -62,6 +82,7 @@ class ItemTypeManager extends React.Component {
           odd={index%2 === 0}
           key="itemtyperow-vault"
           itemType={itemType}
+          itemOnPressCallback={itemOnPressCallback}
           vaultInventory={profileItemsManager.vault[itemType] || []}
         />
       </ScrollView>
