@@ -4,35 +4,39 @@ module.exports = StyleSheet.create({
   itemTypeRowContainer: {
     flex: 1,
     flexDirection: 'row',
-    height:250,
-    padding: 10
+    justifyContent: 'center',
+    height: 240,
+    padding: 15
+  },
+  itemTypeRowContainerOdd: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    height: 240,
+    padding: 15,
+    backgroundColor: '#484848'
   },
   itemTypeRowEquippedAndEmblem: {
-    flex: 3,
-    justifyContent: 'space-around'
+    flex: 4,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  itemTypeRowEmblem: {
+    width: 75,
+    height:75,
+    borderRadius: 75,
+    margin: 10,
   },
   itemTypeRowNotEquipped: {
     flex: 7,
-    justifyContent: 'space-around',
-    alignItems: 'center'
+    flexWrap: 'wrap',
+    alignItems: 'flex-end'
   },
   itemTypeRowNotEquippedLine: {
     flex: 1,
     flexDirection: 'row',
-    justifyContent: 'space-around',
+    justifyContent: 'center',
     alignItems: 'center'
   },
-  itemTypeRowItem: {
-    width: 60,
-    height: 60,
-    borderColor: 'white',
-    borderWidth: 1,
-  },
-  itemTypeRowNoItem: {
-    width: 60,
-    height: 60,
-    borderColor: 'white',
-    borderWidth: 1,
-    borderStyle: 'dotted'
-  }
+
 });

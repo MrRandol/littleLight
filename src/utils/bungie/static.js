@@ -16,6 +16,9 @@ export const OAUTH_CLIENT_SECRET = 'RG2RkEtK4xdPdI2AV.9.-b6JlosMBhBQbXqVvU2u.lU'
 export const OAUTH_TOKEN_URL = HOST + 'Platform/App/OAuth/Token/';
 export const AUTHENTICATION_CODE_URL = HOST + 'en/OAuth/Authorize?client_id=' + OAUTH_CLIENT_ID + '&response_type=code';
 
+export const FALLBACK_ICON = 'https://www.materialui.co/materialIcons/action/lock_white_72x72.png';
+export const VAULT_ICON = 'https://www.materialui.co/materialIcons/action/lock_white_72x72.png';
+
 var defaultHeaders = new Headers();
 defaultHeaders.append('X-API-Key', API_KEY);
 

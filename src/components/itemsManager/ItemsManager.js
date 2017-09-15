@@ -11,7 +11,7 @@ function mapDispatchToProps(dispatch) { return bindActionCreators(Actions, dispa
    REACT IMPORTS
 ******************/
 import React from 'react';
-import { View, BackHandler } from 'react-native';
+import { View } from 'react-native';
 
 /*****************
   CUSTOM IMPORTS
@@ -27,42 +27,27 @@ import ItemTypeManager from './ItemTypeManager';
 class ItemsManager extends React.Component {
   constructor(props) {
     super(props);
-    this.state= {
-      currentView: 'GuardianOverview'
-    }
   }
-
-  componentWillMount() {
-    var self = this;
-    BackHandler.addEventListener('hardwareBackPress', function() {
-     if (self.state.currentView === 'GuardianOverview') {
-       return false;
-     }
-     self.setState({currentView: 'GuardianOverview'});
-     return true;
-    });
-  }
-
 
   switchToView(viewName, additionalParams) {
-    this.setState({
-      currentView: viewName,
-      additionalParams: additionalParams
-    })
+    this.props.switchView(viewName, additionalParams);
   }
 
   render() {
 
     var contentToRender;
-    switch(this.state.currentView) {
+    switch(this.props.itemsManager.currentView.name) {
 
       case 'ItemTypeManager':
-        contentToRender = <ItemTypeManager style={{ flex: 9 }} itemType={this.state.additionalParams.itemType} itemsManager={this.props.itemsManager} />
+        contentToRender = <ItemTypeManager style={{ flex: 9 }} guardians={this.props.user.guardians} itemType={this.props.itemsManager.currentView.additionalParams.itemType} itemsManager={this.props.itemsManager} />
         break;
 
       case 'GuardianOverview':
-      default:
         contentToRender = <GuardianOverview style={{ flex: 9 }} itemTypePressCallback={this.switchToView.bind(this)} itemsManager={this.props.itemsManager} />
+        break;
+
+      default:
+        contentToRender = null
     }
 
     return(
@@ -70,6 +55,7 @@ class ItemsManager extends React.Component {
         <GuardianSelector 
           style={{flex: 1}} 
           currentGuardianId={this.props.itemsManager.currentGuardianId}
+          switchGuardian={this.props.switchGuardian}
           guardians={this.props.user.guardians}
         />
         { contentToRender }

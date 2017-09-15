@@ -17,21 +17,21 @@ module.exports = StyleSheet.create({
     flexDirection: 'column',
     justifyContent: 'space-around',
     alignItems: 'center',
-    backgroundColor: '#808080'
+    backgroundColor: '#242424'
   },
   guardianOverviewSubclassContainer: {
     flex: 10,
     flexDirection: 'column',
     justifyContent: 'space-around',
     alignItems: 'center',
-    backgroundColor: '#A0A0A0'
+    backgroundColor: '#262626'
   },
   guardianOverviewArmorContainer: {
     flex: 7,
     flexDirection: 'column',
     justifyContent: 'space-around',
     alignItems: 'center',
-    backgroundColor: '#808080'
+    backgroundColor: '#242424'
   },
   guardianOverviewItemCategoryButton: {
     width: 90,

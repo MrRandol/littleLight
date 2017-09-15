@@ -22,31 +22,40 @@ class GuardianOverview extends React.Component {
     this.props.itemTypePressCallback.call(this, 'ItemTypeManager', {itemType: itemType});
   }
 
+  itemTypeIcon(type) {
+    var characterEquipment = this.props.itemsManager.guardiansInventory[this.props.itemsManager.currentGuardianId].characterEquipment;
+    var source = characterEquipment[type] ? BUNGIE.HOST + characterEquipment[type][0].displayProperties.icon : BUNGIE.FALLBACK_ICON;
+    return <TouchableOpacity onPress={() => this.onItemTypePress(type)} ><Image style={styles.guardianOverviewItemCategoryButton} source={{uri: source}} /></TouchableOpacity>
+  }
+
   render() {
 
     var characterEquipment = this.props.itemsManager.guardiansInventory[this.props.itemsManager.currentGuardianId].characterEquipment;
 
-    //<Image style={styles.guardianOverviewBackground} source={{uri: BUNGIE.HOST+currentGuardian.emblemBackgroundPath}} />
     return(
       <View style={styles.guardianOverviewContainer} >
         <View style={styles.guardianOverviewBackground} >
           <View style={styles.guardianOverviewMenuContainer} >
 
             <View style={styles.guardianOverviewWeaponsContainer} >
-              <TouchableOpacity onPress={() => this.onItemTypePress("kineticWeapons")} ><Image style={styles.guardianOverviewItemCategoryButton} source={{uri: BUNGIE.HOST + characterEquipment.kineticWeapons[0].displayProperties.icon}} /></TouchableOpacity>
-              <TouchableOpacity onPress={() => this.onItemTypePress("energyWeapons")} ><Image style={styles.guardianOverviewItemCategoryButton} source={{uri: BUNGIE.HOST + characterEquipment.energyWeapons[0].displayProperties.icon}} /></TouchableOpacity>
-              <TouchableOpacity onPress={() => this.onItemTypePress("powerWeapons")} ><Image style={styles.guardianOverviewItemCategoryButton} source={{uri: BUNGIE.HOST + characterEquipment.powerWeapons[0].displayProperties.icon}} /></TouchableOpacity>
-              <TouchableOpacity onPress={() => this.onItemTypePress("ghost")} ><Image style={styles.guardianOverviewItemCategoryButton} source={{uri: BUNGIE.HOST + characterEquipment.ghost[0].displayProperties.icon}} /></TouchableOpacity>
+            
+              { this.itemTypeIcon("kineticWeapons") }
+              { this.itemTypeIcon("energyWeapons") }
+              { this.itemTypeIcon("powerWeapons") }
+              { this.itemTypeIcon("ghost") }
+            
             </View>
             <View style={styles.guardianOverviewSubclassContainer} >
               <Image style={styles.guardianOverviewSubclassCategoryButton} source={{uri: BUNGIE.HOST + characterEquipment.subclass[0].displayProperties.icon}} />
             </View>
             <View style={styles.guardianOverviewArmorContainer} >
-              <TouchableOpacity onPress={() => this.onItemTypePress("helmet")} ><Image style={styles.guardianOverviewItemCategoryButton} source={{uri: BUNGIE.HOST + characterEquipment.helmet[0].displayProperties.icon}} /></TouchableOpacity>
-              <TouchableOpacity onPress={() => this.onItemTypePress("gauntlets")} ><Image style={styles.guardianOverviewItemCategoryButton} source={{uri: BUNGIE.HOST + characterEquipment.gauntlets[0].displayProperties.icon}} /></TouchableOpacity>
-              <TouchableOpacity onPress={() => this.onItemTypePress("chestArmor")} ><Image style={styles.guardianOverviewItemCategoryButton} source={{uri: BUNGIE.HOST + characterEquipment.chestArmor[0].displayProperties.icon}} /></TouchableOpacity>
-              <TouchableOpacity onPress={() => this.onItemTypePress("legArmor")} ><Image style={styles.guardianOverviewItemCategoryButton} source={{uri: BUNGIE.HOST + characterEquipment.legArmor[0].displayProperties.icon}} /></TouchableOpacity>
-              <TouchableOpacity onPress={() => this.onItemTypePress("classArmor")} ><Image style={styles.guardianOverviewItemCategoryButton} source={{uri: BUNGIE.HOST + characterEquipment.classArmor[0].displayProperties.icon}} /></TouchableOpacity>
+            
+              { this.itemTypeIcon("helmet") }
+              { this.itemTypeIcon("gauntlets") }
+              { this.itemTypeIcon("chestArmor") }
+              { this.itemTypeIcon("legArmor") }
+              { this.itemTypeIcon("classArmor") }
+            
             </View>
 
           </View>

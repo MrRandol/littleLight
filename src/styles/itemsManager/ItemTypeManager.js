@@ -2,9 +2,9 @@ import { StyleSheet } from 'react-native';
 
 module.exports = StyleSheet.create({
 
-  ItemsManagerContainer: {
+  itemTypeManagerContainer: {
     flex: 1,
-    backgroundColor: '#FFFF00'
+    backgroundColor: '#242424'
   },
 
 });

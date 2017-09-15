@@ -5,7 +5,8 @@ let cloneObject = function(obj) {
 }
 
 let newState = { 
-  loading: true
+  loading: true,
+  currentSection: 'itemsManager'
 };
 
 export default function user(state = newState, action) {

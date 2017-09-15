@@ -4,14 +4,14 @@
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as Actions from '../actions';
-function mapStateToProps(state) { return {loading: state.loading.loading}; }
+function mapStateToProps(state) { return {loading: state.loading.loading, state: state}; }
 function mapDispatchToProps(dispatch) { return bindActionCreators(Actions, dispatch); }
 
 /******************
    REACT IMPORTS
 ******************/
 import React from 'react';
-import { View, StatusBar } from 'react-native';
+import { View, StatusBar, BackHandler } from 'react-native';
 
 /*****************
   CUSTOM IMPORTS
@@ -26,6 +26,28 @@ import ItemsManager from './itemsManager/ItemsManager';
 class LittleLight extends React.Component {
   constructor(props) {
     super(props);
+  }
+
+  //Global backbutton handler.
+  // Direty but only way I found for now ...
+  componentWillMount() {
+    var self = this;
+    BackHandler.addEventListener('hardwareBackPress', function() {
+      if (self.props.state.loading.currentSection === 'itemsManager') {
+        switch (self.props.state.itemsManager.currentView.name) {
+          case 'GuardianOverview':
+            return false;
+
+          case 'ItemTypeManager':
+            self.props.switchView('GuardianOverview');
+            return true;
+
+          default:
+            return false;
+        }
+      }
+      return false;
+    });
   }
 
   render() {

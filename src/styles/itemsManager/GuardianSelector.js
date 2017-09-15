@@ -2,9 +2,9 @@ import { StyleSheet } from 'react-native';
 
 module.exports = StyleSheet.create({
   guardianSelectorContainer: {
-    height: 50,
     backgroundColor: '#0000FF',
     justifyContent: 'center',
+    alignItems: 'center',
     flexDirection: 'row'
   },
   guardianSelectorEmblem: {
@@ -16,4 +16,20 @@ module.exports = StyleSheet.create({
     flex: 1,
     alignItems: 'center'
   },
+  guardianSelectorModal: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  guardianSelectorModalContent: {
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    backgroundColor: '#CBCBCB',
+  },
+  guardianSelectorModalTitle: {
+
+  },
+  guardianSelectorModalButton: {
+
+  }
 });

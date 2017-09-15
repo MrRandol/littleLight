@@ -39,8 +39,13 @@ export async function getAllItemsAndCharacters(membershipType, destinyMembership
       guardiansInventory[guardianId].characterInventories = await matchItemsToManifest(jsonResp.Response.characterInventories.data[guardianId].items);
       guardiansInventory[guardianId].characterEquipment = await matchItemsToManifest(jsonResp.Response.characterEquipment.data[guardianId].items);
     }
-    var profileInventory = await matchItemsToManifest(jsonResp.Response.profileInventory.data.items, groupByLocation);
-
+    var profileInventoryNotGrouped = await matchItemsToManifest(jsonResp.Response.profileInventory.data.items, groupByLocation);
+    var profileInventory = {};
+    var profileInventoryKeys = Object.keys(profileInventoryNotGrouped);
+    for (var i = profileInventoryKeys.length - 1; i >= 0; i--) {
+     profileInventory[profileInventoryKeys[i]] = _.groupBy(profileInventoryNotGrouped[profileInventoryKeys[i]], groupByBucketType);
+    }
+    
     statusCallback.call(this, {
       status: 'SUCCESS',
       data: {
