@@ -97,13 +97,6 @@ function groupByLocation(item) {
   return BUNGIE.LOCATIONS[item.location];
 }
 
-async function getItemsCategories() {
-  var categories = {};
-    var manifestItems = await Store.getManifestItems(Object.keys(hashMap));
-
-  return categories
-}
-
 // Exception builder
 function inventoryException(code, message) {
  this.code = code;
