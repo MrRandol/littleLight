@@ -21,6 +21,7 @@ import * as Store from '../store/auth';
 import * as Message from '../message';
 import * as User from './user';
 import * as BUNGIE from './static';
+import * as Request from './request';
 
 var btoa = require('Base64').btoa;
 
@@ -31,7 +32,6 @@ export function getAuthentication(statusCallback) {
       Message.error("Error on getLocalAuthenticationData");
       throw new authenticationException(20, result ? result.error : " - ");
     }
-
     if (result.data && result.data.access_token && result.data.refresh_token) {
       Message.debug("Tokens exist, checking validity.")
       checkTokenValidity(result.data.access_token, result.data.refresh_token, statusCallback);
@@ -102,17 +102,10 @@ function requestTokens(url, body, statusCallback, tried) {
   var headers = new Headers();
   headers.append('Content-Type', 'application/x-www-form-urlencoded');
   headers.append('Authorization', 'Basic ' + btoa(BUNGIE.OAUTH_CLIENT_ID + ':' + BUNGIE.OAUTH_CLIENT_SECRET) );
-  var params = {
-      method: 'POST',
-      headers: headers,
-      body: body
-  }
 
   try {
-    fetch(url, params)
-    .then(function (resp) {
-      return resp.json();
-    }).then(function (json) {
+    Request.doPost(url, body, headers)
+    .then(function (json) {
       var authObject = {
         access_token: json.access_token,
         refresh_token: json.refresh_token

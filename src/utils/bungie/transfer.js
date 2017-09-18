@@ -1,50 +1,35 @@
 import React from 'react';
 
 import * as Message from '../message';
-import * as AuthStore from '../store/auth';
+import * as Request from './request';
 import * as BUNGIE from './static';
 
 var _ = require('underscore');
 
 
-export async function transferToVault(item, characterId, membershipType) {
+export async function transferFromToVault(item, characterId, membershipType, itemIsInVault) {
 
-  var body = {
+  var body = JSON.stringify({
     itemReferenceHash: item.itemHash,
     stackSize: 1, // For now only one
-    transferToVault: true,
+    transferToVault: !itemIsInVault,
     itemId: item.itemInstanceId,
     characterId: characterId,
     membershipType: membershipType
-  }
+  });
 
-  var token = await AuthStore.getAccessToken();
-  var headers = new Headers();
-
-  headers.append('X-API-Key', BUNGIE.API_KEY);
-  headers.append('Authorization', 'Bearer ' + token );
-  var params = {
-    method: 'POST',
-    headers: headers,
-    body: JSON.stringify(body)
-  }
-
-  var url = BUNGIE.HOST + 'Platform/Destiny2/Actions/Items/TransferItem/'; 
-
-
-
-  Message.debug("Body to POST");
-  Message.debug(JSON.stringify(body));
-  Message.debug(url);
+  var url = BUNGIE.TRANSFER_ITEM;
 
   try {
-    fetch(url, params)
-      .then(function (resp) {
-        Message.debug(JSON.stringify(resp));
+    return Request.doPost(url, body)
+      .then(function (json) {
+        Message.debug(JSON.stringify(json));
+        return json;
       })
       .catch((error) => { Message.error("Error on post!"); Message.error(error)});
   } catch (error) {
      Message.error("Error catched on POST !");
+     Message.error(error);
   }
 
 }

@@ -49,7 +49,7 @@ class ItemTypeRow extends React.Component {
   }
 
   itemOnPressCallback(item) {
-    this.props.itemOnPressCallback.call(this, item);
+    this.props.itemOnPressCallback.call(this, item, this.props.vault);
   }
 
   render() {

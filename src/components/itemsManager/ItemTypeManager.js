@@ -26,11 +26,12 @@ class ItemTypeManager extends React.Component {
     }
   }
 
-  itemOnPressCallback(item) {
-    console.log("Item has been pressed : " + item.displayProperties.name);
+  itemOnPressCallback(item, itemIsInVault) {
+    console.log("Item onPress Callback : " + item.displayProperties.name);
     this.setState({
       itemToTransfer: item,
-      modalVisible: true
+      modalVisible: true, 
+      itemIsInVault: itemIsInVault
     });
   }
 
@@ -59,7 +60,7 @@ class ItemTypeManager extends React.Component {
     var index;
     return(
       <ScrollView style={styles.itemTypeManagerContainer} >
-      <ItemTransferModal visible={this.state.modalVisible} item={this.state.itemToTransfer} characterId={currentGuardianId} membershipType={this.props.membershipType} closeModalCallback={this.closeModalCallback.bind(this)} />
+      <ItemTransferModal visible={this.state.modalVisible} item={this.state.itemToTransfer} itemIsInVault={this.state.itemIsInVault} characterId={currentGuardianId} membershipType={this.props.membershipType} closeModalCallback={this.closeModalCallback.bind(this)} />
       {
         guardianIds.map(function(guardianId, index) {
           return (

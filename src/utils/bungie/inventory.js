@@ -1,36 +1,20 @@
 import React from 'react';
 
 import * as Message from '../message';
-import * as AuthStore from '../store/auth';
+import * as Request from './request';
 import * as Store from '../store/manifest';
 import * as BUNGIE from './static';
 
 var _ = require('underscore');
 
-const APIKEY = '1a9bb6274ca14361a735c9aa188994f7';
-export const HOST = "https://www.bungie.net/Platform/";
-
 export async function getAllItemsAndCharacters(membershipType, destinyMembershipId, statusCallback) {
   try {
     statusCallback.call(this, {status: "IN_PROGRESS", message: "fetchItems"});
 
-    var token = await AuthStore.getAccessToken();
-    var headers = new Headers();
-
-    headers.append('X-API-Key', APIKEY);
-    headers.append('Authorization', 'Bearer ' + token );
-    var params = {
-      headers: headers,
-      cache: 'default',
-      mode: 'cors'
-    }
-
     var query_params = 'components=profileInventories,CharacterInventories,CharacterEquipment,Characters';
-    var url = HOST + 'Destiny2/' + membershipType + '/Profile/' + destinyMembershipId + '/?' + query_params; 
+    var url = BUNGIE.HOST + 'Platform/Destiny2/' + membershipType + '/Profile/' + destinyMembershipId + '/?' + query_params; 
 
-    var resp = await fetch(url, params);
-    var jsonResp = await resp.json();
-
+    var jsonResp = await Request.doGet(url);
     statusCallback.call(this, {status: "IN_PROGRESS", message: "matchItemsToDatabase"});
     
     var guardiansInventory = {};
