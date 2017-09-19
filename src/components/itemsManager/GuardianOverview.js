@@ -13,6 +13,8 @@ var styles = require('../../styles/itemsManager/GuardianOverview');
 
 import * as BUNGIE from '../../utils/bungie/static';
 
+import Item from './Item';
+
 class GuardianOverview extends React.Component {
   constructor(props) {
     super(props);
@@ -23,9 +25,13 @@ class GuardianOverview extends React.Component {
   }
 
   itemTypeIcon(type) {
-    var characterEquipment = this.props.itemsManager.guardiansInventory[this.props.itemsManager.currentGuardianId].characterEquipment;
-    var source = characterEquipment[type] ? BUNGIE.HOST + characterEquipment[type][0].displayProperties.icon : BUNGIE.FALLBACK_ICON;
-    return <TouchableOpacity onPress={() => this.onItemTypePress(type)} ><Image style={styles.guardianOverviewItemCategoryButton} source={{uri: source}} /></TouchableOpacity>
+    var characterEquipment;
+    try {
+      characterEquipment = this.props.itemsManager.guardiansInventory[this.props.itemsManager.currentGuardianId].characterEquipment[type][0];
+    } catch (e) {
+      characterEquipment = null;
+    }
+    return <Item itemOnPressCallback={() => this.onItemTypePress(type)} item={characterEquipment} styleRef='overview' />
   }
 
   render() {

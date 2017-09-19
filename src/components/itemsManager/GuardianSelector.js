@@ -11,6 +11,7 @@ import T from 'i18n-react';
 T.setTexts(require('../../i18n/en.json'));
 var styles = require('../../styles/itemsManager/GuardianSelector');
 
+import LoadingImage from '../common/LoadingImage'
 
 import * as BUNGIE from '../../utils/bungie/static';
 
@@ -79,7 +80,7 @@ class GuardianSelector extends React.Component {
                 this.state.guardianIds.map(function(guardianId, index) {
                   return ( 
                     <TouchableOpacity key={"emblemtouchablewrapper-"+guardianId} onPress={ () => {self.switchGuardian(guardianId)} } >
-                      <Image 
+                      <LoadingImage 
                         key={"emblemselector-"+guardianId}
                         resizeMode='cover'
                         style={{width: emblemWidth, height: emblemHeight, padding: 30}} 
@@ -95,9 +96,9 @@ class GuardianSelector extends React.Component {
         
 
         <TouchableOpacity onPress={ () => {this.setModalVisible(true)} } >
-            <Image style={{width: width, height: selectorHeight}} source={{uri: BUNGIE.HOST+currentGuardian.emblemBackgroundPath}} >
+            <LoadingImage style={{width: width, height: selectorHeight}} source={{uri: BUNGIE.HOST+currentGuardian.emblemBackgroundPath}} >
               <Text style={styles.guardianSelectorInfos}>{ BUNGIE.CLASS_TYPES[currentGuardian.classType] } -- { currentGuardian.light }</Text>
-            </Image>
+            </LoadingImage>
         </TouchableOpacity>
 
       </View>

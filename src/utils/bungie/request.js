@@ -10,16 +10,18 @@ const APIKEY = BUNGIE.API_KEY;
 
 var getHeaders = new Headers();
 getHeaders.append('X-API-Key', APIKEY);
+getHeaders.append('Cache-Control', 'no-cache');
 
 var postHeaders = new Headers();
 postHeaders.append('X-API-Key', APIKEY);
 
-export async function doGet(url) {
-  var token = await AuthStore.getAccessToken();
-  getHeaders.append('Authorization', 'Bearer ' + token );
+export async function doGet(url, useToken=true) {
+  if (useToken) {
+    var token = await AuthStore.getAccessToken();
+    getHeaders.append('Authorization', 'Bearer ' + token );
+  }
   var getParams = {
     headers: getHeaders,
-    cache: 'default', 
     mode: 'cors',
     method: 'GET'
   }
@@ -49,12 +51,16 @@ async function doRequest(url, params, nbtry=0) {
     if (resp.status >= 200 && resp.status < 300 && resp.ok === true) {
       return resp.json();
     } else {
+      if (resp.status === 401) {
+        throw new bungieRequestException(42, "Bungie returned unnauthoried when trying to access ressource.")
+      }
       Message.error("(" + nbtry + "/" + MAXTRY + ") Something went wrong while fetching " + url);
+      Message.error(JSON.stringify(resp));
       if (nbtry >= MAXTRY) {
-        throw new bungieRequestException(1, "Maximum tries in error reached.")
+        throw new bungieRequestException(41, "Maximum tries in error reached.")
       } else {
         Message.debug("retrying to do request")
-        return doGet(url, nbtry+1);
+        return doRequest(url, params, nbtry+1);
       }
     }
   })

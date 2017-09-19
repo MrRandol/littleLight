@@ -2,7 +2,7 @@ import { StyleSheet } from 'react-native';
 
 module.exports = StyleSheet.create({
   guardianSelectorContainer: {
-    backgroundColor: '#0000FF',
+    backgroundColor: '#FFFFFF',
     justifyContent: 'center',
     alignItems: 'center',
     flexDirection: 'row'

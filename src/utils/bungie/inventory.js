@@ -23,7 +23,7 @@ export async function getAllItemsAndCharacters(membershipType, destinyMembership
       guardiansInventory[guardianId].characterInventories = await matchItemsToManifest(jsonResp.Response.characterInventories.data[guardianId].items);
       guardiansInventory[guardianId].characterEquipment = await matchItemsToManifest(jsonResp.Response.characterEquipment.data[guardianId].items);
     }
-    var profileInventoryNotGrouped = await matchItemsToManifest(jsonResp.Response.profileInventory.data.items, groupByLocation);
+    var profileInventoryNotGrouped = await matchItemsToManifest(jsonResp.Response.profileInventory.data.items, groupByCurrentBucket);
     var profileInventory = {};
     var profileInventoryKeys = Object.keys(profileInventoryNotGrouped);
     for (var i = profileInventoryKeys.length - 1; i >= 0; i--) {
@@ -45,7 +45,7 @@ export async function getAllItemsAndCharacters(membershipType, destinyMembership
   }
 }
 
-async function matchItemsToManifest(accountItems, groupCallback = groupByBucketType) {
+async function matchItemsToManifest(accountItems, groupCallback = groupByCurrentBucket) {
   try {
     var hashMap = {};
     var output = {};
@@ -73,12 +73,15 @@ async function matchItemsToManifest(accountItems, groupCallback = groupByBucketT
   }
 }
 
-function groupByBucketType(item) {
-  return BUNGIE.BUCKET_TYPES[item.inventory.bucketTypeHash];
+function groupByCurrentBucket(item) {
+  return BUNGIE.BUCKET_TYPES[item.bucketHash];
 }
 
-function groupByLocation(item) {
-  return BUNGIE.LOCATIONS[item.location];
+function groupByBucketType(item) {
+  if (!item.inventory || ! item.inventory.bucketTypeHash) {
+    return '';
+  }
+  return BUNGIE.BUCKET_TYPES[item.inventory.bucketTypeHash];
 }
 
 // Exception builder

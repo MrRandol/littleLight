@@ -7,6 +7,7 @@ import { unzip } from 'react-native-zip-archive'
 
 import * as Message from '../message';
 import * as Store from '../store/manifest';
+import * as Request from './request';
 import * as BUNGIE from './static';
 
 export function checkVersionAndUpdate(statusCallback) {
@@ -29,11 +30,9 @@ export function checkVersionAndUpdate(statusCallback) {
 function checkManifestVersion(currentVersion, statusCallback) {
   try {
     statusCallback.call(this, {status: "IN_PROGRESS", message: "manifestCheckVersion"});
-    return fetch(BUNGIE.MANIFEST, BUNGIE.defaultRequestParams)
-    .then( function (resp) {
-      return resp.json();
-    })
+    return Request.doGet(BUNGIE.MANIFEST, false)
     .then(function(manifest) {
+      // Handle request via request.js
       var version =  manifest.Response.version;
       Message.debug("Bungie.net manifest version : " + version);
       Message.debug("Current manifest version    : " + currentVersion.data);

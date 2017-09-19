@@ -2,7 +2,7 @@
    REACT IMPORTS
 ******************/
 import React from 'react';
-import { Modal, View, Text, Image, Button, Dimensions } from 'react-native';
+import { Modal, View, ScrollView, Text, Image, Button, Dimensions, TouchableOpacity, TouchableWithoutFeedback } from 'react-native';
 
 /*****************
   CUSTOM IMPORTS
@@ -11,9 +11,10 @@ import T from 'i18n-react';
 T.setTexts(require('../../i18n/en.json'));
 var styles = require('../../styles/itemsManager/ItemTransferModal');
 
+import LoadingImage from '../common/LoadingImage'
+
 import * as BUNGIE from '../../utils/bungie/static';
 import * as transfer from '../../utils/bungie/transfer';
-import * as Message from '../../utils/message';
 
 class ItemTransferModal extends React.Component {
   constructor(props) {
@@ -21,21 +22,15 @@ class ItemTransferModal extends React.Component {
   }
 
   closeModal() {
+    console.log("close !");
     this.props.closeModalCallback.call(this, false);
   }
 
-  transferItem() {
-    var self = this;
-    transfer.transferFromToVault(this.props.item, this.props.characterId, this.props.membershipType, this.props.itemIsInVault)
-    .then(function (resp) {
-      if (resp.ErrorCode === 1) {
-        self.props.closeModalCallback.call(self, false);
-      } else {
-        Message.error("Error on item transfer.");
-        Message.error(resp.ErrorStatus);
-        Message.error(resp.Message);
-      }
-    });
+  transferItem(sourceGuardian, destinationGuardian) {
+    console.log("Source Guardian : " + sourceGuardian);
+    console.log("Dest Guardian : " + destinationGuardian);
+    this.props.transferItemCallback.call(this, this.props.item, this.props.itemIsInVault, destinationGuardian, sourceGuardian);
+    this.closeModal();
   }
 
   render() {
@@ -45,28 +40,89 @@ class ItemTransferModal extends React.Component {
 
     var title = this.props.itemIsInVault ? "Transfer to current guardian" : "Transfer to vault";
 
+    var guardians = this.props.guardians;
+    var currentGuardianId = this.props.currentGuardianId;
+    var itemAssociatedGuardian = this.props.itemAssociatedGuardian;
+
+    var self = this;
+
     return (
       <Modal
         animationType="slide"
         transparent={true}
         visible={this.props.visible}
-        onRequestClose={function(){}}
+        onRequestClose={() => this.closeModal()}
       >
-        <View style={styles.itemTransferModal} >
-          <View style={[styles.itemTransferModalContent, {width: width, height: height/2}]} >
+        <TouchableOpacity onPressOut={() => this.closeModal()} style={[{width: width, height: height, backgroundColor: 'rgba(0, 0, 0, 0.8)'}]}>
+        <View 
+          style={styles.itemTransferModal}
+        >
+        <TouchableWithoutFeedback style={styles.itemTransferModal}>
+        {this.props.item && (
+            <View style={[styles.content, {width: width, height: height/1.6}]} >
 
-            <Image 
-              resizeMode='cover'
-              style={{width: 80, height: 80, padding: 30}} 
-              source={{uri: source}} />
+              <View style={styles.titleContainer} >
+                <Text style={styles.title} > { this.props.item.displayProperties.name } </Text>
+                <Text style={styles.description} > { this.props.item.displayProperties.description } </Text>
+              </View>
 
-            <Button style={styles.guardianSelectorModalButton} onPress={ () => {this.transferItem()} } title={title} />
-            <Button style={styles.guardianSelectorModalButton} onPress={ () => {this.closeModal()} } title="CANCEL" />
-          </View>
+              <View style={styles.itemContainer} >
+                <View style={styles.itemContainerLeft} >
+                  <LoadingImage 
+                    resizeMode='cover'
+                    style={styles.itemIcon} 
+                    source={{uri: source}} 
+                  />
+                  <Text style={styles.iconDescription} > { "Legendary bfg" }</Text>
+                </View>
+                <View style={styles.itemContainerRight} >
+                  <Text style={styles.itemStat} > { "Power level : " + "xxx" }</Text>
+                  <Text style={styles.itemStat} > { "Damage type : " + "xxx" }</Text>
+                  <Text style={styles.itemStat} > { "Required level : " + "xxx" }</Text>
+                </View>
+              </View>
+
+              <View style={styles.buttonsContainer} >
+              {
+                Object.keys(guardians).map(function(guardianId) { 
+                  if (guardianId !== itemAssociatedGuardian) {
+                    return (
+                      <TouchableOpacity onPress={() => self.transferItem(itemAssociatedGuardian, guardianId)} key={"touchStoreTo-"+guardianId} >
+                        <LoadingImage
+                          style={styles.transferButton}
+                          key={"storeTo-"+guardianId}
+                          source={{uri: BUNGIE.HOST+guardians[guardianId].emblemPath}} >
+                          <Text style={styles.transferButtonText}> STORE </Text>
+                        </LoadingImage>
+                      </TouchableOpacity>
+                    )
+                  }
+                })
+              }
+
+              {
+                !this.props.itemIsInVault && 
+                  <TouchableOpacity activeOpacity={1} onPress={() => self.transferItem(null, itemAssociatedGuardian)} >
+                  <LoadingImage
+                    style={styles.transferButton}
+                    source={{uri : BUNGIE.VAULT_ICON}} >
+                    <Text style={styles.transferButtonText}> STORE </Text>
+                  </LoadingImage>
+                </TouchableOpacity>
+              }
+              </View>
+
+              <Button style={styles.cancelButton} color='#242424' onPress={ () => {this.closeModal()} } title="CANCEL" />
+            </View>
+        )}
+        </TouchableWithoutFeedback>
         </View>
+        </TouchableOpacity>
       </Modal>
     );
   } 
 }
+
+//<Button style={styles.guardianSelectorModalButton} onPress={ () => {this.transferItem()} } title={title} />
 
 export default ItemTransferModal;

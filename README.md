@@ -11,3 +11,6 @@ TODO : populate with a lot of things :D
 
 30 : An error occured while matching your inventory to the stored Bungie database.
 31 : An error occured while retreiving your inventories and matching them to Bungie DB.
+
+41 : Maximum tries reached when attempting request
+42 : Request returned Unauthorized

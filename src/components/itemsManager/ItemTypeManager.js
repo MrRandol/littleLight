@@ -11,6 +11,8 @@ import T from 'i18n-react';
 T.setTexts(require('../../i18n/en.json'));
 var styles = require('../../styles/itemsManager/ItemTypeManager');
 
+var _ = require('underscore');
+
 import * as BUNGIE from '../../utils/bungie/static';
 import * as Message from '../../utils/message';
 
@@ -26,12 +28,13 @@ class ItemTypeManager extends React.Component {
     }
   }
 
-  itemOnPressCallback(item, itemIsInVault) {
+  itemOnPressCallback(item, itemIsInVault, guardianId) {
     console.log("Item onPress Callback : " + item.displayProperties.name);
     this.setState({
       itemToTransfer: item,
       modalVisible: true, 
-      itemIsInVault: itemIsInVault
+      itemIsInVault: itemIsInVault,
+      itemAssociatedGuardian: guardianId
     });
   }
 
@@ -54,13 +57,22 @@ class ItemTypeManager extends React.Component {
 
     var guardiansItemsManager = this.props.itemsManager.guardiansInventory;
     var profileItemsManager = this.props.itemsManager.profileInventory;
-    var itemType = this.props.itemType;
-    var guardians = this.props.guardians;
+    var itemType = this.props.itemsManager.currentView.additionalParams.itemType;
+    var guardians = this.props.user.guardians;
     var itemOnPressCallback = this.itemOnPressCallback.bind(this);
     var index;
     return(
       <ScrollView style={styles.itemTypeManagerContainer} >
-      <ItemTransferModal visible={this.state.modalVisible} item={this.state.itemToTransfer} itemIsInVault={this.state.itemIsInVault} characterId={currentGuardianId} membershipType={this.props.membershipType} closeModalCallback={this.closeModalCallback.bind(this)} />
+      <ItemTransferModal 
+        visible={this.state.modalVisible} 
+        item={this.state.itemToTransfer}
+        itemIsInVault={this.state.itemIsInVault}
+        itemAssociatedGuardian={this.state.itemAssociatedGuardian}
+        currentGuardianId={currentGuardianId}
+        guardians={guardians}
+        transferItemCallback={this.props.transferItemCallback.bind(this)}
+        closeModalCallback={this.closeModalCallback.bind(this)}
+      />
       {
         guardianIds.map(function(guardianId, index) {
           return (
@@ -80,11 +92,11 @@ class ItemTypeManager extends React.Component {
 
         <ItemTypeRow 
           vault={true}
-          odd={index%2 === 0}
+          odd={guardianIds.length%2 === 0}
           key="itemtyperow-vault"
           itemType={itemType}
           itemOnPressCallback={itemOnPressCallback}
-          vaultInventory={profileItemsManager.vault[itemType] || []}
+          vaultInventory={profileItemsManager.general[itemType] || []}
         />
       </ScrollView>
     );
