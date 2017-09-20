@@ -86,8 +86,7 @@ class SplashScreen extends React.Component {
   doFetchAllItemsAndGuardians() {
     try {
       Bungie.getAllItemsAndCharacters(
-        this.props.user.destinyMemberships[0].membershipType, 
-        this.props.user.destinyMemberships[0].membershipId, 
+        this.props.user.destinyMemberships[0], 
         this.fetchItemsAndGuardiansStatusCallback.bind(this)
       )
     } catch (error) {

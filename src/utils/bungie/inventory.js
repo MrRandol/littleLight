@@ -7,11 +7,14 @@ import * as BUNGIE from './static';
 
 var _ = require('underscore');
 
-export async function getAllItemsAndCharacters(membershipType, destinyMembershipId, statusCallback) {
+export async function getAllItemsAndCharacters(membership, statusCallback) {
   try {
+
+    var membershipType = membership.membershipType;
+    var destinyMembershipId = membership.membershipId;
     statusCallback.call(this, {status: "IN_PROGRESS", message: "fetchItems"});
 
-    var query_params = 'components=profileInventories,CharacterInventories,CharacterEquipment,Characters';
+    var query_params = 'components=profileInventories,CharacterInventories,CharacterEquipment,Characters,ItemInstances';
     var url = BUNGIE.HOST + 'Platform/Destiny2/' + membershipType + '/Profile/' + destinyMembershipId + '/?' + query_params; 
 
     var jsonResp = await Request.doGet(url);
@@ -20,14 +23,23 @@ export async function getAllItemsAndCharacters(membershipType, destinyMembership
     var guardiansInventory = {};
     for(var guardianId in jsonResp.Response.characters.data) {
       guardiansInventory[guardianId] = {};
-      guardiansInventory[guardianId].characterInventories = await matchItemsToManifest(jsonResp.Response.characterInventories.data[guardianId].items);
-      guardiansInventory[guardianId].characterEquipment = await matchItemsToManifest(jsonResp.Response.characterEquipment.data[guardianId].items);
+      guardiansInventory[guardianId].characterInventories = await matchItemsToManifest(
+        jsonResp.Response.characterInventories.data[guardianId].items, 
+        jsonResp.Response.itemComponents.instances.data
+      );
+      guardiansInventory[guardianId].characterEquipment = await matchItemsToManifest(
+        jsonResp.Response.characterEquipment.data[guardianId].items, 
+        jsonResp.Response.itemComponents.instances.data
+      );
     }
-    var profileInventoryNotGrouped = await matchItemsToManifest(jsonResp.Response.profileInventory.data.items, groupByCurrentBucket);
+    var profileInventoryNotGrouped = await matchItemsToManifest(jsonResp.Response.profileInventory.data.items, jsonResp.Response.itemComponents.instances.data);
     var profileInventory = {};
     var profileInventoryKeys = Object.keys(profileInventoryNotGrouped);
     for (var i = profileInventoryKeys.length - 1; i >= 0; i--) {
-     profileInventory[profileInventoryKeys[i]] = _.groupBy(profileInventoryNotGrouped[profileInventoryKeys[i]], groupByBucketType);
+      profileInventory[profileInventoryKeys[i]] = _.groupBy(
+        profileInventoryNotGrouped[profileInventoryKeys[i]],
+        groupByBucketType
+      );
     }
     
     statusCallback.call(this, {
@@ -45,7 +57,7 @@ export async function getAllItemsAndCharacters(membershipType, destinyMembership
   }
 }
 
-async function matchItemsToManifest(accountItems, groupCallback = groupByCurrentBucket) {
+async function matchItemsToManifest(accountItems, instanceItems, groupCallback = groupByCurrentBucket) {
   try {
     var hashMap = {};
     var output = {};
@@ -58,10 +70,16 @@ async function matchItemsToManifest(accountItems, groupCallback = groupByCurrent
     }
       
     var itemsCollection = [];
-    var item;
+    var itemManifest;
+    var itemInventory;
     for (var i = manifestItems.data.length - 1; i >= 0; i--) {
-      item = JSON.parse(manifestItems.data[i][1]);
-      output[item.hash] = Object.assign(hashMap[manifestItems.data[i][0]], item);
+      itemManifest = JSON.parse(manifestItems.data[i][1]);
+      itemInventory = hashMap[manifestItems.data[i][0]];
+      if (itemInventory.itemInstanceId && instanceItems[itemInventory.itemInstanceId]) {
+        output[itemManifest.hash] = Object.assign({}, itemInventory, itemManifest, instanceItems[itemInventory.itemInstanceId]);
+      } else {
+        output[itemManifest.hash] = Object.assign({}, itemInventory, itemManifest);
+      }
     }
 
     return _.groupBy(output, groupCallback);
@@ -78,7 +96,7 @@ function groupByCurrentBucket(item) {
 }
 
 function groupByBucketType(item) {
-  if (!item.inventory || ! item.inventory.bucketTypeHash) {
+  if (!item.inventory || !item.inventory.bucketTypeHash) {
     return '';
   }
   return BUNGIE.BUCKET_TYPES[item.inventory.bucketTypeHash];

@@ -35,8 +35,28 @@ to change very often, I took the choice to define
 them locally as a copy.
 
 If needed, we can still fetch them at load.
-Of course init time will be longer.
+Of course init time will be longer and 
+storage will be ... sollicitated.
 ************************************************/
+export const CLASS_TYPES = {
+  0: 'titan',
+  1: 'hunter',
+  2: 'warlock'
+}
+
+export const GENDER_TYPES = {
+  0: 'male',
+  1: 'female',
+  2: 'unknown'
+}
+
+export const RACE_TYPES = {
+  0: 'human',
+  1: 'awoken',
+  2: 'exo',
+  3: 'unknown'
+}
+
 export const ITEMTYPES = {
   0: 'None',
   1: 'Currency',
@@ -65,10 +85,23 @@ export const LOCATIONS = {
   4: 'postmaster'
 }
 
-export const CLASS_TYPES = {
-  0: 'titan',
-  1: 'hunter',
-  2: 'warlock'
+export const DAMAGE_TYPES = {
+  0: 'None',
+  1: 'Kinetic',
+  2: 'Arc',
+  3: 'Thermal',
+  4: 'Void',
+  5: 'Raid'
+}
+
+export const TIER_TYPES = {
+  0: 'Unknown',
+  1: 'Currency',
+  2: 'Basic',
+  3: 'Common',
+  4: 'Rare',
+  5: 'Superior',
+  6: 'Exotic'
 }
 
 export const BUCKET_TYPES = {

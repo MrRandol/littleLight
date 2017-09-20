@@ -2,7 +2,7 @@
    REACT IMPORTS
 ******************/
 import React from 'react';
-import { View, Image, Text, Modal, TouchableOpacity, Dimensions, Button } from 'react-native';
+import { View, Image, Text, Modal, TouchableOpacity, TouchableWithoutFeedback, Dimensions, Button } from 'react-native';
 
 /*****************
   CUSTOM IMPORTS
@@ -43,7 +43,6 @@ class GuardianSelector extends React.Component {
   }
 
   setModalVisible(visible) {
-    console.log("setModalVisible called with param " + visible);
     this.setState({modalVisible: visible});
   }
 
@@ -71,33 +70,62 @@ class GuardianSelector extends React.Component {
           animationType="slide"
           transparent={true}
           visible={this.state.modalVisible}
-          onRequestClose={function(){}}
+          onRequestClose={() => {self.setModalVisible(false).bind(self)}}
         >
-          <View style={styles.guardianSelectorModal} >
-            <View style={[styles.guardianSelectorModalContent, {width: width, height: 3*emblemHeight+250}]} >
-              <Text style={styles.guardianSelectorModalTitle} > Select Guardian : </Text>
+
+        <TouchableOpacity onPressOut={() => {self.setModalVisible(false).bind(self)}} style={[{width: width, height: height, backgroundColor: 'rgba(0, 0, 0, 0.8)'}]}>
+        <View 
+          style={styles.guardianSelectorModal}
+        >
+        <TouchableWithoutFeedback style={styles.guardianSelectorModal}>
+
+          <View style={styles.guardianSelectorModalContainer} >
+            <View style={[styles.guardianSelectorModalContent, {width: width, height: 3*emblemHeight+200}]} >
+              <View style={styles.guardianButtonsContainer} >
               {
                 this.state.guardianIds.map(function(guardianId, index) {
+                  var guardian = guardians[guardianId];
                   return ( 
                     <TouchableOpacity key={"emblemtouchablewrapper-"+guardianId} onPress={ () => {self.switchGuardian(guardianId)} } >
                       <LoadingImage 
                         key={"emblemselector-"+guardianId}
                         resizeMode='cover'
-                        style={{width: emblemWidth, height: emblemHeight, padding: 30}} 
-                        source={{uri: BUNGIE.HOST+guardians[guardianId].emblemBackgroundPath}} />
+                        style={[styles.guardianButton, {width: emblemWidth, height: emblemHeight}]} 
+                        source={{uri: BUNGIE.HOST+guardian.emblemBackgroundPath}} >
+                        <View style={styles.leftPadding} />
+                        <View style={styles.guardianButtonMainInfos} >
+                          <Text style={styles.guardianClass}>{ BUNGIE.CLASS_TYPES[guardian.classType] }</Text>
+                          <Text style={styles.guardianRaceGender}>{ BUNGIE.RACE_TYPES[guardian.raceType] + " " + BUNGIE.GENDER_TYPES[guardian.genderType] }</Text>
+                        </View>
+                        <View style={styles.guardianButtonPowerInfos} >
+                          <Text style={styles.guardianButtonPower}>{ guardian.light }</Text>
+                        </View>
+                      </LoadingImage>
                     </TouchableOpacity>
                   )
                 })
               }
-              <Button style={styles.guardianSelectorModalButton} onPress={ () => {this.setModalVisible(false)} } title="CANCEL" />
+              </View>
+              <View style={styles.cancelButtonContainer} >
+                <Button color='#242424' onPress={ () => {self.setModalVisible(false)} } title="CANCEL" />
+              </View>
             </View>
           </View>
+        </TouchableWithoutFeedback>
+        </View>
+        </TouchableOpacity>
         </Modal>
-        
 
         <TouchableOpacity onPress={ () => {this.setModalVisible(true)} } >
-            <LoadingImage style={{width: width, height: selectorHeight}} source={{uri: BUNGIE.HOST+currentGuardian.emblemBackgroundPath}} >
-              <Text style={styles.guardianSelectorInfos}>{ BUNGIE.CLASS_TYPES[currentGuardian.classType] } -- { currentGuardian.light }</Text>
+            <LoadingImage style={[styles.guardianButton, {width: width, height: selectorHeight}]} source={{uri: BUNGIE.HOST+currentGuardian.emblemBackgroundPath}} >
+              <View style={styles.leftPadding} />
+              <View style={styles.guardianButtonMainInfos} >
+                <Text style={styles.guardianClass}>{ BUNGIE.CLASS_TYPES[currentGuardian.classType] }</Text>
+                <Text style={styles.guardianRaceGender}>{ BUNGIE.RACE_TYPES[currentGuardian.raceType] + " " + BUNGIE.GENDER_TYPES[currentGuardian.genderType] }</Text>
+              </View>
+              <View style={styles.guardianButtonPowerInfos} >
+                <Text style={styles.guardianButtonPower}>{ currentGuardian.light }</Text>
+              </View>
             </LoadingImage>
         </TouchableOpacity>
 

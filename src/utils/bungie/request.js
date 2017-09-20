@@ -10,7 +10,6 @@ const APIKEY = BUNGIE.API_KEY;
 
 var getHeaders = new Headers();
 getHeaders.append('X-API-Key', APIKEY);
-getHeaders.append('Cache-Control', 'no-cache');
 
 var postHeaders = new Headers();
 postHeaders.append('X-API-Key', APIKEY);
@@ -23,7 +22,8 @@ export async function doGet(url, useToken=true) {
   var getParams = {
     headers: getHeaders,
     mode: 'cors',
-    method: 'GET'
+    method: 'GET',
+    cache: 'no-store'
   }
   return doRequest(url, getParams);
 }

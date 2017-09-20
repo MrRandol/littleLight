@@ -20,7 +20,7 @@ import T from 'i18n-react';
 T.setTexts(require('../../i18n/en.json'));
 var styles = require('../../styles/itemsManager/ItemsManager');
 
-import * as Message from '../../utils/message';
+import * as Inventory from '../../utils/bungie/inventory';
 import * as Transfer from '../../utils/bungie/transfer';
 
 import GuardianSelector from './GuardianSelector';
@@ -45,7 +45,6 @@ class ItemsManager extends React.Component {
           self.doTransfer(item, true, destinationGuardian)
           .then(function(status) {
             if (status.status === "SUCCESS") { 
-              Message.debug("Transfer OK !");
             } else {
               throw("TRANSFER ERROR (step 2 on 2 : vault to destination)")
             }
@@ -79,13 +78,29 @@ class ItemsManager extends React.Component {
     });
   }
 
+  refreshItems() {
+    var self = this;
+    try {
+      return Inventory.getAllItemsAndCharacters(self.props.user.user.destinyMemberships[0], function(status) {
+        if(status.status === 'SUCCESS') {
+          self.props.setGuardians(status.data.guardians);
+          self.props.setItems(status.data);
+          return status;
+        }
+      });
+    } catch (error) {
+      console.log("Error on refresh ! ");
+      console.log(error);
+    }
+  }
+
   render() {
 
     var contentToRender;
     switch(this.props.itemsManager.currentView.name) {
 
       case 'ItemTypeManager':
-        contentToRender = <ItemTypeManager style={{ flex: 9 }} user={this.props.user} itemsManager={this.props.itemsManager} transferItemCallback={this.transferItem.bind(this)} />
+        contentToRender = <ItemTypeManager style={{ flex: 9 }} user={this.props.user} itemsManager={this.props.itemsManager} refreshItemsCallback={this.refreshItems.bind(this)} transferItemCallback={this.transferItem.bind(this)} />
         break;
 
       case 'GuardianOverview':

@@ -42,8 +42,8 @@ export default function inventory(state = newState, action) {
 
     case SET_ITEMS:
       newState = _.clone(state);
-      newState.profileInventory = action.items.profileInventory;
-      newState.guardiansInventory = action.items.guardiansInventory;
+      newState.profileInventory = _.extend({}, action.items.profileInventory);
+      newState.guardiansInventory = _.extend({}, action.items.guardiansInventory);
       return newState
       
     case SWITCH_GUARDIAN:

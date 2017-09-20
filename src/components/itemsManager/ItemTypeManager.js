@@ -2,7 +2,7 @@
    REACT IMPORTS
 ******************/
 import React from 'react';
-import { ScrollView } from 'react-native';
+import { ScrollView, RefreshControl } from 'react-native';
 
 /*****************
   CUSTOM IMPORTS
@@ -24,7 +24,8 @@ class ItemTypeManager extends React.Component {
     super(props);
     this.state = {
       itemToTransfer: null,
-      modalVisible: false
+      modalVisible: false,
+      refreshing: false,
     }
   }
 
@@ -41,6 +42,16 @@ class ItemTypeManager extends React.Component {
   closeModalCallback() {
     this.setState({modalVisible: false})
   }
+
+  _onRefresh() {
+    var self = this;
+    self.setState({refreshing: true});
+    self.props.refreshItemsCallback().then(function(status) {
+      self.setState({refreshing: false});
+    });
+  }
+
+  
 
   render() {
     var currentGuardianId = this.props.itemsManager.currentGuardianId;
@@ -62,7 +73,14 @@ class ItemTypeManager extends React.Component {
     var itemOnPressCallback = this.itemOnPressCallback.bind(this);
     var index;
     return(
-      <ScrollView style={styles.itemTypeManagerContainer} >
+      <ScrollView style={styles.itemTypeManagerContainer} 
+        refreshControl = {<RefreshControl
+          refreshing={this.state.refreshing}
+          onRefresh={this._onRefresh.bind(this)}
+          title="Reload items"
+        />}
+      >
+
       <ItemTransferModal 
         visible={this.state.modalVisible} 
         item={this.state.itemToTransfer}

@@ -73,12 +73,13 @@ class ItemTransferModal extends React.Component {
                     style={styles.itemIcon} 
                     source={{uri: source}} 
                   />
-                  <Text style={styles.iconDescription} > { "Legendary bfg" }</Text>
+                  <Text style={styles.iconDescription} > { this.props.item.itemTypeAndTierDisplayName }</Text>
                 </View>
                 <View style={styles.itemContainerRight} >
-                  <Text style={styles.itemStat} > { "Power level : " + "xxx" }</Text>
-                  <Text style={styles.itemStat} > { "Damage type : " + "xxx" }</Text>
-                  <Text style={styles.itemStat} > { "Required level : " + "xxx" }</Text>
+                  <Text style={styles.itemStat} > { "Power level : " + this.props.item.primaryStat.value }</Text>
+                  { this.props.item.damageTypeHashes && 
+                    <Text style={styles.itemStat} > { "Damage type : " + BUNGIE.DAMAGE_TYPES[this.props.item.damageTypes[0]] }</Text>
+                  }
                 </View>
               </View>
 
