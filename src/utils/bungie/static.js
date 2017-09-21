@@ -104,6 +104,18 @@ export const TIER_TYPES = {
   6: 'Exotic'
 }
 
+export const FALLBACK_TIER_COLORS = '#484848';
+
+export const TIER_COLORS = {
+  0: '#484848',
+  1: '#484848',
+  2: 'rgba(195, 188, 180, 1)',
+  3: 'rgba(54, 111, 66, 1)',
+  4: 'rgba(80, 118, 163, 1)',
+  5: '#522F65',
+  6: 'rgba(206, 174, 51, 1)'
+}
+
 export const BUCKET_TYPES = {
   2422292810: '',
   2465295065: 'energyWeapons',
@@ -145,3 +157,26 @@ export const BUCKET_TYPES = {
   1801258597: '',
   2025709351: 'vehicle',
 }
+
+// For display purpose, ordered bucket types for swipe
+export const ORDERER_BUCKET_TYPES = [
+  'kineticWeapons',
+  'energyWeapons',
+  'powerWeapons',
+  'ghost',
+  'helmet',
+  'gauntlets',
+  'chestArmor',
+  'legArmor',
+  'classArmor',
+/*
+  1269569095: 'auras',
+  4292445962: 'clanBanners',
+  2973005342: 'shaders',
+  18606351: 'shaders',
+  3054419239: 'emotes',
+  4274335291: 'emblems',
+  284967655: 'ships',
+  375726501: 'engrams',
+  2025709351: 'vehicle',*/
+]

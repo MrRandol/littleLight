@@ -20,6 +20,7 @@ import T from 'i18n-react';
 T.setTexts(require('../../i18n/en.json'));
 var styles = require('../../styles/itemsManager/ItemsManager');
 
+import * as BUNGIE from '../../utils/bungie/static';
 import * as Inventory from '../../utils/bungie/inventory';
 import * as Transfer from '../../utils/bungie/transfer';
 
@@ -27,9 +28,23 @@ import GuardianSelector from './GuardianSelector';
 import GuardianOverview from './GuardianOverview';
 import ItemTypeManager from './ItemTypeManager';
 
+var _ = require('underscore');
+
 class ItemsManager extends React.Component {
   constructor(props) {
     super(props);
+  }
+
+  swipeToView() {
+    console.log("Called swipe !")
+    var currentView = this.props.itemsManager.currentView.additionalParams.itemType;
+
+
+    var index = (_.indexOf(BUNGIE.ORDERER_BUCKET_TYPES, currentView) + 1) %(BUNGIE.ORDERER_BUCKET_TYPES.length);
+
+        console.log("current : " + JSON.stringify(currentView) + "(" + _.indexOf(BUNGIE.ORDERER_BUCKET_TYPES, currentView) + "/" + BUNGIE.ORDERER_BUCKET_TYPES.length +  ")");
+        console.log("new : " + BUNGIE.ORDERER_BUCKET_TYPES[index] + "(" + index + ")")
+    this.props.switchView('ItemTypeManager', {itemType: BUNGIE.ORDERER_BUCKET_TYPES[index]})
   }
 
   switchToView(viewName, additionalParams) {
@@ -100,7 +115,7 @@ class ItemsManager extends React.Component {
     switch(this.props.itemsManager.currentView.name) {
 
       case 'ItemTypeManager':
-        contentToRender = <ItemTypeManager style={{ flex: 9 }} user={this.props.user} itemsManager={this.props.itemsManager} refreshItemsCallback={this.refreshItems.bind(this)} transferItemCallback={this.transferItem.bind(this)} />
+        contentToRender = <ItemTypeManager style={{ flex: 9 }} swipeToView={this.swipeToView.bind(this)} user={this.props.user} itemsManager={this.props.itemsManager} refreshItemsCallback={this.refreshItems.bind(this)} transferItemCallback={this.transferItem.bind(this)} />
         break;
 
       case 'GuardianOverview':

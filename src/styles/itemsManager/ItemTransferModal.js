@@ -13,7 +13,6 @@ module.exports = StyleSheet.create({
   },
   titleContainer: {
     flex: 3,
-    backgroundColor: '#522F65',
     alignItems: 'stretch',
     justifyContent: 'center',
   },

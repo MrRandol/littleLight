@@ -2,7 +2,7 @@
    REACT IMPORTS
 ******************/
 import React from 'react';
-import { ScrollView, RefreshControl } from 'react-native';
+import { View, ScrollView, Text, RefreshControl, TouchableOpacity } from 'react-native';
 
 /*****************
   CUSTOM IMPORTS
@@ -17,6 +17,7 @@ import * as BUNGIE from '../../utils/bungie/static';
 import * as Message from '../../utils/message';
 
 import ItemTypeRow from './ItemTypeRow';
+import LoadingImage from '../common/LoadingImage';
 import ItemTransferModal from './ItemTransferModal';
 
 class ItemTypeManager extends React.Component {
@@ -80,6 +81,13 @@ class ItemTypeManager extends React.Component {
           title="Reload items"
         />}
       >
+
+      <View style={styles.titleContainer} >
+        <TouchableOpacity onPress={this.props.swipeToView} >
+          <LoadingImage style={{width: 50, height: 50}} source={{uri: BUNGIE.VAULT_ICON}} />
+        </TouchableOpacity>
+        <Text style={styles.title} >{ itemType }</Text>
+      </View>
 
       <ItemTransferModal 
         visible={this.state.modalVisible} 

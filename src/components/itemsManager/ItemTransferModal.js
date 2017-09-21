@@ -46,6 +46,8 @@ class ItemTransferModal extends React.Component {
 
     var self = this;
 
+    var tierColor = this.props.item && this.props.item.inventory ? BUNGIE.TIER_COLORS[this.props.item.inventory.tierType] : BUNGIE.FALLBACK_TIER_COLORS;
+
     return (
       <Modal
         animationType="slide"
@@ -61,7 +63,7 @@ class ItemTransferModal extends React.Component {
         {this.props.item && (
             <View style={[styles.content, {width: width, height: height/1.6}]} >
 
-              <View style={styles.titleContainer} >
+              <View style={[styles.titleContainer, { backgroundColor: tierColor }]} >
                 <Text style={styles.title} > { this.props.item.displayProperties.name } </Text>
                 <Text style={styles.description} > { this.props.item.displayProperties.description } </Text>
               </View>
