@@ -59,6 +59,9 @@ export default function inventory(state = newState, action) {
 
     case TRANSFER_TO_VAULT:
       newState = _.clone(state);
+      if (!newState.profileInventory.general) {
+        newState.profileInventory.general = {};
+      }
       var itemType = BUNGIE.BUCKET_TYPES[action.item.inventory.bucketTypeHash];
       var { newSource, newDest } = transferItem (
         newState.guardiansInventory[action.guardianId].characterInventories[itemType],

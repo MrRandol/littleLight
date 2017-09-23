@@ -9,7 +9,6 @@ var _ = require('underscore');
 
 export async function getAllItemsAndCharacters(membership, statusCallback) {
   try {
-
     var membershipType = membership.membershipType;
     var destinyMembershipId = membership.membershipId;
     statusCallback.call(this, {status: "IN_PROGRESS", message: "fetchItems"});
@@ -25,14 +24,17 @@ export async function getAllItemsAndCharacters(membership, statusCallback) {
       guardiansInventory[guardianId] = {};
       guardiansInventory[guardianId].characterInventories = await matchItemsToManifest(
         jsonResp.Response.characterInventories.data[guardianId].items, 
-        jsonResp.Response.itemComponents.instances.data
+        jsonResp.Response.itemComponents.instances.data,
       );
       guardiansInventory[guardianId].characterEquipment = await matchItemsToManifest(
         jsonResp.Response.characterEquipment.data[guardianId].items, 
-        jsonResp.Response.itemComponents.instances.data
+        jsonResp.Response.itemComponents.instances.data,
       );
     }
-    var profileInventoryNotGrouped = await matchItemsToManifest(jsonResp.Response.profileInventory.data.items, jsonResp.Response.itemComponents.instances.data);
+    var profileInventoryNotGrouped = await matchItemsToManifest(
+      jsonResp.Response.profileInventory.data.items, 
+      jsonResp.Response.itemComponents.instances.data, 
+    );
     var profileInventory = {};
     var profileInventoryKeys = Object.keys(profileInventoryNotGrouped);
     for (var i = profileInventoryKeys.length - 1; i >= 0; i--) {
@@ -82,7 +84,8 @@ async function matchItemsToManifest(accountItems, instanceItems, groupCallback =
       }
     }
 
-    return _.groupBy(output, groupCallback);
+    var list =  _.groupBy(output, groupCallback);
+    return list;
 
   } catch (error) {
     Message.error("Error while matching Bungie DB to inventory");
@@ -92,14 +95,11 @@ async function matchItemsToManifest(accountItems, instanceItems, groupCallback =
 }
 
 function groupByCurrentBucket(item) {
-  return BUNGIE.BUCKET_TYPES[item.bucketHash];
+  return item.bucketHash ? item.bucketHash : '';
 }
 
 function groupByBucketType(item) {
-  if (!item.inventory || !item.inventory.bucketTypeHash) {
-    return '';
-  }
-  return BUNGIE.BUCKET_TYPES[item.inventory.bucketTypeHash];
+  return item.inventory && item.inventory.bucketTypeHash ? item.inventory.bucketTypeHash : '';
 }
 
 // Exception builder

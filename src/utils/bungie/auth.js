@@ -76,7 +76,7 @@ function refreshToken(token, statusCallback, tried) {
 }
 
 function handleAuthenticationCodeCallback(statusCallback, event) {
-  Message.debug("Got external calle with url : " + event.url);
+  Message.debug("Got external call with url : " + event.url);
   Linking.removeEventListener('url', handleAuthenticationCodeCallback);
 
   const error = event.url.toString().match( /error=([^&]+)/ );

@@ -53,9 +53,9 @@ class ItemTypeRow extends React.Component {
   }
 
   render() {
+    var self = this;
     var uid = this.props.vault ? 'vault' : this.props.guardianId;
     var containerStyle = this.props.odd ? styles.itemTypeRowContainerOdd : styles.itemTypeRowContainer;
-    var self = this;
     if (this.props.vault && data.length > 9) {
       containerStyle = [containerStyle, {height: Math.ceil(data.length / 3) * 70 + 40}];
     }
@@ -78,7 +78,6 @@ class ItemTypeRow extends React.Component {
               );
             })
           }
-          
         </View>
       </View>
     );

@@ -13,6 +13,9 @@ function mapDispatchToProps(dispatch) { return bindActionCreators(Actions, dispa
 import React from 'react';
 import { View, StatusBar, BackHandler } from 'react-native';
 
+// Global wrapper to catch exceptions.
+import * as ErrorHandler from '../utils/errorHandler';
+
 /*****************
   CUSTOM IMPORTS
 ******************/

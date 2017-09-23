@@ -20,50 +20,64 @@ class GuardianOverview extends React.Component {
     super(props);
   }
 
-  onItemTypePress(itemType) {
-    this.props.itemTypePressCallback.call(this, 'ItemTypeManager', {itemType: itemType});
+  onItemTypePress(bucketHash) {
+    this.props.itemTypePressCallback.call(this, 'ItemTypeManager', {bucketHash: bucketHash});
   }
 
-  itemTypeIcon(type) {
+  itemTypeIcon(bucketHash) {
     var characterEquipment;
     try {
-      characterEquipment = this.props.itemsManager.guardiansInventory[this.props.itemsManager.currentGuardianId].characterEquipment[type][0];
+      characterEquipment = this.props.itemsManager.guardiansInventory[this.props.itemsManager.currentGuardianId].characterEquipment[bucketHash][0];
     } catch (e) {
       characterEquipment = null;
     }
-    return <Item itemOnPressCallback={() => this.onItemTypePress(type)} item={characterEquipment} styleRef='overview' />
+    return <Item itemOnPressCallback={() => this.onItemTypePress(bucketHash)} item={characterEquipment} styleRef='overview' />
   }
 
   render() {
 
     var characterEquipment = this.props.itemsManager.guardiansInventory[this.props.itemsManager.currentGuardianId].characterEquipment;
 
+    /*{ this.itemTypeIcon("kineticWeapons") }
+    { this.itemTypeIcon("energyWeapons") }
+    { this.itemTypeIcon("powerWeapons") }
+    { this.itemTypeIcon("ghost") }*/
+    /*{ this.itemTypeIcon(1498876634) }
+    { this.itemTypeIcon(2465295065) }
+    { this.itemTypeIcon(953998645) }
+    { this.itemTypeIcon(4023194814) }*/
+
+  /*{ this.itemTypeIcon("helmet") }
+    { this.itemTypeIcon("gauntlets") }
+    { this.itemTypeIcon("chestArmor") }
+    { this.itemTypeIcon("legArmor") }
+    { this.itemTypeIcon("classArmor") }*/
+    /*{ this.itemTypeIcon(3448274439) }
+    { this.itemTypeIcon(3551918588) }
+    { this.itemTypeIcon(14239492) }
+    { this.itemTypeIcon(20886954) }
+    { this.itemTypeIcon(1585787867) }*/
+
     return(
       <View style={styles.guardianOverviewContainer} >
         <View style={styles.guardianOverviewBackground} >
           <View style={styles.guardianOverviewMenuContainer} >
-
             <View style={styles.guardianOverviewWeaponsContainer} >
-            
-              { this.itemTypeIcon("kineticWeapons") }
-              { this.itemTypeIcon("energyWeapons") }
-              { this.itemTypeIcon("powerWeapons") }
-              { this.itemTypeIcon("ghost") }
-            
+              { this.itemTypeIcon(1498876634) }
+              { this.itemTypeIcon(2465295065) }
+              { this.itemTypeIcon(953998645) }
+              { this.itemTypeIcon(4023194814) }
             </View>
             <View style={styles.guardianOverviewSubclassContainer} >
-              <Image style={styles.guardianOverviewSubclassCategoryButton} source={{uri: BUNGIE.HOST + characterEquipment.subclass[0].displayProperties.icon}} />
+              <Image style={styles.guardianOverviewSubclassCategoryButton} source={{uri: BUNGIE.HOST + characterEquipment['3284755031'][0].displayProperties.icon}} />
             </View>
             <View style={styles.guardianOverviewArmorContainer} >
-            
-              { this.itemTypeIcon("helmet") }
-              { this.itemTypeIcon("gauntlets") }
-              { this.itemTypeIcon("chestArmor") }
-              { this.itemTypeIcon("legArmor") }
-              { this.itemTypeIcon("classArmor") }
-            
+              { this.itemTypeIcon(3448274439) }
+              { this.itemTypeIcon(3551918588) }
+              { this.itemTypeIcon(14239492) }
+              { this.itemTypeIcon(20886954) }
+              { this.itemTypeIcon(1585787867) }
             </View>
-
           </View>
         </View>
       </View>

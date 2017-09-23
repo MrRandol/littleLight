@@ -59,7 +59,7 @@ class SplashScreen extends React.Component {
 
   manifestStatusCallback(status) {
     Message.info("[MANIFEST STATUS] " + JSON.stringify(status));
-    this.setState({component: "Manifest", message: status.message});
+    this.setState({component: "manifest", message: status.message});
     if (status.status === 'SUCCESS') {
       this.doAuthentication();
     }
@@ -76,7 +76,7 @@ class SplashScreen extends React.Component {
 
   authenticationStatusCallback(status) {
     Message.info("[AUTHENTICATION STATUS] " + JSON.stringify(status.status) + " - " + JSON.stringify(status.message));
-    this.setState({component: "OAuth", message: status.message});
+    this.setState({component: "oauth", message: status.message});
     if (status.status === 'SUCCESS') {
       this.props.setUser(status.user.Response);
       this.doFetchAllItemsAndGuardians();
@@ -110,11 +110,10 @@ class SplashScreen extends React.Component {
     return (
       <View style={styles.splashContainer}>
         <Image style={styles.splashImage} source={require('../../assets/ghost.jpg')} >
-          <Text style={styles.welcome} > LittleLight </Text>
+          <Text style={styles.welcome} > { T.translate("common.littleLight") } </Text>
           <View style={styles.loadingContainer} >
-            <Text style={styles.loading}> Loading ... </Text>
-            <Text style={styles.loadingComponent}> {this.state.component}  </Text>
-            <Text style={styles.loadingMessage}> {this.state.message}  </Text>
+            <Text style={styles.loading}> { T.translate("SplashScreen.loading") + " : " + T.translate("SplashScreen." + this.state.component) } </Text>
+            <Text style={styles.loadingMessage}> { T.translate("SplashScreen." + this.state.message) }  </Text>
           </View>
         </Image>
       </View>

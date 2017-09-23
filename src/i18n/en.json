@@ -1,18 +1,44 @@
-{ "LittleLight":
+{ 
+  "common": 
   {
-    "welcome": "Welcome To Little Light !"
+    "littleLight": "Little Light",
   },
-  "UserStatus":
+  "SplashScreen":
   {
-    "enterName": "What is you name guardian ?",
-    "greetings": "Hello",
-    "search": "SEARCH",
-    "loading": "LOADING...",
-    "changeAccount": "CHANGE ACCOUNT",
-    "enterNameEmpty": "Please provide a name to perform search",
-    "errorSave": "Error while saving guardian name",
-    "errorRetreive": "Error while retreiving guardian name from storage",
-    "errorFetch": "Error while fetching guardian on Bungie platform :("
+    "loading": "Loading",
+    // Manifest
+    "manifest": "Destiny data",
+    "manifestIsUpToDate": "Data is up to date !",
+    "manifestCheckVersion": "Checking current data version",
+    "manifestFetchContent": "Downloading new content version",
+    "manifestExtractData": "Extracting data",
+    "manifestSavedData": "Saving new data",
+    "manifestSaveVersion": "Saving new version",
+    "manifestUpdated": "Data has been updated !",
+    // Oauth
+    "oauth": "Authenticating you",
+    "authCheckTokenValidity": "Checking authentication status",
+    "authValid": "Authentication is valid !",
+    "authRefreshToken": "Refreshing authentication",
+    "authRequestNewToken": "Requesting new authentication data",
+    // Inventories and stuff
+    "guardiansFetch": "Transmatting your loot",
+    "fetchItems": "Downloading inventory data",
+    "matchItemsToDatabase": "Aggregating information",
+    "guardiansItemsFetched": "Inventories successfully downloaded !",
+  },
+  "Guardian": {
+    "human": "Human",
+    "awoken": "Awoken",
+    "exo": "Exo",
+    "male": "Male",
+    "female": "Female",
+    "titan_male": "Titan",
+    "titan_female": "Titan",
+    "hunter_male": "Hunter",
+    "hunter_female": "Hunter",
+    "warlock_male": "Warlock",
+    "warlock_female": "Warlock"
   }
   
 }

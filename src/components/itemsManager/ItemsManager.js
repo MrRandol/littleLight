@@ -35,16 +35,14 @@ class ItemsManager extends React.Component {
     super(props);
   }
 
-  swipeToView() {
-    console.log("Called swipe !")
-    var currentView = this.props.itemsManager.currentView.additionalParams.itemType;
-
-
-    var index = (_.indexOf(BUNGIE.ORDERER_BUCKET_TYPES, currentView) + 1) %(BUNGIE.ORDERER_BUCKET_TYPES.length);
-
-        console.log("current : " + JSON.stringify(currentView) + "(" + _.indexOf(BUNGIE.ORDERER_BUCKET_TYPES, currentView) + "/" + BUNGIE.ORDERER_BUCKET_TYPES.length +  ")");
-        console.log("new : " + BUNGIE.ORDERER_BUCKET_TYPES[index] + "(" + index + ")")
-    this.props.switchView('ItemTypeManager', {itemType: BUNGIE.ORDERER_BUCKET_TYPES[index]})
+  swipeToView(previous = false) {
+    var currentType = this.props.itemsManager.currentView.additionalParams.bucketHash;
+    var iterationValue = previous === true ? -1 : 1;
+    var index = (_.indexOf(BUNGIE.ORDERER_BUCKET_TYPES, currentType) + iterationValue) %(BUNGIE.ORDERER_BUCKET_TYPES.length);
+    if (index < 0 ) {
+      index = BUNGIE.ORDERER_BUCKET_TYPES.length - 1;
+    }
+    this.props.switchView('ItemTypeManager', {bucketHash: BUNGIE.ORDERER_BUCKET_TYPES[index]})
   }
 
   switchToView(viewName, additionalParams) {

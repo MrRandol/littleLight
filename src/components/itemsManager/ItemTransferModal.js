@@ -78,7 +78,9 @@ class ItemTransferModal extends React.Component {
                   <Text style={styles.iconDescription} > { this.props.item.itemTypeAndTierDisplayName }</Text>
                 </View>
                 <View style={styles.itemContainerRight} >
-                  <Text style={styles.itemStat} > { "Power level : " + this.props.item.primaryStat.value }</Text>
+                  { this.props.item.primaryStat && 
+                    <Text style={styles.itemStat} > { "Power level : " + this.props.item.primaryStat.value }</Text>
+                  }
                   { this.props.item.damageTypeHashes && 
                     <Text style={styles.itemStat} > { "Damage type : " + BUNGIE.DAMAGE_TYPES[this.props.item.damageTypes[0]] }</Text>
                   }
@@ -125,7 +127,5 @@ class ItemTransferModal extends React.Component {
     );
   } 
 }
-
-//<Button style={styles.guardianSelectorModalButton} onPress={ () => {this.transferItem()} } title={title} />
 
 export default ItemTransferModal;

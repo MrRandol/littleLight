@@ -27,7 +27,7 @@ module.exports = StyleSheet.create({
     alignItems: 'center',
   },
   loading: {
-    fontSize: 18,
+    fontSize: 16,
     textAlign: 'center',
     margin: 10,
     color: '#DEDEDE',

@@ -160,15 +160,15 @@ export const BUCKET_TYPES = {
 
 // For display purpose, ordered bucket types for swipe
 export const ORDERER_BUCKET_TYPES = [
-  'kineticWeapons',
-  'energyWeapons',
-  'powerWeapons',
-  'ghost',
-  'helmet',
-  'gauntlets',
-  'chestArmor',
-  'legArmor',
-  'classArmor',
+  1498876634, // kineticWeapons
+  2465295065, // energyWeapons
+  953998645,  // powerWeapons
+  4023194814, // ghost
+  3448274439, // helmet
+  3551918588, // gauntlets
+  14239492,   // chestArmor
+  20886954,   // legArmor
+  1585787867, // classArmor
 /*
   1269569095: 'auras',
   4292445962: 'clanBanners',
@@ -180,3 +180,4 @@ export const ORDERER_BUCKET_TYPES = [
   375726501: 'engrams',
   2025709351: 'vehicle',*/
 ]
+

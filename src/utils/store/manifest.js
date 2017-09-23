@@ -37,7 +37,7 @@ export async function getManifestItem(hash) {
 }
 
 export async function getManifestItemCategory(hash) {
-  try {
+  try { 
     const category = await AsyncStorage.getItem('@ManifestStore:Manifest.itemCategory.' + hash);
     return {status: "SUCCESS", data: category} 
   } catch (error) {
@@ -51,6 +51,33 @@ export async function getManifestItems(hashArray) {
     // '@ManifestStore:Manifest.item.<hash>'
     const items = await AsyncStorage.multiGet(hashArray);
     return {status: "SUCCESS", data: items} 
+  } catch (error) {
+    return {status: "ERROR", error: error}
+  }
+}
+
+export async function getManifestItemBuckets() {
+  const items = await AsyncStorage.getAllKeys();
+  var keys = [];
+  for (var i = items.length - 1; i >= 0; i--) {
+    if (items[i].indexOf('@ManifestStore:Manifest.itemBucket.') !== -1 ) {
+      keys.push(items[i]);
+    }
+  }
+  var categoriesArray = await AsyncStorage.multiGet(keys);
+  var category;
+  var categories = {};
+  for (var i = categoriesArray.length - 1; i >= 0; i--) {
+    category = JSON.parse(categoriesArray[i][1]);
+    categories[category.hash] = category;
+  }
+  return {status: "SUCCESS", data: categories} 
+}
+
+export async function getManifestItemBucket(hash) {
+  try { 
+    const bucket = await AsyncStorage.getItem('@ManifestStore:Manifest.itemBucket.' + hash);
+    return {status: "SUCCESS", data: bucket} 
   } catch (error) {
     return {status: "ERROR", error: error}
   }

@@ -14,7 +14,7 @@ var styles = require('../../styles/itemsManager/ItemTypeManager');
 var _ = require('underscore');
 
 import * as BUNGIE from '../../utils/bungie/static';
-import * as Message from '../../utils/message';
+import * as Store from '../../utils/store/manifest';
 
 import ItemTypeRow from './ItemTypeRow';
 import LoadingImage from '../common/LoadingImage';
@@ -27,11 +27,33 @@ class ItemTypeManager extends React.Component {
       itemToTransfer: null,
       modalVisible: false,
       refreshing: false,
+      title: "",
+    };
+  }
+
+  componentDidMount() {
+    this.componentWillReceiveProps();
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (this.state.updating) {
+      return;
     }
+    this.setState( { title: '', updating: true});
+    var self = this;
+    console.log("title init")
+    Store.getManifestItemBucket(this.props.itemsManager.currentView.additionalParams.bucketHash)
+    .then(function(resp) {
+      if (resp.status === "SUCCESS" && resp.data) {
+        self.setState( { title: JSON.parse(resp.data).displayProperties.name, updating: false } );
+      } else {
+        console.log(self.props.itemsManager.currentView.additionalParams.bucketHash)
+        console.log(resp.data)
+      }
+    })
   }
 
   itemOnPressCallback(item, itemIsInVault, guardianId) {
-    console.log("Item onPress Callback : " + item.displayProperties.name);
     this.setState({
       itemToTransfer: item,
       modalVisible: true, 
@@ -50,9 +72,7 @@ class ItemTypeManager extends React.Component {
     self.props.refreshItemsCallback().then(function(status) {
       self.setState({refreshing: false});
     });
-  }
-
-  
+  } 
 
   render() {
     var currentGuardianId = this.props.itemsManager.currentGuardianId;
@@ -69,7 +89,7 @@ class ItemTypeManager extends React.Component {
 
     var guardiansItemsManager = this.props.itemsManager.guardiansInventory;
     var profileItemsManager = this.props.itemsManager.profileInventory;
-    var itemType = this.props.itemsManager.currentView.additionalParams.itemType;
+    var bucketHash = this.props.itemsManager.currentView.additionalParams.bucketHash;
     var guardians = this.props.user.guardians;
     var itemOnPressCallback = this.itemOnPressCallback.bind(this);
     var index;
@@ -83,10 +103,13 @@ class ItemTypeManager extends React.Component {
       >
 
       <View style={styles.titleContainer} >
-        <TouchableOpacity onPress={this.props.swipeToView} >
-          <LoadingImage style={{width: 50, height: 50}} source={{uri: BUNGIE.VAULT_ICON}} />
+        <TouchableOpacity onPress={() => { this.props.swipeToView(true)}} style={styles.typeSwitcherButton} >
+          <LoadingImage resizeMode='cover' source={require('../../../assets/previous.png')} />
         </TouchableOpacity>
-        <Text style={styles.title} >{ itemType }</Text>
+        <Text style={styles.title} >{ this.state.title }</Text>
+        <TouchableOpacity onPress={() => { this.props.swipeToView(false)}} style={styles.typeSwitcherButton} >
+          <LoadingImage resizeMode='cover' source={require('../../../assets/next.png')} />
+        </TouchableOpacity>
       </View>
 
       <ItemTransferModal 
@@ -106,11 +129,11 @@ class ItemTypeManager extends React.Component {
               odd={index%2 === 0}
               key={"itemtyperow-" + guardianId}
               guardianId={guardianId} 
-              itemType={itemType}
+              bucketHash={bucketHash}
               guardians={guardians}
               itemOnPressCallback={itemOnPressCallback}
-              guardianEquipped={guardiansItemsManager[guardianId].characterEquipment[itemType]}
-              guardianInventory={guardiansItemsManager[guardianId].characterInventories[itemType]}
+              guardianEquipped={guardiansItemsManager[guardianId].characterEquipment[bucketHash]}
+              guardianInventory={guardiansItemsManager[guardianId].characterInventories[bucketHash]}
             />
           )
         })
@@ -120,9 +143,9 @@ class ItemTypeManager extends React.Component {
           vault={true}
           odd={guardianIds.length%2 === 0}
           key="itemtyperow-vault"
-          itemType={itemType}
+          bucketHash={bucketHash}
           itemOnPressCallback={itemOnPressCallback}
-          vaultInventory={profileItemsManager.general[itemType] || []}
+          vaultInventory={profileItemsManager['138197802'] && profileItemsManager['138197802'][bucketHash] ? profileItemsManager['138197802'][bucketHash] : []}
         />
       </ScrollView>
     );

@@ -40,7 +40,7 @@ function checkManifestVersion(currentVersion, statusCallback) {
         status: "SUCCESS",
         isUpToDate: version === currentVersion.data, 
         version: version, 
-        contentPath: manifest.Response.mobileWorldContentPaths.en
+        contentPath: manifest.Response.mobileWorldContentPaths.fr
       };
     })
     .catch( function(error) {
@@ -95,31 +95,39 @@ function fetchAndExtractManifest(path, version, statusCallback) {
 
 function insertDbIntoStore(db, version, statusCallback) {
   statusCallback.call(this, {status: "IN_PROGRESS", message: "manifestExtractData"});
-  doTransaction(
-    db, 
-    "SELECT json FROM 'DestinyInventoryItemDefinition'",
-    ['hash', 'displayProperties', 'itemCategoryHashes'], 
-    'item', 
-    function() {
-        doTransaction(
-        db, 
-        "SELECT json FROM 'DestinyItemCategoryDefinition'",
-        ['hash', 'displayProperties', 'itemTypeRegex'], 
-        'itemCategory',
-        function(itemsSet) {
-          statusCallback.call(this, {status: "IN_PROGRESS", message: "manifestSavedData"});
-          updateManifestVersion({status: itemsSet.status, data: version, error: itemsSet.error}, statusCallback);
-        }
-      );
-    }
-  );
+  callTransaction(db, 'DestinyInventoryItemDefinition', 'item')
+  .then(function(itemsSet) {
+    return callTransaction(db, 'DestinyItemCategoryDefinition', 'itemCategory');
+  })
+  .then(function(itemsSet) {
+    return callTransaction(db, 'DestinyInventoryBucketDefinition', 'itemBucket');
+  })
+  .then(function(itemsSet) {
+    statusCallback.call(this, {status: "IN_PROGRESS", message: "manifestSavedData"});
+    updateManifestVersion({status: itemsSet.status, data: version, error: itemsSet.error}, statusCallback);
+  });
 }
 
-function doTransaction(db, request, fieldsToMatch, storeKey, endOfTransactionCallback) {
+function callTransaction(db, table, storeKey, storeIndexFunction = defaultStoreIndex) {
+  return new Promise(function(resolve, reject){
+    doTransaction(db, table, storeKey, storeIndexFunction, function(data) {
+      if(data === null) {
+        throw new manifestException(15, "No data return on transaction"); 
+      } 
+      resolve(data);
+    });
+  });
+}
+
+function defaultStoreIndex(item) {
+  return item.hash;
+}
+
+function doTransaction(db, table, storeKey, storeIndexFunction, endOfTransactionCallback) {
   var self = this;
   try {
     db.transaction((tx) => {
-      tx.executeSql(request, [], (tx, results) => {
+      tx.executeSql("SELECT json FROM '" + table + "'", [], (tx, results) => {
         console.log("Query completed");
         console.log(results.rows.length + " rows returned");
         var item = null;
@@ -127,15 +135,7 @@ function doTransaction(db, request, fieldsToMatch, storeKey, endOfTransactionCal
         var itemsArray = [];
         for (var i=0; i < results.rows.length; i++) {
           item = JSON.parse(results.rows.item(i).json);
-          // Reduction of data size
-          // By filed manual selection
-          storedItem = {};
-          for (var field in fieldsToMatch) {
-            if (item.hasOwnProperty(field)) {
-              storedItem[field] = item[field];
-            }
-          }
-          itemsArray.push(["@ManifestStore:Manifest." + storeKey + "." + item.hash, JSON.stringify(item)]);
+          itemsArray.push(["@ManifestStore:Manifest." + storeKey + "." + storeIndexFunction(item), JSON.stringify(item)]);
         }
         Message.debug("Resulting Set contains " + itemsArray.length + " items");
         Store.saveManifestItems(itemsArray)
@@ -178,11 +178,17 @@ function updateManifestVersion(manifestVersion, statusCallback){
   }
 }
 
+function camelize(str) {
+  return str.replace(/(?:^\w|[A-Z]|\b\w)/g, function(letter, index) {
+    return index == 0 ? letter.toLowerCase() : letter.toUpperCase();
+  }).replace(/\s+/g, '');
+}
+
 // Exception builder
 function manifestException(code, message) {
  this.code = code;
  this.message = message;
  this.toString = function() {
-  return this.message + " (code " + this.code + ")";
-};
+    return this.message + " (code " + this.code + ")";
+  };
 }

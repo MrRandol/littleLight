@@ -14,6 +14,7 @@ var styles = require('../../styles/itemsManager/GuardianSelector');
 import LoadingImage from '../common/LoadingImage'
 
 import * as BUNGIE from '../../utils/bungie/static';
+import * as Store from '../../utils/store/manifest';
 
 class GuardianSelector extends React.Component {
 
@@ -94,8 +95,8 @@ class GuardianSelector extends React.Component {
                         source={{uri: BUNGIE.HOST+guardian.emblemBackgroundPath}} >
                         <View style={styles.leftPadding} />
                         <View style={styles.guardianButtonMainInfos} >
-                          <Text style={styles.guardianClass}>{ BUNGIE.CLASS_TYPES[guardian.classType] }</Text>
-                          <Text style={styles.guardianRaceGender}>{ BUNGIE.RACE_TYPES[guardian.raceType] + " " + BUNGIE.GENDER_TYPES[guardian.genderType] }</Text>
+                          <Text style={styles.guardianClass}>{ T.translate("Guardian." + BUNGIE.CLASS_TYPES[guardian.classType] + "_" + BUNGIE.GENDER_TYPES[guardian.genderType]) }</Text>
+                          <Text style={styles.guardianRaceGender}>{ T.translate("Guardian." + BUNGIE.RACE_TYPES[guardian.raceType]) + " " + T.translate("Guardian." + BUNGIE.GENDER_TYPES[guardian.genderType]) }</Text>
                         </View>
                         <View style={styles.guardianButtonPowerInfos} >
                           <Text style={styles.guardianButtonPower}>{ guardian.light }</Text>
@@ -120,8 +121,8 @@ class GuardianSelector extends React.Component {
             <LoadingImage style={[styles.guardianButton, {width: width, height: selectorHeight}]} source={{uri: BUNGIE.HOST+currentGuardian.emblemBackgroundPath}} >
               <View style={styles.leftPadding} />
               <View style={styles.guardianButtonMainInfos} >
-                <Text style={styles.guardianClass}>{ BUNGIE.CLASS_TYPES[currentGuardian.classType] }</Text>
-                <Text style={styles.guardianRaceGender}>{ BUNGIE.RACE_TYPES[currentGuardian.raceType] + " " + BUNGIE.GENDER_TYPES[currentGuardian.genderType] }</Text>
+                <Text style={styles.guardianClass}>{ T.translate("Guardian." + BUNGIE.CLASS_TYPES[currentGuardian.classType] + "_" + BUNGIE.GENDER_TYPES[currentGuardian.genderType]) }</Text>
+                <Text style={styles.guardianRaceGender}>{ T.translate("Guardian." + BUNGIE.RACE_TYPES[currentGuardian.raceType]) + " " + T.translate("Guardian." + BUNGIE.GENDER_TYPES[currentGuardian.genderType]) }</Text>
               </View>
               <View style={styles.guardianButtonPowerInfos} >
                 <Text style={styles.guardianButtonPower}>{ currentGuardian.light }</Text>
