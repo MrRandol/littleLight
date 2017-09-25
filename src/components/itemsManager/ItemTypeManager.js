@@ -12,6 +12,7 @@ T.setTexts(require('../../i18n/en.json'));
 var styles = require('../../styles/itemsManager/ItemTypeManager');
 
 var _ = require('underscore');
+import GestureRecognizer, {swipeDirections} from 'react-native-swipe-gestures';
 
 import * as BUNGIE from '../../utils/bungie/static';
 import * as Store from '../../utils/store/manifest';
@@ -27,7 +28,29 @@ class ItemTypeManager extends React.Component {
       itemToTransfer: null,
       modalVisible: false,
       refreshing: false,
+      gestureName: 'none',
     };
+  }
+
+  onSwipeUp(gestureState) {
+    this.setState({myText: 'You swiped up!'});
+  }
+ 
+  onSwipeDown(gestureState) {
+    this.setState({myText: 'You swiped down!'});
+  }
+ 
+  onSwipeLeft(gestureState) {
+    this.setState({myText: 'You swiped left!'});
+  }
+ 
+  onSwipeRight(gestureState) {
+    this.setState({myText: 'You swiped right!'});
+  }
+ 
+  onSwipe(gestureName, gestureState) {
+    const {SWIPE_UP, SWIPE_DOWN, SWIPE_LEFT, SWIPE_RIGHT} = swipeDirections;
+    this.setState({gestureName: gestureName});
   }
 
   itemOnPressCallback(item, itemIsInVault, guardianId) {
@@ -70,6 +93,11 @@ class ItemTypeManager extends React.Component {
     var guardians = this.props.user.guardians;
     var itemOnPressCallback = this.itemOnPressCallback.bind(this);
     var index;
+
+    const config = {
+      velocityThreshold: 0.1,
+      directionalOffsetThreshold: 40
+    };
     return(
       <ScrollView style={styles.itemTypeManagerContainer} 
         refreshControl = {<RefreshControl
@@ -78,6 +106,12 @@ class ItemTypeManager extends React.Component {
           title="Reload items"
         />}
       >
+      <GestureRecognizer
+        onSwipeLeft={() => { this.props.swipeToView(false)}}
+        onSwipeRight={() => { this.props.swipeToView(true)}}
+        config={config}
+        style={{flex: 1}}
+        >
         <ItemTransferModal 
           visible={this.state.modalVisible} 
           item={this.state.itemToTransfer}
@@ -124,6 +158,7 @@ class ItemTypeManager extends React.Component {
           itemOnPressCallback={itemOnPressCallback}
           vaultInventory={profileItemsManager['138197802'] && profileItemsManager['138197802'][bucketHash] ? profileItemsManager['138197802'][bucketHash] : []}
         />
+      </GestureRecognizer>
       </ScrollView>
     );
   } 

@@ -71,10 +71,10 @@ class GuardianSelector extends React.Component {
           animationType="slide"
           transparent={true}
           visible={this.state.modalVisible}
-          onRequestClose={() => {self.setModalVisible(false).bind(self)}}
+          onRequestClose={() => {this.setModalVisible(false)}}
         >
 
-        <TouchableOpacity onPressOut={() => {self.setModalVisible(false).bind(self)}} style={[{width: width, height: height, backgroundColor: 'rgba(0, 0, 0, 0.8)'}]}>
+        <TouchableOpacity onPressOut={() => {this.setModalVisible(false)}} style={[{width: width, height: height, backgroundColor: 'rgba(0, 0, 0, 0.8)'}]}>
         <View 
           style={styles.guardianSelectorModal}
         >
@@ -108,7 +108,7 @@ class GuardianSelector extends React.Component {
               }
               </View>
               <View style={styles.cancelButtonContainer} >
-                <Button color='#242424' onPress={ () => {self.setModalVisible(false)} } title="CANCEL" />
+                <Button color='#242424' onPress={ () => {this.setModalVisible(false)} } title="CANCEL" />
               </View>
             </View>
           </View>
