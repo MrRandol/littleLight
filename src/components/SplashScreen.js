@@ -69,7 +69,6 @@ class SplashScreen extends React.Component {
       this.setState({component: "manifest", message: status.message});
       if (status.status === 'SUCCESS') {
         this.doAuthentication();
-        //this.doPreLoadDataFromStore();
       }
     } catch (error) {
       Message.error("[LOADING] An error occured while handling manifest callback");
