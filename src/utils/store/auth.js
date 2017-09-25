@@ -1,38 +1,36 @@
 import { AsyncStorage } from 'react-native';
+import { LLException } from '../errorHandler';
 
-export async function saveAuthData(oauth) {
-    try {
-      await AsyncStorage.setItem('@AuthStore:Oauth', JSON.stringify(oauth));
-      return {status: "SUCCESS", data: oauth}
-    } catch (error) {
-       return {status: "ERROR", error: error};
-    }
+
+export function getAuthData() {
+  try {
+    return AsyncStorage.getItem('@AuthStore:Oauth');
+  } catch (error) {
+    Message.error("[STORE] Error on getAuthData");
+    Message.error(error);
+    throw new LLException(130, error, 'oauthStoreException');
+  }
 }
 
-export async function getAuthData() {
-    try {
-      const oauth = await AsyncStorage.getItem('@AuthStore:Oauth');
-      return {status: "SUCCESS", data: JSON.parse(oauth)}
-    } catch (error) {
-       return {status: "ERROR", error: error};
-    }
-}
-
-export async function resetAuthData() {
-    try {
-      await AsyncStorage.removeItem('@AuthStore:Oauth');
-      return {status: "SUCCESS"}
-    } catch (error) {
-       return {status: "ERROR", error: error};
-    }
+export function saveAuthData(oauth) {
+  try {
+    return AsyncStorage.setItem('@AuthStore:Oauth', JSON.stringify(oauth));
+  } catch (error) {
+    Message.error("[STORE] Error on saveAuthData");
+    Message.error(error);
+    throw new LLException(131, error, 'oauthStoreException');
+  }
 }
 
 export function getAccessToken() {
-    try {
-      return AsyncStorage.getItem('@AuthStore:Oauth').then((oauth => {
-        return JSON.parse(oauth).access_token;
-      }));
-    } catch (error) {
-       return {status: "ERROR", error: error};
-    }
+  try {
+    return AsyncStorage.getItem('@AuthStore:Oauth')
+    .then(oauth => {
+      return JSON.parse(oauth).access_token;
+    });
+  } catch (error) {
+    Message.error("[STORE] Error on getAccessToken");
+    Message.error(error);
+    throw new LLException(132, error, 'oauthStoreException');
+  }
 }

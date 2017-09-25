@@ -8,21 +8,63 @@ TODO : populate with a lot of things :D
 
 
 ## ERRORS (ongoing)
+  
+### SPLASHSCREEN
+10 : An error occured while handling manifest data  
+11 : An error occured while handling manifest callback  
+12 : An error occured while authenticating user  
+13 : An error occured while handling authentication callback  
+14 : Error while loading data from internal store into state  
+15 : Error while handling preload callback  
+16 : An error occured while fetching your guardians informations  
+17 : An error occured while handling guardians infos callback  
+  
+### MANIFEST
+20 : "Error in check/update Manifest"  
+21 : "Error in checkManifestVersion"  
+22 : "Error in fetchAndExtractManifest"  
+25 : "Error in while inserting data from manifest into local sore"  
+24 : "Error in while inserting data from manifest into local sore"  
+25 : "Error on transaction call to sqlite"  
+26 : "Error while inserting manifest data into store"  
+27 : "Error while saving Manifest version"  
+29 : "Error while inserting manifest version into store"  
+  
+### Manifest Store (internal)  
+120 : "Error on getManifestVersion"  
+121 : "Error on saveManifestVersion"  
+122 : "Error on saveManifestItems"  
+123 : "Error on getManifestItems"  
+124 : "Error on getManifestItemBuckets"  
+  
+### AUTHENTICATION  
+30 : Error while processing Authentication flow  
+31 : Error while checking token validity  
+32 : Error while checking token validity  
+33 : Already tried to refresh. Exit with error.  
+34 : Error while refreshing token  
+35 : Error while requesting new token  
+36 : Error on callback from Bungie authentication service  
+37 : Error on callback from Bungie authentication service  
+38 : Error while requesting tokens  
+39 : Error while requesting tokens  
+  
+### OAuth Store (internal)  
+130 : Error on getAuthData  
+131 : Error on saveAuthData  
+132 : Error on getAccessToken  
 
-10 : The check of the Destiny database version failed. Maybe due to Bungie servers ...
-11 : The download of the new Destiny database failed.
-12 : The insertion of the data in the application storage failed.
-13 : An unknown error occured before saving database version.
-14 : The insertion of the data version in the application storage failed.
-15 : We made an internal request on the Destiny data but got a null object. This should not happen.
+### INVENTORY
+40 : Error while fetching bucket data from store.
+41 : Error while fetching bucket data from store.
+42 : Error While fetching all profile data from Bungie
+43 : Error While matching data between manifest and inventory
 
-20 : An error occured while retreiving the local authentication data.
-21 : An error occured while processing authentication validity checks.
-22 : Something wrong happened while getting fedback from Bungie authentication service.
-23 : An error occured while fetching new authentication token.
+### TRANSFER
+50 : Error on item transfer from/to vault
+51 : Error on item transfer from/to vault
 
-30 : An error occured while matching your inventory to the stored Bungie database.
-31 : An error occured while retreiving your inventories and matching them to Bungie DB.
-
-41 : Maximum tries reached when attempting request
-42 : Request returned Unauthorized
+## ITEMS MANAGEMENT
+200 : Error while transferring item
+201 : Error while transferring item between guardians
+202 : Error while transferring item from/to vault

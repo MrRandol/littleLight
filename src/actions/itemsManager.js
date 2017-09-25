@@ -1,15 +1,21 @@
 export const SET_ITEMS = 'SET_ITEMS';
+export const SET_ITEM_BUCKETS = 'SET_ITEM_BUCKETS';
 export const SWITCH_GUARDIAN = 'SWITCH_GUARDIAN';
 export const SWITCH_VIEW = 'SWITCH_VIEW';
 export const TRANSFER_TO_VAULT = 'TRANSFER_TO_VAULT';
 export const TRANSFER_FROM_VAULT = 'TRANSFER_FROM_VAULT';
 
-
-
 export function setItems (items) {
   return {
     type: SET_ITEMS,
     items: items
+  }
+}
+
+export function setItemBuckets (buckets) {
+  return {
+    type: SET_ITEM_BUCKETS,
+    buckets: buckets
   }
 }
 

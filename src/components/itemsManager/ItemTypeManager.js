@@ -27,30 +27,7 @@ class ItemTypeManager extends React.Component {
       itemToTransfer: null,
       modalVisible: false,
       refreshing: false,
-      title: "",
     };
-  }
-
-  componentDidMount() {
-    this.componentWillReceiveProps();
-  }
-
-  componentWillReceiveProps(nextProps) {
-    if (this.state.updating) {
-      return;
-    }
-    this.setState( { title: '', updating: true});
-    var self = this;
-    console.log("title init")
-    Store.getManifestItemBucket(this.props.itemsManager.currentView.additionalParams.bucketHash)
-    .then(function(resp) {
-      if (resp.status === "SUCCESS" && resp.data) {
-        self.setState( { title: JSON.parse(resp.data).displayProperties.name, updating: false } );
-      } else {
-        console.log(self.props.itemsManager.currentView.additionalParams.bucketHash)
-        console.log(resp.data)
-      }
-    })
   }
 
   itemOnPressCallback(item, itemIsInVault, guardianId) {
@@ -101,43 +78,43 @@ class ItemTypeManager extends React.Component {
           title="Reload items"
         />}
       >
+        <ItemTransferModal 
+          visible={this.state.modalVisible} 
+          item={this.state.itemToTransfer}
+          itemIsInVault={this.state.itemIsInVault}
+          itemAssociatedGuardian={this.state.itemAssociatedGuardian}
+          currentGuardianId={currentGuardianId}
+          guardians={guardians}
+          transferItemCallback={this.props.transferItemCallback.bind(this)}
+          closeModalCallback={this.closeModalCallback.bind(this)}
+        />
 
-      <View style={styles.titleContainer} >
-        <TouchableOpacity onPress={() => { this.props.swipeToView(true)}} style={styles.typeSwitcherButton} >
-          <LoadingImage resizeMode='cover' source={require('../../../assets/previous.png')} />
-        </TouchableOpacity>
-        <Text style={styles.title} >{ this.state.title }</Text>
-        <TouchableOpacity onPress={() => { this.props.swipeToView(false)}} style={styles.typeSwitcherButton} >
-          <LoadingImage resizeMode='cover' source={require('../../../assets/next.png')} />
-        </TouchableOpacity>
-      </View>
+        <View style={styles.titleContainer} >
+          <TouchableOpacity onPress={() => { this.props.swipeToView(true)}} style={styles.typeSwitcherButton} >
+            <LoadingImage resizeMode='cover' source={require('../../../assets/previous.png')} />
+          </TouchableOpacity>
+          <Text style={styles.title} >{ this.props.itemsManager.itemBuckets[this.props.itemsManager.currentView.additionalParams.bucketHash].displayProperties.name }</Text>
+          <TouchableOpacity onPress={() => { this.props.swipeToView(false)}} style={styles.typeSwitcherButton} >
+            <LoadingImage resizeMode='cover' source={require('../../../assets/next.png')} />
+          </TouchableOpacity>
+        </View>
 
-      <ItemTransferModal 
-        visible={this.state.modalVisible} 
-        item={this.state.itemToTransfer}
-        itemIsInVault={this.state.itemIsInVault}
-        itemAssociatedGuardian={this.state.itemAssociatedGuardian}
-        currentGuardianId={currentGuardianId}
-        guardians={guardians}
-        transferItemCallback={this.props.transferItemCallback.bind(this)}
-        closeModalCallback={this.closeModalCallback.bind(this)}
-      />
-      {
-        guardianIds.map(function(guardianId, index) {
-          return (
-            <ItemTypeRow 
-              odd={index%2 === 0}
-              key={"itemtyperow-" + guardianId}
-              guardianId={guardianId} 
-              bucketHash={bucketHash}
-              guardians={guardians}
-              itemOnPressCallback={itemOnPressCallback}
-              guardianEquipped={guardiansItemsManager[guardianId].characterEquipment[bucketHash]}
-              guardianInventory={guardiansItemsManager[guardianId].characterInventories[bucketHash]}
-            />
-          )
-        })
-      }
+        {
+          guardianIds.map(function(guardianId, index) {
+            return (
+              <ItemTypeRow 
+                odd={index%2 === 0}
+                key={"itemtyperow-" + guardianId}
+                guardianId={guardianId} 
+                bucketHash={bucketHash}
+                guardians={guardians}
+                itemOnPressCallback={itemOnPressCallback}
+                guardianEquipped={guardiansItemsManager[guardianId].characterEquipment[bucketHash]}
+                guardianInventory={guardiansItemsManager[guardianId].characterInventories[bucketHash]}
+              />
+            )
+          })
+        }
 
         <ItemTypeRow 
           vault={true}

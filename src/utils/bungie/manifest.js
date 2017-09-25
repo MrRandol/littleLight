@@ -5,26 +5,33 @@ var SQLite = require('react-native-sqlite-storage');
 import RNFetchBlob from 'react-native-fetch-blob';
 import { unzip } from 'react-native-zip-archive'
 
+// Internal
+import { LLException } from '../errorHandler';
 import * as Message from '../message';
 import * as Store from '../store/manifest';
 import * as Request from './request';
 import * as BUNGIE from './static';
 
 export function checkVersionAndUpdate(statusCallback) {
-  var self = this;
-  Store.getManifestVersion()
-  .then( function(currentVersion) {
-    return checkManifestVersion(currentVersion, statusCallback);
-  })
-  .then(function(manifestCheck) {
-    if (manifestCheck && manifestCheck.isUpToDate) {
-      Message.debug("Version " + manifestCheck.version + " is already stored; nothing to do.");
-      statusCallback.call(this, {status: "SUCCESS", message: "manifestIsUpToDate", version: manifestCheck.version});
-    } else {
-      Message.debug("A new version (" + manifestCheck.version + ") of the manifest is out. Downloading it.");
-      fetchAndExtractManifest(manifestCheck.contentPath, manifestCheck.version, statusCallback);
-    }
-  })
+  try {
+    Store.getManifestVersion()
+    .then( function(currentVersion) {
+      return checkManifestVersion(currentVersion, statusCallback);
+    })
+    .then(function(manifestCheck) {
+      if (manifestCheck && manifestCheck.isUpToDate) {
+        Message.debug("Version " + manifestCheck.version + " is already stored; nothing to do.");
+        statusCallback.call(this, {status: "SUCCESS", message: "manifestIsUpToDate", version: manifestCheck.version});
+      } else {
+        Message.debug("A new version (" + manifestCheck.version + ") of the manifest is out. Downloading it.");
+        fetchAndExtractManifest(manifestCheck.contentPath, manifestCheck.version, statusCallback);
+      }
+    })
+  } catch (error) {
+    Message.error("[MANIFEST] Error in check/update Manifest");
+    Message.error(error);
+    throw new LLException(20, error, 'manifestException');
+  }
 }
 
 function checkManifestVersion(currentVersion, statusCallback) {
@@ -32,30 +39,28 @@ function checkManifestVersion(currentVersion, statusCallback) {
     statusCallback.call(this, {status: "IN_PROGRESS", message: "manifestCheckVersion"});
     return Request.doGet(BUNGIE.MANIFEST, false)
     .then(function(manifest) {
-      // Handle request via request.js
       var version =  manifest.Response.version;
-      Message.debug("Bungie.net manifest version : " + version);
-      Message.debug("Current manifest version    : " + currentVersion.data);
       return {
         status: "SUCCESS",
-        isUpToDate: version === currentVersion.data, 
-        version: version, 
-        contentPath: manifest.Response.mobileWorldContentPaths.fr
+        version: version,
+        isUpToDate: version === currentVersion,
+        // TODO : dynamic content selection depending on language
+        contentPath: manifest.Response.mobileWorldContentPaths.en
       };
     })
     .catch( function(error) {
       throw(error); 
     });
   } catch (error) {
-    Message.error("Error in checkManifestVersion");
-    throw new manifestException(10, error); 
+    Message.error("[MANIFEST] Error in checkManifestVersion");
+    Message.error(error);
+    throw new LLException(21, error, 'manifestException');
   }
 }
 
 function fetchAndExtractManifest(path, version, statusCallback) {
   try {
     statusCallback.call(this, {status: "IN_PROGRESS", message: "manifestFetchContent"});
-    var self = this;
     var dir = Platform.OS === 'ios' ? RNFS.MainBundlePath : RNFS.DocumentDirectoryPath;
     var sqlName = path.substring(path.lastIndexOf('/')+1);
     var zipPath = dir + '/worldContent.zip';
@@ -88,43 +93,50 @@ function fetchAndExtractManifest(path, version, statusCallback) {
       throw(error);
     })
   } catch (error) {
-    Message.error("Error in fetchAndExtractManifest");
-    throw new manifestException(11, error); 
+    Message.error("[MANIFEST] Error in fetchAndExtractManifest");
+    Message.error(error);
+    throw new LLException(22, error, 'manifestException');
   }
 }
 
 function insertDbIntoStore(db, version, statusCallback) {
-  statusCallback.call(this, {status: "IN_PROGRESS", message: "manifestExtractData"});
-  callTransaction(db, 'DestinyInventoryItemDefinition', 'item')
-  .then(function(itemsSet) {
-    return callTransaction(db, 'DestinyItemCategoryDefinition', 'itemCategory');
-  })
-  .then(function(itemsSet) {
-    return callTransaction(db, 'DestinyInventoryBucketDefinition', 'itemBucket');
-  })
-  .then(function(itemsSet) {
-    statusCallback.call(this, {status: "IN_PROGRESS", message: "manifestSavedData"});
-    updateManifestVersion({status: itemsSet.status, data: version, error: itemsSet.error}, statusCallback);
-  });
-}
-
-function callTransaction(db, table, storeKey, storeIndexFunction = defaultStoreIndex) {
-  return new Promise(function(resolve, reject){
-    doTransaction(db, table, storeKey, storeIndexFunction, function(data) {
-      if(data === null) {
-        throw new manifestException(15, "No data return on transaction"); 
-      } 
-      resolve(data);
+  try {
+    statusCallback.call(this, {status: "IN_PROGRESS", message: "manifestExtractData"});
+    callTransaction(db, 'DestinyInventoryItemDefinition', 'item')
+    .then(function() {
+      return callTransaction(db, 'DestinyItemCategoryDefinition', 'itemCategory');
+    })
+    .then(function() {
+      return callTransaction(db, 'DestinyInventoryBucketDefinition', 'itemBucket');
+    })
+    .then(function() {
+      statusCallback.call(this, {status: "IN_PROGRESS", message: "manifestSavedData"});
+      updateManifestVersion(version, statusCallback);
     });
-  });
+  } catch (error) {
+    Message.error("[MANIFEST] Error in while inserting data from manifest into local sore");
+    Message.error(error);
+    throw new LLException(24, error, 'manifestException');
+  }
 }
 
-function defaultStoreIndex(item) {
-  return item.hash;
+function callTransaction(db, table, storeKey) {
+  try {
+    return new Promise(function(resolve, reject){
+      doTransaction(db, table, storeKey, 
+        function() {
+          resolve(true);
+        }
+      );
+    });
+  } catch (error) {
+    Message.error("[MANIFEST] Error on transaction call to sqlite");
+    Message.error(error);
+    throw new LLException(26, error, 'manifestException');
+  }
 }
 
-function doTransaction(db, table, storeKey, storeIndexFunction, endOfTransactionCallback) {
-  var self = this;
+function doTransaction(db, table, storeKey, endOfTransactionCallback) {
   try {
     db.transaction((tx) => {
       tx.executeSql("SELECT json FROM '" + table + "'", [], (tx, results) => {
@@ -135,60 +147,44 @@ function doTransaction(db, table, storeKey, storeIndexFunction, endOfTransaction
         var itemsArray = [];
         for (var i=0; i < results.rows.length; i++) {
           item = JSON.parse(results.rows.item(i).json);
-          itemsArray.push(["@ManifestStore:Manifest." + storeKey + "." + storeIndexFunction(item), JSON.stringify(item)]);
+          itemsArray.push(["@ManifestStore:Manifest." + storeKey + "." + item.hash, JSON.stringify(item)]);
         }
         Message.debug("Resulting Set contains " + itemsArray.length + " items");
         Store.saveManifestItems(itemsArray)
-        .then( function(itemsSet){
-          if(itemsSet.status !== 'SUCCESS') {
-            throw itemsSet.error;
+        .then(function(error){
+          if (error) {
+            Message.error("[MANIFEST] Store in error");
+            Message.error(error);
+            throw new LLException(25, error, 'manifestException');
           }
-          endOfTransactionCallback.call(this, itemsSet);
+          endOfTransactionCallback.call(this);
         });
       });
     });
   } catch (error) {
-    Message.error("Error in insertDbIntoStore");
-    throw new manifestException(12, error);
+    Message.error("[MANIFEST] Error while inserting '" + table + "'' data into store");
+    Message.error(error);
+    throw new LLException(27, error, 'manifestException');
   }
 }
 
-
-function updateManifestVersion(manifestVersion, statusCallback){
-  var self = this;
-  statusCallback.call(this, {status: "IN_PROGRESS", message: "manifestSaveVersion"});
-  Message.debug("Now preparing save of manifest version");
-  Message.debug(JSON.stringify(manifestVersion));
-  if (manifestVersion.status === 'SUCCESS') {
-    Message.debug("Data is updated. Saving version");
-
-    Store.saveManifestVersion(manifestVersion.data)
+function updateManifestVersion(_version, statusCallback){
+  try {
+    statusCallback.call(this, {status: "IN_PROGRESS", message: "manifestSaveVersion"});
+    Store.saveManifestVersion(_version)
     .then( function(version) {
-      if (version.status === 'SUCCESS') {
+      if (version) {
         Message.debug("Successfully saved Manifest version");
-        statusCallback.call(this, {status: "SUCCESS", message: "manifestUpdated", data: version.data});
+        statusCallback.call(this, {status: "SUCCESS", message: "manifestUpdated", data: version});
       } else {
-        Message.error("Error while saving Manifest version");
-        throw new manifestException(14, error);
+        Message.error("[MANIFEST] Error while inserting manifest version into store");
+        Message.error(error);
+        throw new LLException(29, error, 'manifestException');
       }
     });
-  } else {
-    Message.error("Error in updateManifestVersion");
-    throw new manifestException(13, manifestVersion.error); 
+  } catch (error) {
+    Message.error("[MANIFEST] Error while inserting manifest version into store");
+    Message.error(error);
+    throw new LLException(29, error, 'manifestException');
   }
-}
-
-function camelize(str) {
-  return str.replace(/(?:^\w|[A-Z]|\b\w)/g, function(letter, index) {
-    return index == 0 ? letter.toLowerCase() : letter.toUpperCase();
-  }).replace(/\s+/g, '');
-}
-
-// Exception builder
-function manifestException(code, message) {
- this.code = code;
- this.message = message;
- this.toString = function() {
-    return this.message + " (code " + this.code + ")";
-  };
 }

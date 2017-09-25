@@ -1,7 +1,8 @@
 import * as BUNGIE from '../utils/bungie/static';
 
 import { 
-  SET_ITEMS, 
+  SET_ITEMS,
+  SET_ITEM_BUCKETS,
   SWITCH_GUARDIAN, 
   SWITCH_VIEW,
   TRANSFER_TO_VAULT,
@@ -44,6 +45,11 @@ export default function inventory(state = newState, action) {
       newState = _.clone(state);
       newState.profileInventory = _.extend({}, action.items.profileInventory);
       newState.guardiansInventory = _.extend({}, action.items.guardiansInventory);
+      return newState
+     
+    case SET_ITEM_BUCKETS:
+      newState = _.clone(state);
+      newState.itemBuckets = _.extend({}, action.buckets);
       return newState
       
     case SWITCH_GUARDIAN:
