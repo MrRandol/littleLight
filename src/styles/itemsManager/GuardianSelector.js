@@ -5,10 +5,12 @@ module.exports = StyleSheet.create({
     backgroundColor: '#242424',
     justifyContent: 'center',
     alignItems: 'center',
-    flexDirection: 'row'
+    flexDirection: 'row',
+    borderBottomColor: '#ffffff',
+    borderBottomWidth: StyleSheet.hairlineWidth
   },
   guardianSelectorEmblem: {
-    height: 55,
+    height: 85,
     width: 235,
   },
   guardianSelectorInfos: {

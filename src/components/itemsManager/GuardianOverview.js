@@ -35,11 +35,11 @@ class GuardianOverview extends React.Component {
   }
 
   render() {
-
     var characterEquipment = this.props.itemsManager.guardiansInventory[this.props.itemsManager.currentGuardianId].characterEquipment;
+    var backgroundsource = BUNGIE.HOST + characterEquipment['3284755031'][0].secondaryIcon;
     return(
       <View style={styles.guardianOverviewContainer} >
-        <View style={styles.guardianOverviewBackground} >
+        <Image style={styles.guardianOverviewBackground} resizeMode='cover' source={{uri: backgroundsource}} >
           <View style={styles.guardianOverviewMenuContainer} >
             <View style={styles.guardianOverviewWeaponsContainer} >
               { this.itemTypeIcon(BUNGIE.ORDERED_BUCKETS[0]) /*kineticWeapons*/ }
@@ -48,7 +48,7 @@ class GuardianOverview extends React.Component {
               { this.itemTypeIcon(BUNGIE.ORDERED_BUCKETS[3]) /*ghost*/          }
             </View>
             <View style={styles.guardianOverviewSubclassContainer} >
-              <Image style={styles.guardianOverviewSubclassCategoryButton} source={{uri: BUNGIE.HOST + characterEquipment['3284755031'][0].displayProperties.icon}} />
+              {/*<Image style={styles.guardianOverviewSubclassCategoryButton} source={{uri: BUNGIE.HOST + characterEquipment['3284755031'][0].displayProperties.icon}} />*/}
             </View>
             <View style={styles.guardianOverviewArmorContainer} >
               { this.itemTypeIcon(BUNGIE.ORDERED_BUCKETS[4]) /*helmet*/     }
@@ -58,7 +58,7 @@ class GuardianOverview extends React.Component {
               { this.itemTypeIcon(BUNGIE.ORDERED_BUCKETS[8]) /*classArmor*/ }
             </View>
           </View>
-        </View>
+        </Image>
       </View>
     );
     

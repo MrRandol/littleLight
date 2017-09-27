@@ -2,36 +2,37 @@ import { StyleSheet } from 'react-native';
 
 module.exports = StyleSheet.create({
   guardianOverviewContainer: {
-    flex: 1
+    flex: 1,
+    backgroundColor: '#242424'
   },
   guardianOverviewBackground: {
     flex: 1,
-    backgroundColor: '#909090'
+    width: null,
+    height: null,
+    //opacity: 0.85
   },
   guardianOverviewMenuContainer: {
     flex: 1,
     flexDirection: 'row',
+    backgroundColor: 'rgba(0,0,0,0.35)'
   },
   guardianOverviewWeaponsContainer: {
     flex: 7,
     flexDirection: 'column',
     justifyContent: 'space-around',
     alignItems: 'center',
-    backgroundColor: '#242424'
   },
   guardianOverviewSubclassContainer: {
     flex: 10,
     flexDirection: 'column',
     justifyContent: 'space-around',
     alignItems: 'center',
-    backgroundColor: '#262626'
   },
   guardianOverviewArmorContainer: {
     flex: 7,
     flexDirection: 'column',
     justifyContent: 'space-around',
     alignItems: 'center',
-    backgroundColor: '#242424'
   },
   guardianOverviewItemCategoryButton: {
     width: 90,
