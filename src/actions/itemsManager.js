@@ -1,5 +1,6 @@
 export const SET_ITEMS = 'SET_ITEMS';
 export const SET_ITEM_BUCKETS = 'SET_ITEM_BUCKETS';
+export const SET_STATS = 'SET_STATS';
 export const SWITCH_GUARDIAN = 'SWITCH_GUARDIAN';
 export const SWITCH_VIEW = 'SWITCH_VIEW';
 export const TRANSFER_TO_VAULT = 'TRANSFER_TO_VAULT';
@@ -18,6 +19,14 @@ export function setItemBuckets (buckets) {
     buckets: buckets
   }
 }
+
+export function setStats (stats) {
+  return {
+    type: SET_STATS,
+    stats: stats
+  }
+}
+
 
 export function switchGuardian (guardianId) {
   return {

@@ -37,46 +37,25 @@ class GuardianOverview extends React.Component {
   render() {
 
     var characterEquipment = this.props.itemsManager.guardiansInventory[this.props.itemsManager.currentGuardianId].characterEquipment;
-
-    /*{ this.itemTypeIcon("kineticWeapons") }
-    { this.itemTypeIcon("energyWeapons") }
-    { this.itemTypeIcon("powerWeapons") }
-    { this.itemTypeIcon("ghost") }*/
-    /*{ this.itemTypeIcon(1498876634) }
-    { this.itemTypeIcon(2465295065) }
-    { this.itemTypeIcon(953998645) }
-    { this.itemTypeIcon(4023194814) }*/
-
-  /*{ this.itemTypeIcon("helmet") }
-    { this.itemTypeIcon("gauntlets") }
-    { this.itemTypeIcon("chestArmor") }
-    { this.itemTypeIcon("legArmor") }
-    { this.itemTypeIcon("classArmor") }*/
-    /*{ this.itemTypeIcon(3448274439) }
-    { this.itemTypeIcon(3551918588) }
-    { this.itemTypeIcon(14239492) }
-    { this.itemTypeIcon(20886954) }
-    { this.itemTypeIcon(1585787867) }*/
-
     return(
       <View style={styles.guardianOverviewContainer} >
         <View style={styles.guardianOverviewBackground} >
           <View style={styles.guardianOverviewMenuContainer} >
             <View style={styles.guardianOverviewWeaponsContainer} >
-              { this.itemTypeIcon(1498876634) }
-              { this.itemTypeIcon(2465295065) }
-              { this.itemTypeIcon(953998645) }
-              { this.itemTypeIcon(4023194814) }
+              { this.itemTypeIcon(BUNGIE.ORDERED_BUCKETS[0]) /*kineticWeapons*/ }
+              { this.itemTypeIcon(BUNGIE.ORDERED_BUCKETS[1]) /*energyWeapons*/  }
+              { this.itemTypeIcon(BUNGIE.ORDERED_BUCKETS[2]) /*powerWeapons*/   }
+              { this.itemTypeIcon(BUNGIE.ORDERED_BUCKETS[3]) /*ghost*/          }
             </View>
             <View style={styles.guardianOverviewSubclassContainer} >
               <Image style={styles.guardianOverviewSubclassCategoryButton} source={{uri: BUNGIE.HOST + characterEquipment['3284755031'][0].displayProperties.icon}} />
             </View>
             <View style={styles.guardianOverviewArmorContainer} >
-              { this.itemTypeIcon(3448274439) }
-              { this.itemTypeIcon(3551918588) }
-              { this.itemTypeIcon(14239492) }
-              { this.itemTypeIcon(20886954) }
-              { this.itemTypeIcon(1585787867) }
+              { this.itemTypeIcon(BUNGIE.ORDERED_BUCKETS[4]) /*helmet*/     }
+              { this.itemTypeIcon(BUNGIE.ORDERED_BUCKETS[5]) /*gauntlets*/  }
+              { this.itemTypeIcon(BUNGIE.ORDERED_BUCKETS[6]) /*chestArmor*/ }
+              { this.itemTypeIcon(BUNGIE.ORDERED_BUCKETS[7]) /*legArmor*/   }
+              { this.itemTypeIcon(BUNGIE.ORDERED_BUCKETS[8]) /*classArmor*/ }
             </View>
           </View>
         </View>

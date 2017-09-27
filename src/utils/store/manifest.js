@@ -1,9 +1,11 @@
 import { AsyncStorage } from 'react-native';
 import { LLException } from '../errorHandler';
+import * as Message from '../message';
 
-export function getManifestVersion() {
+export async function getManifestVersion() {
   try {
-    return AsyncStorage.getItem('@ManifestStore:Manifest.version');
+    const data = await AsyncStorage.getItem('@ManifestStore:Manifest.version');
+    return data;
   } catch (error) {
     Message.error("[STORE] Error on getManifestVersion");
     Message.error(error);
@@ -11,9 +13,9 @@ export function getManifestVersion() {
   }
 }
 
-export function saveManifestVersion(version) {
+export async function saveManifestVersion(version) {
   try {
-    return AsyncStorage.setItem('@ManifestStore:Manifest.version', version);
+    return await AsyncStorage.setItem('@ManifestStore:Manifest.version', version);
   } catch (error) {
     Message.error("[STORE] Error on saveManifestVersion");
     Message.error(error);
@@ -21,9 +23,9 @@ export function saveManifestVersion(version) {
   }
 }
 
-export function saveManifestItems(items) {
+export async function saveManifestItems(items) {
   try {
-    return AsyncStorage.multiSet(items);
+    return await AsyncStorage.multiSet(items);
   } catch (error) {
     Message.error("[STORE] Error on saveManifestItems");
     Message.error(error);
@@ -31,11 +33,11 @@ export function saveManifestItems(items) {
   }
 }
 
-export function getManifestItems(hashArray) {
+export async function getManifestItems(hashArray) {
   try {
     // hashArray items must be strings of form
     // '@ManifestStore:Manifest.item.<hash>'
-    return AsyncStorage.multiGet(hashArray);
+    return await AsyncStorage.multiGet(hashArray);
   } catch (error) {
     Message.error("[STORE] Error on getManifestItems");
     Message.error(error);
@@ -43,13 +45,13 @@ export function getManifestItems(hashArray) {
   }
 }
 
-export function getManifestItemBuckets() {
+export function getManifestDataForKey(storeKey) {
   try {
     return AsyncStorage.getAllKeys()
     .then(function(items) {
       var keys = [];
       for (var i = items.length - 1; i >= 0; i--) {
-        if (items[i].indexOf('@ManifestStore:Manifest.itemBucket.') !== -1 ) {
+        if (items[i].indexOf('@ManifestStore:Manifest.' + storeKey + '.') !== -1 ) {
           keys.push(items[i]);
         }
       }

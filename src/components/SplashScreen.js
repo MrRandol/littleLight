@@ -96,7 +96,7 @@ class SplashScreen extends React.Component {
       this.setState({component: "oauth", message: status.message});
       if (status.status === 'SUCCESS') {
         this.props.setUser(status.user.Response);
-        this.doPreLoadDataFromStore();
+        this.doPreLoadBucketsFromStore();
       }
     } catch (error) {
       Message.error("[LOADING] An error occured while handling authentication callback");
@@ -106,35 +106,63 @@ class SplashScreen extends React.Component {
   }
 
   /***************************************
-                3 - PRELOAD
+            3 - PRELOAD BUCKETS
   ***************************************/
-  doPreLoadDataFromStore() {
+  doPreLoadBucketsFromStore() {
     try {
-      Inventory.getItemBucketDefinitions(this.preLoadDataStatusCallback.bind(this));
+      Inventory.getStoreDatas('itemBucket', this.preLoadBucketsStatusCallback.bind(this));
     } catch (error) {
-      Message.error("[LOADING] Error while loading data from internal store into state");
+      Message.error("[LOADING] Error while loading buckets from internal store into state");
       Message.error(error);
       throw new LLException(14, error, 'loadingException');
     }
   }
 
-  preLoadDataStatusCallback(status) {
+  preLoadBucketsStatusCallback(status) {
     try {
       Message.info("[PRELOAD DATA STATUS] " + JSON.stringify(status.status) + " - " + JSON.stringify(status.message));
       this.setState({component: "preloadData", message: status.message});
       if (status.status === 'SUCCESS') {
         this.props.setItemBuckets(status.data);
-        this.doFetchAllItemsAndGuardians();
+        this.doPreLoadStatsFromStore();
       }
     } catch (error) {
-      Message.error("[LOADING] Error while handling preload callback");
+      Message.error("[LOADING] Error while handling preload buckets callback");
       Message.error(error);
       throw new LLException(15, error, 'loadingException');
     }
   }
 
   /***************************************
-            4 - ITEMS FETCH
+            4 - PRELOAD STATS
+  ***************************************/
+  doPreLoadStatsFromStore() {
+    try {
+      Inventory.getStoreDatas('stat', this.preLoadStatsStatusCallback.bind(this));
+    } catch (error) {
+      Message.error("[LOADING] Error while loading stats from internal store into state");
+      Message.error(error);
+      throw new LLException(14, error, 'loadingException');
+    }
+  }
+
+  preLoadStatsStatusCallback(status) {
+    try {
+      Message.info("[PRELOAD DATA STATUS] " + JSON.stringify(status.status) + " - " + JSON.stringify(status.message));
+      this.setState({component: "preloadData", message: status.message});
+      if (status.status === 'SUCCESS') {
+        this.props.setStats(status.data);
+        this.doFetchAllItemsAndGuardians();
+      }
+    } catch (error) {
+      Message.error("[LOADING] Error while handling preload stats callback");
+      Message.error(error);
+      throw new LLException(15, error, 'loadingException');
+    }
+  }
+
+  /***************************************
+            5 - ITEMS FETCH
   ***************************************/
   doFetchAllItemsAndGuardians() {
     try {
@@ -157,12 +185,22 @@ class SplashScreen extends React.Component {
         this.props.switchGuardian(Object.keys(status.data.guardians)[0]);
         this.props.setGuardians(status.data.guardians);
         this.props.setItems(status.data);
-        this.props.setLoadingState(false);
+        this.launchApp();
       }
     } catch (error) {
       Message.error("[LOADING] An error occured while handling guardians infos callback");
       Message.error(error);
       throw new LLException(17, error, 'loadingException');
+    }
+  }
+
+  launchApp() {
+   try {
+      this.props.setLoadingState(false);
+    } catch (error) {
+      Message.error("[LOADING] An error occured while initiating app display");
+      Message.error(error);
+      throw new LLException(18, error, 'loadingException');
     }
   }
 

@@ -18,7 +18,8 @@ TODO : populate with a lot of things :D
 15 : Error while handling preload callback  
 16 : An error occured while fetching your guardians informations  
 17 : An error occured while handling guardians infos callback  
-  
+18 : An error occured while initiating app display
+
 ### MANIFEST
 20 : "Error in check/update Manifest"  
 21 : "Error in checkManifestVersion"  
@@ -63,6 +64,7 @@ TODO : populate with a lot of things :D
 ### TRANSFER
 50 : Error on item transfer from/to vault
 51 : Error on item transfer from/to vault
+54 : No source nor destination guardian found. This should not happen.
 
 ## ITEMS MANAGEMENT
 200 : Error while transferring item

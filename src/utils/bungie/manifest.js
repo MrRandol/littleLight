@@ -110,6 +110,9 @@ function insertDbIntoStore(db, version, statusCallback) {
       return callTransaction(db, 'DestinyInventoryBucketDefinition', 'itemBucket');
     })
     .then(function() {
+      return callTransaction(db, 'DestinyStatDefinition', 'stat');
+    })
+    .then(function() {
       statusCallback.call(this, {status: "IN_PROGRESS", message: "manifestSavedData"});
       updateManifestVersion(version, statusCallback);
     });
@@ -178,7 +181,6 @@ function updateManifestVersion(_version, statusCallback){
         statusCallback.call(this, {status: "SUCCESS", message: "manifestUpdated", data: version});
       } else {
         Message.error("[MANIFEST] Error while inserting manifest version into store");
-        Message.error(error);
         throw new LLException(29, error, 'manifestException');
       }
     });

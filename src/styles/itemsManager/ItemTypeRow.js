@@ -21,13 +21,13 @@ module.exports = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  itemTypeRowEmblem: {
+  roundEmblem: {
     width: 75,
     height:75,
     borderRadius: 75,
     margin: 10,
   },
-  itemTypeRowNotEquipped: {
+  notEquippedItems: {
     flex: 7,
     flexWrap: 'wrap',
     alignItems: 'flex-end'

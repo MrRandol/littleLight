@@ -1,8 +1,10 @@
+var _ = require('underscore');
 import * as BUNGIE from '../utils/bungie/static';
 
 import { 
   SET_ITEMS,
   SET_ITEM_BUCKETS,
+  SET_STATS,
   SWITCH_GUARDIAN, 
   SWITCH_VIEW,
   TRANSFER_TO_VAULT,
@@ -19,10 +21,9 @@ let newState = {
   }
 };
 
-var _ = require('underscore');
 
 function transferItem(sourceBucket, destBucket, item) {
-  var itemType = BUNGIE.BUCKET_TYPES[item.inventory.bucketTypeHash];
+  var itemType = item.inventory.bucketTypeHash;
   var newSource = [];
   for (var i = 0; i < sourceBucket.length; i++) {
     if (sourceBucket[i].itemInstanceId !== item.itemInstanceId) {
@@ -51,6 +52,11 @@ export default function inventory(state = newState, action) {
       newState = _.clone(state);
       newState.itemBuckets = _.extend({}, action.buckets);
       return newState
+           
+    case SET_STATS:
+      newState = _.clone(state);
+      newState.stats = _.extend({}, action.stats);
+      return newState
       
     case SWITCH_GUARDIAN:
       newState = _.clone(state);
@@ -65,29 +71,29 @@ export default function inventory(state = newState, action) {
 
     case TRANSFER_TO_VAULT:
       newState = _.clone(state);
-      if (!newState.profileInventory.general) {
-        newState.profileInventory.general = {};
+      if (!newState.profileInventory['138197802']) {
+        newState.profileInventory['138197802'] = {};
       }
-      var itemType = BUNGIE.BUCKET_TYPES[action.item.inventory.bucketTypeHash];
+      var itemType = action.item.inventory.bucketTypeHash;
       var { newSource, newDest } = transferItem (
         newState.guardiansInventory[action.guardianId].characterInventories[itemType],
-        newState.profileInventory.general[itemType],
+        newState.profileInventory['138197802'][itemType],
         action.item
       )
       newState.guardiansInventory[action.guardianId].characterInventories[itemType] = newSource;
-      newState.profileInventory.general[itemType] = newDest;
+      newState.profileInventory['138197802'][itemType] = newDest;
       return newState;
 
     case TRANSFER_FROM_VAULT:
       newState = _.clone(state);
-      var itemType = BUNGIE.BUCKET_TYPES[action.item.inventory.bucketTypeHash];
+      var itemType = action.item.inventory.bucketTypeHash;
       var { newSource, newDest } = transferItem (
-        newState.profileInventory.general[itemType],
+        newState.profileInventory['138197802'][itemType],
         newState.guardiansInventory[action.guardianId].characterInventories[itemType],
         action.item
       )
       newState.guardiansInventory[action.guardianId].characterInventories[itemType] = newDest;
-      newState.profileInventory.general[itemType] = newSource;
+      newState.profileInventory['138197802'][itemType] = newSource;
       return newState;
 
     default:

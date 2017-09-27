@@ -7,24 +7,32 @@ import * as BUNGIE from './static';
 
 var _ = require('underscore');
 
-export function transferBetweenGuardians (item, characterId, membershipType, sourceGuardian, destGuardian) {
-  this.transferFromToVault(item, false, sourceGuardian).
-  then(function() {
-    self.transferFromToVault(item, true, destGuardian)
-    .catch(function (error) {
-      Message.error("[TRANSFER] Error while moving item between guardians (vault > dest)");
-      Message.error(error);
-      throw new LLException(53, error, 'transferException')
+export function transferItem(item, membershipType, sourceGuardian, destGuardian) {
+  Message.debug("Transferring item between " + sourceGuardian + " and " + destGuardian);
+
+  if (!sourceGuardian && !destGuardian) {
+    Message.error("[TRANSFER] Item transfer cannot be done whith no source nor destination !");
+    throw new LLException(54, error, 'transferException')
+  }
+
+  if (sourceGuardian) {
+    Message.debug("Transferring from " + sourceGuardian + " to vault");
+    return transferFromToVault(item, sourceGuardian, membershipType, true)
+    .then(function() {
+      if (!destGuardian) {
+        Message.debug("No dest guardian. Destination was vault.");
+        return true;
+      }
+      Message.debug("Transferring from vault to " + destGuardian);
+      return transferFromToVault(item, destGuardian, membershipType, false);
     })
-  })
-  .catch(function (error) {
-    Message.error("[TRANSFER] Error while moving item between guardians (source > vault)");
-    Message.error(error);
-    throw new LLException(52, error, 'transferException')
-  })
+  }
+  
+  Message.debug("No source. Transferring from vault to " + destGuardian);
+  return transferFromToVault(item, destGuardian, membershipType, false);
 }
 
-export async function transferFromToVault(item, characterId, membershipType, transferToVault) {
+async function transferFromToVault(item, guardianId, membershipType, transferToVault) {
   try {
     var url = BUNGIE.TRANSFER_ITEM;
     var body = JSON.stringify({
@@ -32,11 +40,13 @@ export async function transferFromToVault(item, characterId, membershipType, tra
       stackSize: 1, // For now only one
       transferToVault: transferToVault,
       itemId: item.itemInstanceId,
-      characterId: characterId,
+      characterId: guardianId,
       membershipType: membershipType
     });
     return Request.doPost(url, body)
       .then(function (json) {
+        Message.debug("TRANSFER ANSWER ::");
+        Message.debug(json);
         return json;
       })
       .catch(function(error) { 

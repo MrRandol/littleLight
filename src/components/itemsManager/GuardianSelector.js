@@ -68,7 +68,7 @@ class GuardianSelector extends React.Component {
       <View style={[styles.guardianSelectorContainer, {height: selectorHeight}]} >
 
         <Modal
-          animationType="slide"
+          animationType="fade"
           transparent={true}
           visible={this.state.modalVisible}
           onRequestClose={() => {this.setModalVisible(false)}}

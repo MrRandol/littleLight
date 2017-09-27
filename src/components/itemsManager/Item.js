@@ -26,10 +26,16 @@ class Item extends React.Component {
   }
 
   render(){
-   if (!this.props.item) {
+    if (!this.props.item) {
       return <View style={styles.itemNoItem} />
     }
-    var source = this.props.item.displayProperties && this.props.item.displayProperties.icon ? BUNGIE.HOST+this.props.item.displayProperties.icon : BUNGIE.FALLBACK_ICON;
+
+    var source;
+    try {
+      source = BUNGIE.HOST+this.props.item.displayProperties.icon;
+    } catch(e) {
+      source = BUNGIE.FALLBACK_ICON;
+    } 
     
     var style;
     switch(this.props.styleRef) {

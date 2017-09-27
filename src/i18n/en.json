@@ -2,6 +2,7 @@
   "common": 
   {
     "littleLight": "Little Light",
+    "cancel": "Cancel",
   },
   "SplashScreen":
   {
@@ -39,6 +40,13 @@
     "hunter_female": "Hunter",
     "warlock_male": "Warlock",
     "warlock_female": "Warlock"
+  },
+  "Transfer": {
+    "store": "STORE"
+  },
+  "Item": {
+    "powerLevel": "Power Level",
+    "damageType": "Damage Type"
   }
   
 }

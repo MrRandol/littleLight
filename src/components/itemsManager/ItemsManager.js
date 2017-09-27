@@ -26,89 +26,52 @@ import * as Inventory from '../../utils/bungie/inventory';
 import * as Transfer from '../../utils/bungie/transfer';
 import * as Message from '../../utils/message';
 
+import ItemTransferModal from './transfer/ItemTransferModal';
 import GuardianSelector from './GuardianSelector';
 import GuardianOverview from './GuardianOverview';
-import ItemTypeManager from './ItemTypeManager';
+import ItemTypeSwiper from './ItemTypeSwiper';
 
 var _ = require('underscore');
 
 class ItemsManager extends React.Component {
   constructor(props) {
     super(props);
-  }
-
-  swipeToView(previous = false) {
-    var currentType = this.props.itemsManager.currentView.additionalParams.bucketHash;
-    var iterationValue = previous === true ? -1 : 1;
-    var index = (_.indexOf(BUNGIE.ORDERER_BUCKET_TYPES, currentType) + iterationValue) %(BUNGIE.ORDERER_BUCKET_TYPES.length);
-    if (index < 0 ) {
-      index = BUNGIE.ORDERER_BUCKET_TYPES.length - 1;
-    }
-    this.props.switchView('ItemTypeManager', {bucketHash: BUNGIE.ORDERER_BUCKET_TYPES[index]})
+    this.state = {
+      transferModalVisible: false
+    };
   }
 
   switchToView(viewName, additionalParams) {
     this.props.switchView(viewName, additionalParams);
   }
 
-  transferItem(item, itemInVault, destinationGuardian, sourceGuardian = null) {
+  transferItem(item, sourceGuardian, destGuardian) {
+    var self = this;
     try {
-      var self = this;
-      if (sourceGuardian !== null) {
-        Transfer.transferBetweenGuardians(
-          item, 
-          this.props.user.user.destinyMemberships[0].membershipType, 
-          sourceGuardian,
-          destinationGuardian
-        )
-        .then(function() {
-          self.props.transferToVault(item, sourceGuardian);
-          self.props.transferFromVault(item, destinationGuardian);
-        })
-        .catch(function (error) {
-          Message.error("[ITEMS_MANAGER] Error while transferring item between guardians.");
-          Message.error(error);
-          throw new LLException(201, error, 'itemsManagerException')
-        });
-      } else {
-        Transfer.transferFromToVault(
-          item, 
-          destinationGuardian, 
-          this.props.user.user.destinyMemberships[0].membershipType, 
-          !itemInVault
-        )
-        .then(function (resp) {
-          if(itemInVault) {
-            self.props.transferFromVault(item, destinationGuardian);
-          } else {
-            self.props.transferToVault(item, destinationGuardian);
-          }
-        })
-        .catch(function (error) {
-          Message.error("[ITEMS_MANAGER] Error while transferring item from/to vault.");
-          Message.error(error);
-          throw new LLException(202, error, 'itemsManagerException')
-        });
-      }
+      Transfer.transferItem(item, this.props.user.user.destinyMemberships[0].membershipType, sourceGuardian, destGuardian)
+      .then(function() {
+        Message.debug("Transfer OK. Refreshing.");
+        self.refreshItems();
+      });
     } catch (error) {
-      Message.error("[ITEMS_MANAGER] Error while transferring item.");
-      Message.error(error);
+      Message.warn("[ITEMS_MANAGER] Error while transferring item.");
+      Message.warn(error);
       throw new LLException(200, error, 'itemsManagerException')
     }
   }
 
   refreshItems() {
-    var self = this;
     try {
-      return Inventory.getAllItemsAndCharacters(self.props.user.user.destinyMemberships[0], 
+      var self = this;
+      this.setState({refreshing: true});
+      return Inventory.getAllItemsAndCharacters(this.props.user.user.destinyMemberships[0],
         function(status) {
           if(status.status === 'SUCCESS') {
             self.props.setGuardians(status.data.guardians);
             self.props.setItems(status.data);
-            return status;
-          } else {
-            Message.error("[ITEMS_MANAGER] Error while refreshing data.");
-            throw new LLException(210, 'itemsRefreshError', 'itemsManagerException');
+            self.setState({refreshing: false});
+            Message.debug("RefreshDone");
+            return true;
           }
         }
       );
@@ -119,12 +82,24 @@ class ItemsManager extends React.Component {
     }
   }
 
+  showTransferModal(item, guardianId) {
+    this.setState({
+      itemToTransfer: item,
+      itemAssociatedGuardian: guardianId,
+      transferModalVisible: true, 
+    });
+  }
+
+  closeTransferModal() {
+    this.setState({transferModalVisible: false})
+  }
+
   render() {
     var contentToRender;
     switch(this.props.itemsManager.currentView.name) {
 
       case 'ItemTypeManager':
-        contentToRender = <ItemTypeManager style={{ flex: 9 }} swipeToView={this.swipeToView.bind(this)} user={this.props.user} itemsManager={this.props.itemsManager} refreshItemsCallback={this.refreshItems.bind(this)} transferItemCallback={this.transferItem.bind(this)} />
+        contentToRender = <ItemTypeSwiper style={{ flex: 9 }} user={this.props.user} itemsManager={this.props.itemsManager} showTransferModal={this.showTransferModal.bind(this)} refreshItems={this.refreshItems.bind(this)} />
         break;
 
       case 'GuardianOverview':
@@ -137,13 +112,26 @@ class ItemsManager extends React.Component {
 
     return(
       <View style={styles.ItemsManagerContainer} >
+
+        <ItemTransferModal 
+          visible={this.state.transferModalVisible} 
+          item={this.state.itemToTransfer}
+          itemAssociatedGuardian={this.state.itemAssociatedGuardian}
+          itemsManager={this.props.itemsManager}
+          guardians={this.props.user.guardians}
+          transferItem={this.transferItem.bind(this)}
+          closeModal={this.closeTransferModal.bind(this)}
+        />
+
         <GuardianSelector 
           style={{flex: 1}} 
           currentGuardianId={this.props.itemsManager.currentGuardianId}
           switchGuardian={this.props.switchGuardian}
           guardians={this.props.user.guardians}
         />
+
         { contentToRender }
+
       </View>
     );
   } 

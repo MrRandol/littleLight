@@ -1,10 +1,11 @@
 import { AsyncStorage } from 'react-native';
 import { LLException } from '../errorHandler';
+import * as Message from '../message';
 
-
-export function getAuthData() {
+export async function getAuthData() {
   try {
-    return AsyncStorage.getItem('@AuthStore:Oauth');
+    const data = await AsyncStorage.getItem('@AuthStore:Oauth');
+    return JSON.parse(data);
   } catch (error) {
     Message.error("[STORE] Error on getAuthData");
     Message.error(error);
@@ -12,9 +13,10 @@ export function getAuthData() {
   }
 }
 
-export function saveAuthData(oauth) {
+export async function saveAuthData(oauth) {
   try {
-    return AsyncStorage.setItem('@AuthStore:Oauth', JSON.stringify(oauth));
+    const data = await AsyncStorage.setItem('@AuthStore:Oauth', JSON.stringify(oauth));
+    return data;
   } catch (error) {
     Message.error("[STORE] Error on saveAuthData");
     Message.error(error);
@@ -22,12 +24,10 @@ export function saveAuthData(oauth) {
   }
 }
 
-export function getAccessToken() {
+export async function getAccessToken() {
   try {
-    return AsyncStorage.getItem('@AuthStore:Oauth')
-    .then(oauth => {
-      return JSON.parse(oauth).access_token;
-    });
+    var authData =  await AsyncStorage.getItem('@AuthStore:Oauth')
+    return JSON.parse(authData).access_token;
   } catch (error) {
     Message.error("[STORE] Error on getAccessToken");
     Message.error(error);

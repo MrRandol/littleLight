@@ -8,7 +8,7 @@ module.exports = StyleSheet.create({
     flexDirection: 'row'
   },
   guardianSelectorEmblem: {
-    height: 50,
+    height: 55,
     width: 235,
   },
   guardianSelectorInfos: {

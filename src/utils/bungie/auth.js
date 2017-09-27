@@ -130,18 +130,20 @@ function requestTokens(url, body, statusCallback, tried) {
     var headers = new Headers();
     headers.append('Content-Type', 'application/x-www-form-urlencoded');
     headers.append('Authorization', 'Basic ' + btoa(BUNGIE.OAUTH_CLIENT_ID + ':' + BUNGIE.OAUTH_CLIENT_SECRET) );
-
+    var access_token, refresh_token
     Request.doPost(url, body, headers)
     .then(function (json) {
       var authObject = {
         access_token: json.access_token,
         refresh_token: json.refresh_token
       };
+      access_token = json.access_token;
+      refresh_token = json.refresh_token;
       return Store.saveAuthData(authObject)
     })
-    .then(function(result) {
+    .then(function() {
       Message.debug("Saved authentication tokens");
-      checkTokenValidity(result.access_token, result.refresh_token, statusCallback, tried);
+      checkTokenValidity(access_token, refresh_token, statusCallback, tried);
     })
     .catch((error) => { 
       Message.error("[OAUTH] Error while requesting tokens");

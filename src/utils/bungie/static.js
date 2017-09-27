@@ -94,6 +94,15 @@ export const DAMAGE_TYPES = {
   5: 'Raid'
 }
 
+export const DAMAGE_TYPE_ICONS = {
+  0: require('../../../assets/damage/fallback.png'),
+  1: require('../../../assets/damage/kinetic.png'),
+  2: require('../../../assets/damage/arc.png'),
+  3: require('../../../assets/damage/solar.png'),
+  4: require('../../../assets/damage/void.png'),
+  5: require('../../../assets/damage/fallback.png'),
+}
+
 export const TIER_TYPES = {
   0: 'Unknown',
   1: 'Currency',
@@ -158,26 +167,14 @@ export const BUCKET_TYPES = {
   2025709351: 'vehicle',
 }
 
-// For display purpose, ordered bucket types for swipe
-export const ORDERER_BUCKET_TYPES = [
-  1498876634, // kineticWeapons
-  2465295065, // energyWeapons
-  953998645,  // powerWeapons
-  4023194814, // ghost
-  3448274439, // helmet
-  3551918588, // gauntlets
-  14239492,   // chestArmor
-  20886954,   // legArmor
-  1585787867, // classArmor
-/*
-  1269569095: 'auras',
-  4292445962: 'clanBanners',
-  2973005342: 'shaders',
-  18606351: 'shaders',
-  3054419239: 'emotes',
-  4274335291: 'emblems',
-  284967655: 'ships',
-  375726501: 'engrams',
-  2025709351: 'vehicle',*/
+export const ORDERED_BUCKETS = [
+  1498876634, /*kineticWeapons*/
+  2465295065, /*energyWeapons*/ 
+  953998645,  /*powerWeapons*/  
+  4023194814, /*ghost*/         
+  3448274439, /*helmet*/    
+  3551918588, /*gauntlets*/ 
+  14239492,   /*chestArmor*/
+  20886954,   /*legArmor*/  
+  1585787867, /*classArmor*/
 ]
-

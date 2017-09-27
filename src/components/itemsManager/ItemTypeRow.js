@@ -24,58 +24,63 @@ class ItemTypeRow extends React.Component {
     super(props);
   }
 
-  componentWillMount() {
-    data = [];
+  getInventoryItem(index) {
+    return (
+      <Item 
+        key={"inventoryItem-" + this.props.guardianId + index} 
+        item={this.props.inventory ? this.props.inventory[index] : null} 
+        itemOnPressCallback={this.showTransferModal.bind(this)} 
+        styleRef='normal' 
+      />
+    );
+  }
+
+  getEquippedItem() {
+    return (
+      <Item 
+        item={this.props.equipment ? this.props.equipment[0] : null} 
+        itemOnPressCallback={this.showTransferModal.bind(this)}
+        styleRef='equipped' 
+      />
+    );
+  }
+
+  showTransferModal(item) {
+    this.props.showTransferModal.call(this, item, this.props.guardianId);
+  }
+
+  render() {
+
+    var data = [];
     if (this.props.vault) {
-      var length = Math.max(this.props.vaultInventory.length, 9);
+      var length = Math.max(this.props.inventory.length, 9);
       data =  Array(length).fill(null).map((item, index) => index );
     } else {
       data = Array(9).fill(null).map((item, index) => index );
     }
-  }
 
-  getInventoryItem(index) {
-    var item = null;
-    if (this.props.vault) {
-      item = this.props.vaultInventory ? this.props.vaultInventory[index] : null;
-    } else {
-      item = this.props.guardianInventory ? this.props.guardianInventory[index] : null;
-    }
-    return <Item itemOnPressCallback={this.itemOnPressCallback.bind(this)} key={"itemWrapper-" + uid()} item={item} styleRef='normal' />
-  }
-
-  getEquippedItem() {
-    return <Item itemOnPressCallback={this.itemOnPressCallback.bind(this)}  key={"itemWrapper-" + uid()} item={this.props.guardianEquipped ? this.props.guardianEquipped[0] : null} styleRef='equipped' />
-  }
-
-  itemOnPressCallback(item) {
-    this.props.itemOnPressCallback.call(this, item, this.props.vault, this.props.guardianId);
-  }
-
-  render() {
     var self = this;
     var uid = this.props.vault ? 'vault' : this.props.guardianId;
     var containerStyle = this.props.odd ? styles.itemTypeRowContainerOdd : styles.itemTypeRowContainer;
     if (this.props.vault && data.length > 9) {
       containerStyle = [containerStyle, {height: Math.ceil(data.length / 3) * 70 + 40}];
     }
+    var emblemSource = this.props.vault ? BUNGIE.VAULT_ICON : BUNGIE.HOST+this.props.guardians[this.props.guardianId].emblemPath;
     return(
       <View key={"inventoryRow-" + uid} style={containerStyle} >
         <View style={styles.itemTypeRowEquippedAndEmblem} >
           <Image 
-            style={styles.itemTypeRowEmblem} 
+            style={styles.roundEmblem} 
             resizeMode="cover"
-            source={{uri: this.props.vault ? BUNGIE.VAULT_ICON : BUNGIE.HOST+this.props.guardians[this.props.guardianId].emblemPath}} 
+            source={{uri: emblemSource}} 
           />
           { !this.props.vault && this.getEquippedItem() }
         </View>
 
-        <View style={styles.itemTypeRowNotEquipped}> 
+        <View style={styles.notEquippedItems}> 
           {  
             data.map(function (item) {
-              return(
-                self.getInventoryItem(item) 
-              );
+              return self.getInventoryItem(item);
             })
           }
         </View>
