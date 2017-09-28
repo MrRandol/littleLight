@@ -41,7 +41,8 @@ class ItemTypeSwiper extends React.Component {
                 user={self.props.user} 
                 itemsManager={self.props.itemsManager}
                 showTransferModal={self.props.showTransferModal}
-                refreshItems={self.props.refreshItems} 
+                refreshItems={self.props.refreshItems}
+                refreshing={self.props.refreshing}
                 transferItemCallback={self.props.transferItem} 
               />
             )

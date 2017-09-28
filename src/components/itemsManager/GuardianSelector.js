@@ -60,7 +60,7 @@ class GuardianSelector extends React.Component {
     var currentGuardian = guardians[this.props.currentGuardianId];
     var self = this;
 
-    var emblemWidth = width * 0.95;
+    var emblemWidth = width;
     var emblemHeight = 96/height*emblemWidth; // 96 = original embem size
     var selectorHeight = 96/height*width;
 

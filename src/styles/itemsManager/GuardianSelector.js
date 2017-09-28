@@ -6,8 +6,8 @@ module.exports = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     flexDirection: 'row',
-    borderBottomColor: '#ffffff',
-    borderBottomWidth: StyleSheet.hairlineWidth
+    borderColor: '#000000',
+    borderWidth: 1
   },
   guardianSelectorEmblem: {
     height: 85,
@@ -60,7 +60,7 @@ module.exports = StyleSheet.create({
     alignItems: 'center'
   },
   guardianSelectorModalContent: {
-    backgroundColor: '#CBCBCB',
+    backgroundColor: '#666666',
   },
   guardianButtonsContainer: {
     flex: 4,

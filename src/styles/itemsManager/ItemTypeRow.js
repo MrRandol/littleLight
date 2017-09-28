@@ -14,7 +14,7 @@ module.exports = StyleSheet.create({
     justifyContent: 'center',
     height: 240,
     padding: 15,
-    backgroundColor: '#484848'
+    backgroundColor: 'rgba(255, 255, 255,0.45)'
   },
   itemTypeRowEquippedAndEmblem: {
     flex: 4,
@@ -30,7 +30,7 @@ module.exports = StyleSheet.create({
   notEquippedItems: {
     flex: 7,
     flexWrap: 'wrap',
-    alignItems: 'flex-end'
+    alignItems: 'flex-start'
   },
   itemTypeRowNotEquippedLine: {
     flex: 1,

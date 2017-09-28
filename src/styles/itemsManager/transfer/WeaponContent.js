@@ -1,15 +1,8 @@
 import { StyleSheet } from 'react-native';
 
 module.exports = StyleSheet.create({
-  itemTransferModal: {
+  container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  content: {
-    justifyContent: 'space-around',
-    alignItems: 'stretch',
-    backgroundColor: '#CBCBCB',
   },
   titleContainer: {
     flex: 3,
@@ -34,9 +27,13 @@ module.exports = StyleSheet.create({
     padding: 3
   },
   itemContainer: {
-    flex: 6,
+    flex: 5,
     flexDirection: 'row',
     backgroundColor: '#666666',
+    borderTopColor: '#bbb',
+    borderTopWidth: 1,
+    borderBottomColor: '#bbb',
+    borderBottomWidth: 1,
   },
   itemContainerLeft: {
     flex: 2,
@@ -60,7 +57,7 @@ module.exports = StyleSheet.create({
     alignItems: 'stretch',
     justifyContent: 'center',
     borderLeftColor: '#bbb',
-    borderLeftWidth: 0.8,
+    borderLeftWidth: 1,
     paddingLeft: 5,
   },
   itemStat: {

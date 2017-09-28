@@ -22,6 +22,10 @@
     "authValid": "Authentication is valid !",
     "authRefreshToken": "Refreshing authentication",
     "authRequestNewToken": "Requesting new authentication data",
+    // Preload data
+    "preloadData": "Opening vault",
+    "fetchData": "Fetching data from store",
+    "dataRetreived": "Data retreived",
     // Inventories and stuff
     "guardiansFetch": "Transmatting your loot",
     "fetchItems": "Downloading inventory data",

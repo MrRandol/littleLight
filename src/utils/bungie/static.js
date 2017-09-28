@@ -103,6 +103,19 @@ export const DAMAGE_TYPE_ICONS = {
   5: require('../../../assets/damage/fallback.png'),
 }
 
+export const SUBCLASS_IMAGES = {
+  'lostLight': require('../../../assets/guardians/lostLight.png'),
+  'sunbreaker': require('../../../assets/guardians/sunbreaker.png'),
+  'nightstalker': require('../../../assets/guardians/nightstalker.png'),
+  'sentinel': require('../../../assets/guardians/sentinel.png'),
+  'dawnblade': require('../../../assets/guardians/dawnblade.png'),  
+  'gunslinger': require('../../../assets/guardians/gunslinger.png'),
+  'voidwalker': require('../../../assets/guardians/voidwalker.png'),
+  'arcstrider': require('../../../assets/guardians/arcstrider.png'),
+  'stormcaller': require('../../../assets/guardians/stormcaller.png'),
+  'striker': require('../../../assets/guardians/striker.png'),
+}
+
 export const TIER_TYPES = {
   0: 'Unknown',
   1: 'Currency',

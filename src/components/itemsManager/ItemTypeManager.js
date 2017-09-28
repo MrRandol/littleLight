@@ -22,19 +22,7 @@ import LoadingImage from '../common/LoadingImage';
 class ItemTypeManager extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      refreshing: false,
-    };
   }
-
-  _onRefresh() {
-    var self = this;
-    self.setState({refreshing: true});
-    self.props.refreshItems()
-    .then(function(status) {
-      self.setState({refreshing: false});
-    });
-  } 
 
   render() {
     var self = this;
@@ -60,8 +48,8 @@ class ItemTypeManager extends React.Component {
       <ScrollView 
         style={styles.itemTypeManagerContainer} 
         refreshControl = {<RefreshControl
-          refreshing={this.state.refreshing}
-          onRefresh={this._onRefresh.bind(this)}
+          refreshing={this.props.refreshing}
+          onRefresh={this.props.refreshItems}
           />
         }
       >

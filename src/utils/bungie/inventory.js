@@ -11,7 +11,7 @@ var _ = require('underscore');
 
 export function getStoreDatas(storeKey, statusCallback) {
   try {
-    statusCallback.call(this, {status: "IN_PROGRESS", message: "fetchBuckets"});
+    statusCallback.call(this, {status: "IN_PROGRESS", message: "fetchData"});
     Store.getManifestDataForKey(storeKey)
     .then(function (data) {
       statusCallback.call(this, {status: "SUCCESS", message: "dataRetreived", data: data});

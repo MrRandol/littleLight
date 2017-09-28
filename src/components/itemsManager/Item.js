@@ -2,7 +2,7 @@
    REACT IMPORTS
 ******************/
 import React from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View, Image, Text, TouchableOpacity } from 'react-native';
 
 /*****************
   CUSTOM IMPORTS
@@ -30,6 +30,10 @@ class Item extends React.Component {
       return <View style={styles.itemNoItem} />
     }
 
+
+    var primaryStatValue = ""; 
+    var damageType = null; 
+
     var source;
     try {
       source = BUNGIE.HOST+this.props.item.displayProperties.icon;
@@ -40,6 +44,8 @@ class Item extends React.Component {
     var style;
     switch(this.props.styleRef) {
       case 'equipped':
+        primaryStatValue = this.props.item && this.props.item.primaryStat ? this.props.item.primaryStat.value : "";
+        damageType = this.props.item && this.props.item.damageTypes ? BUNGIE.DAMAGE_TYPE_ICONS[this.props.item.damageTypes[0]] : null;
         style = styles.itemEquipped;
         break;
       case 'overview':
@@ -47,12 +53,19 @@ class Item extends React.Component {
         break;
       case 'normal':
       default:
+        primaryStatValue = this.props.item && this.props.item.primaryStat ? this.props.item.primaryStat.value : "";
+        damageType = this.props.item && this.props.item.damageTypes ? BUNGIE.DAMAGE_TYPE_ICONS[this.props.item.damageTypes[0]] : null;
         style = styles.item;
     }
 
     return (
       <TouchableOpacity onPress={ () => {this.props.itemOnPressCallback(this.props.item)} } >
-        <LoadingImage style={style} source={{uri: source}} onLoad={() => {this.setState({loading: false})}} />
+        <LoadingImage style={style} source={{uri: source}} onLoad={() => {this.setState({loading: false})}}>
+          <View style={styles.statsOverview}>
+            { damageType && <Image style={styles.itemDamage} source={ damageType } /> }
+            { primaryStatValue !== "" && <Text style={styles.itemPrimaryStat} >{ primaryStatValue }</Text> }
+          </View>
+        </LoadingImage>
       </TouchableOpacity>
     )
   }

@@ -69,7 +69,7 @@ class Item extends React.Component {
     }
 
     return (
-      <View style={{flex:1}}>
+      <View style={styles.container}>
         <View style={[styles.titleContainer, { backgroundColor: tierColor }]} >
           <Text style={styles.title} > { this.props.item.displayProperties.name } </Text>
           <Text style={styles.description} > { this.props.item.displayProperties.description } </Text>
@@ -84,9 +84,9 @@ class Item extends React.Component {
             { this.props.item.primaryStat &&
               <Text style={styles.itemStat} > { primaryStatDisplay + " : " + this.props.item.primaryStat.value }</Text>
             }
-            { this.props.item.damageTypeHashes && 
+            { this.props.item.damageTypes && 
               <View style={{flexDirection:'row'}}>
-                <Text style={styles.itemStat} >{ T.translate("Item.damageType") }</Text>
+                <Text style={styles.itemStat} >{ T.translate("Item.damageType") + " : " }</Text>
                 <Image resizeMode='cover' style={{width: 25, height: 25}} source={ BUNGIE.DAMAGE_TYPE_ICONS[this.props.item.damageTypes[0]] } />
               </View>
             }

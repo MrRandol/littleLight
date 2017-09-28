@@ -7,8 +7,8 @@ module.exports = StyleSheet.create({
     margin: 5,
     borderColor: 'white',
     borderWidth: 1,
-    alignItems: 'center',
-    justifyContent: 'center'
+    alignItems: 'flex-end',
+    justifyContent: 'flex-end'
   },
   itemNoItem: {
     width: 60,
@@ -26,13 +26,26 @@ module.exports = StyleSheet.create({
     borderColor: 'yellow',
     borderWidth: 2,
     margin: 10,
-    alignItems: 'center',
-    justifyContent: 'center'
+    alignItems: 'flex-end',
+    justifyContent: 'flex-end'
   },
   itemOverview: {
-    width: 90,
-    height: 90,
-    borderWidth: 2,
+    width: 96,
+    height: 96,
+    borderWidth: 1,
     borderColor: 'white'
   },
+  statsOverview: {
+    flexDirection: 'row',
+    backgroundColor: 'rgba(0, 0, 0, 0.45)',
+  },
+  itemDamage: {
+    width: 13,
+    height: 13
+  },
+  itemPrimaryStat: {
+    color: '#ffffff',
+    lineHeight: 13,
+    fontSize: 13
+  }
   });

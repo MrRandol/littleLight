@@ -4,7 +4,9 @@ module.exports = StyleSheet.create({
 
   ItemsManagerContainer: {
     flex: 1,
-    backgroundColor: '#FFFF00'
+    width: null,
+    height: null,
+    backgroundColor: '#242424'
   },
 
 });

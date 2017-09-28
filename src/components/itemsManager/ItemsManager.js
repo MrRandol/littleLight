@@ -11,7 +11,7 @@ function mapDispatchToProps(dispatch) { return bindActionCreators(Actions, dispa
    REACT IMPORTS
 ******************/
 import React from 'react';
-import { View } from 'react-native';
+import { View, Image } from 'react-native';
 
 /*****************
   CUSTOM IMPORTS
@@ -37,7 +37,8 @@ class ItemsManager extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      transferModalVisible: false
+      transferModalVisible: false,
+      refreshing: false,
     };
   }
 
@@ -47,16 +48,25 @@ class ItemsManager extends React.Component {
 
   transferItem(item, sourceGuardian, destGuardian) {
     var self = this;
+    this.setState({refreshing: true});
     try {
       Transfer.transferItem(item, this.props.user.user.destinyMemberships[0].membershipType, sourceGuardian, destGuardian)
       .then(function() {
-        Message.debug("Transfer OK. Refreshing.");
-        self.refreshItems();
+        Message.debug("Transfer request OK. Refreshing.");
+        self.refreshItems()
+        .then(function () {
+          Message.debug("Transfer refresh OK !");
+        })
+        .catch (function(error) {
+          Message.warn("[ITEMS_MANAGER] Error while transferring item.");
+          Message.warn(error);
+          throw new LLException(200, error, 'itemsManagerException');
+        });
       });
     } catch (error) {
       Message.warn("[ITEMS_MANAGER] Error while transferring item.");
       Message.warn(error);
-      throw new LLException(200, error, 'itemsManagerException')
+      throw new LLException(200, error, 'itemsManagerException');
     }
   }
 
@@ -76,6 +86,7 @@ class ItemsManager extends React.Component {
         }
       );
     } catch (error) {
+      self.setState({refreshing: false});
       Message.error("[ITEMS_MANAGER] Error while refreshing data.");
       Message.error(error);
       throw new LLException(210, error, 'itemsManagerException');
@@ -94,12 +105,18 @@ class ItemsManager extends React.Component {
     this.setState({transferModalVisible: false})
   }
 
+  camelize(str) {
+    return str.replace(/(?:^\w|[A-Z]|\b\w)/g, function(letter, index) {
+      return index == 0 ? letter.toLowerCase() : letter.toUpperCase();
+    }).replace(/\s+/g, '');
+  }
+
   render() {
     var contentToRender;
     switch(this.props.itemsManager.currentView.name) {
 
       case 'ItemTypeManager':
-        contentToRender = <ItemTypeSwiper style={{ flex: 9 }} user={this.props.user} itemsManager={this.props.itemsManager} showTransferModal={this.showTransferModal.bind(this)} refreshItems={this.refreshItems.bind(this)} />
+        contentToRender = <ItemTypeSwiper style={{ flex: 9 }} user={this.props.user} itemsManager={this.props.itemsManager} showTransferModal={this.showTransferModal.bind(this)} refreshItems={this.refreshItems.bind(this)} refreshing={this.state.refreshing} />
         break;
 
       case 'GuardianOverview':
@@ -110,9 +127,13 @@ class ItemsManager extends React.Component {
         contentToRender = null
     }
 
-    return(
-      <View style={styles.ItemsManagerContainer} >
+    var characterEquipment = this.props.itemsManager.guardiansInventory[this.props.itemsManager.currentGuardianId].characterEquipment;
+    var subclass = this.camelize(characterEquipment['3284755031'][0].displayProperties.name);
+    console.log("Rendering background for subclass : " + subclass);
+    var backgroundsource = BUNGIE.SUBCLASS_IMAGES[subclass];
 
+    return(
+      <Image style={styles.ItemsManagerContainer} resizeMode='cover' source={backgroundsource} >
         <ItemTransferModal 
           visible={this.state.transferModalVisible} 
           item={this.state.itemToTransfer}
@@ -132,7 +153,7 @@ class ItemsManager extends React.Component {
 
         { contentToRender }
 
-      </View>
+      </Image>
     );
   } 
 }

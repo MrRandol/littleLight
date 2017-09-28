@@ -2,7 +2,7 @@
    REACT IMPORTS
 ******************/
 import React from 'react';
-import { View, Image, TouchableOpacity } from 'react-native';
+import { View, TouchableOpacity } from 'react-native';
 
 /*****************
   CUSTOM IMPORTS
@@ -12,7 +12,6 @@ T.setTexts(require('../../i18n/en.json'));
 var styles = require('../../styles/itemsManager/GuardianOverview');
 
 import * as BUNGIE from '../../utils/bungie/static';
-
 import Item from './Item';
 
 class GuardianOverview extends React.Component {
@@ -36,10 +35,9 @@ class GuardianOverview extends React.Component {
 
   render() {
     var characterEquipment = this.props.itemsManager.guardiansInventory[this.props.itemsManager.currentGuardianId].characterEquipment;
-    var backgroundsource = BUNGIE.HOST + characterEquipment['3284755031'][0].secondaryIcon;
     return(
       <View style={styles.guardianOverviewContainer} >
-        <Image style={styles.guardianOverviewBackground} resizeMode='cover' source={{uri: backgroundsource}} >
+        <View style={styles.guardianOverviewBackground} >
           <View style={styles.guardianOverviewMenuContainer} >
             <View style={styles.guardianOverviewWeaponsContainer} >
               { this.itemTypeIcon(BUNGIE.ORDERED_BUCKETS[0]) /*kineticWeapons*/ }
@@ -58,7 +56,7 @@ class GuardianOverview extends React.Component {
               { this.itemTypeIcon(BUNGIE.ORDERED_BUCKETS[8]) /*classArmor*/ }
             </View>
           </View>
-        </Image>
+        </View>
       </View>
     );
     

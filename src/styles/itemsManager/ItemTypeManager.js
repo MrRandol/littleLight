@@ -4,13 +4,14 @@ module.exports = StyleSheet.create({
 
   itemTypeManagerContainer: {
     flex: 1,
-    backgroundColor: '#242424'
+    backgroundColor: 'rgba(0,0,0,0.55)'
   },
   titleContainer: {
     justifyContent: 'center',
     alignItems: 'center',
     height: 50,
-    flexDirection: 'row'
+    flexDirection: 'row',
+    backgroundColor: 'rgba(0,0,0,0.5)'
   },
   title: {
     flex: 7,
