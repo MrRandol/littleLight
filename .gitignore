@@ -51,4 +51,10 @@ buck-out/
 fastlane/report.xml
 fastlane/Preview.html
 fastlane/screenshots
+
+# Dirty data used locally
 workData/
+# Local modifications post init. Should be fixed with a nice docker
+android/build.gradle
+android/gradle.properties
+android/gradle/wrapper/gradle-wrapper.properties
