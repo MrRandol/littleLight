@@ -16,7 +16,8 @@ class ItemTypeSwiper extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      index: 0
+      index: 0,
+      swiperHeight: 0
     };
   }
 
@@ -31,6 +32,10 @@ class ItemTypeSwiper extends React.Component {
     this.setState({index: state.index});
     this.props.switchGuardian(Object.keys(this.props.user.guardians)[state.index]);
   }
+
+  measureView(event) {
+    this.setState({swiperHeight: event.nativeEvent.layout.height})
+  }
   
   render(){
     var self = this;
@@ -42,6 +47,7 @@ class ItemTypeSwiper extends React.Component {
         showsButtons={false} 
         showsPagination={false} 
         onMomentumScrollEnd={this.onMomentumScrollEnd.bind(this)}
+        onLayout={(event) => this.measureView(event)}
       >
         {
           Object.keys(this.props.user.guardians).map(function (guardianId) {
@@ -52,6 +58,9 @@ class ItemTypeSwiper extends React.Component {
                 guardianId={guardianId}
                 itemTypePressCallback={self.props.itemTypePressCallback} 
                 itemsManager={self.props.itemsManager} 
+                swiperHeight={self.state.swiperHeight}
+                refreshItems={self.props.refreshItems} 
+                refreshing={self.props.refreshing}
               />
             )
           })

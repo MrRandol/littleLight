@@ -2,7 +2,7 @@
    REACT IMPORTS
 ******************/
 import React from 'react';
-import { View, TouchableOpacity } from 'react-native';
+import { View, ScrollView, RefreshControl, TouchableOpacity } from 'react-native';
 
 /*****************
   CUSTOM IMPORTS
@@ -36,7 +36,14 @@ class GuardianOverview extends React.Component {
   render() {
     var characterEquipment = this.props.itemsManager.guardiansInventory[this.props.guardianId].characterEquipment;
     return(
-      <View style={styles.guardianOverviewContainer} >
+      <ScrollView 
+        style={{flex: 1}} 
+        refreshControl = {<RefreshControl
+          refreshing={this.props.refreshing}
+          onRefresh={this.props.refreshItems}
+        />}
+      >
+      <View style={[styles.guardianOverviewContainer, {height: this.props.swiperHeight}]} >
         <View style={styles.guardianOverviewBackground} >
           <View style={styles.guardianOverviewMenuContainer} >
             <View style={styles.guardianOverviewWeaponsContainer} >
@@ -58,6 +65,9 @@ class GuardianOverview extends React.Component {
           </View>
         </View>
       </View>
+      {/*<View style={[styles.guardianOverviewContainer, {height: this.props.swiperHeight}]} >
+      </View>*/}
+      </ScrollView>
     );
     
   } 

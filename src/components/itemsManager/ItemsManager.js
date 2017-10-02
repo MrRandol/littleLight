@@ -116,11 +116,30 @@ class ItemsManager extends React.Component {
     switch(this.props.itemsManager.currentView.name) {
 
       case 'ItemTypeManager':
-        contentToRender = <ItemTypeSwiper style={{ flex: 9 }} user={this.props.user} itemsManager={this.props.itemsManager} showTransferModal={this.showTransferModal.bind(this)} refreshItems={this.refreshItems.bind(this)} refreshing={this.state.refreshing} />
+        contentToRender = (
+          <ItemTypeSwiper 
+            style={{ flex: 9 }} 
+            user={this.props.user} 
+            itemsManager={this.props.itemsManager} 
+            showTransferModal={this.showTransferModal.bind(this)} 
+            refreshItems={this.refreshItems.bind(this)} 
+            refreshing={this.state.refreshing}
+          />
+        );
         break;
 
       case 'GuardianOverview':
-        contentToRender = <GuardianOverviewSwiper style={{ flex: 9 }} user={this.props.user} itemTypePressCallback={this.switchToView.bind(this)} itemsManager={this.props.itemsManager} switchGuardian={this.props.switchGuardian}/>
+        contentToRender = (
+          <GuardianOverviewSwiper 
+            style={{ flex: 9 }} 
+            user={this.props.user} 
+            itemTypePressCallback={this.switchToView.bind(this)} 
+            itemsManager={this.props.itemsManager} 
+            switchGuardian={this.props.switchGuardian}
+            refreshItems={this.refreshItems.bind(this)} 
+            refreshing={this.state.refreshing} 
+          />
+        );
         break;
 
       default:
