@@ -9,10 +9,6 @@ module.exports = StyleSheet.create({
     borderColor: '#000000',
     borderWidth: 1
   },
-  guardianSelectorEmblem: {
-    height: 85,
-    width: 235,
-  },
   guardianSelectorInfos: {
     color: '#DCDCDC',
     flex: 1,

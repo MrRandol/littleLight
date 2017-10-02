@@ -181,7 +181,7 @@ function updateManifestVersion(_version, statusCallback){
         statusCallback.call(this, {status: "SUCCESS", message: "manifestUpdated", data: version});
       } else {
         Message.error("[MANIFEST] Error while inserting manifest version into store");
-        throw new LLException(29, error, 'manifestException');
+        throw new LLException(29, "NoVersionReturned", 'manifestException');
       }
     });
   } catch (error) {
