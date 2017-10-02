@@ -6,6 +6,21 @@ project is currently under construction and is at is very earliest development s
 
 TODO : populate with a lot of things :D
 
+## Dev quickstart guide
+
+Nothing here for now, but the react-native documentaion gives 90% of the information needed :)  
+
+## Contribute 
+
+First : congrats on finding this repo ! No communication whatsoever has been made and you still found it !
+Right now I'm working alone on this, but help is welcomed, so just messageme or create a pull request !
+
+## Issues and features
+
+For now, it is tracked under trello : https://trello.com/b/lzY6RR0p/littlelight
+
+Have a bug to signal or a new feature to request : just open an issue :)
+
 
 ## ERRORS (ongoing)
   
@@ -56,17 +71,17 @@ TODO : populate with a lot of things :D
 132 : Error on getAccessToken  
 
 ### INVENTORY
-40 : Error while fetching bucket data from store.
-41 : Error while fetching bucket data from store.
-42 : Error While fetching all profile data from Bungie
-43 : Error While matching data between manifest and inventory
-
-### TRANSFER
-50 : Error on item transfer from/to vault
-51 : Error on item transfer from/to vault
-54 : No source nor destination guardian found. This should not happen.
-
-## ITEMS MANAGEMENT
-200 : Error while transferring item
-201 : Error while transferring item between guardians
-202 : Error while transferring item from/to vault
+40 : Error while fetching bucket data from store.  
+41 : Error while fetching bucket data from store.  
+42 : Error While fetching all profile data from Bungie  
+43 : Error While matching data between manifest and inventory  
+  
+### TRANSFER  
+50 : Error on item transfer from/to vault  
+51 : Error on item transfer from/to vault  
+54 : No source nor destination guardian found. This should not happen.  
+  
+## ITEMS MANAGEMENT  
+200 : Error while transferring item  
+201 : Error while transferring item between guardians  
+202 : Error while transferring item from/to vault  
