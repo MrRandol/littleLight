@@ -30,8 +30,8 @@ module.exports = StyleSheet.create({
     justifyContent: 'flex-end'
   },
   itemOverview: {
-    width: 96,
-    height: 96,
+    width: 88,
+    height: 88,
     borderWidth: 1,
     borderColor: 'white'
   },

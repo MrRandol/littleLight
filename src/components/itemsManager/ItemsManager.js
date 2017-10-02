@@ -28,7 +28,7 @@ import * as Message from '../../utils/message';
 
 import ItemTransferModal from './transfer/ItemTransferModal';
 import GuardianSelector from './GuardianSelector';
-import GuardianOverview from './GuardianOverview';
+import GuardianOverviewSwiper from './GuardianOverviewSwiper';
 import ItemTypeSwiper from './ItemTypeSwiper';
 
 var _ = require('underscore');
@@ -120,7 +120,7 @@ class ItemsManager extends React.Component {
         break;
 
       case 'GuardianOverview':
-        contentToRender = <GuardianOverview style={{ flex: 9 }} itemTypePressCallback={this.switchToView.bind(this)} itemsManager={this.props.itemsManager} />
+        contentToRender = <GuardianOverviewSwiper style={{ flex: 9 }} user={this.props.user} itemTypePressCallback={this.switchToView.bind(this)} itemsManager={this.props.itemsManager} switchGuardian={this.props.switchGuardian}/>
         break;
 
       default:

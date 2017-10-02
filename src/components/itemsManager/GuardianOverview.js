@@ -26,7 +26,7 @@ class GuardianOverview extends React.Component {
   itemTypeIcon(bucketHash) {
     var characterEquipment;
     try {
-      characterEquipment = this.props.itemsManager.guardiansInventory[this.props.itemsManager.currentGuardianId].characterEquipment[bucketHash][0];
+      characterEquipment = this.props.itemsManager.guardiansInventory[this.props.guardianId].characterEquipment[bucketHash][0];
     } catch (e) {
       characterEquipment = null;
     }
@@ -34,7 +34,7 @@ class GuardianOverview extends React.Component {
   }
 
   render() {
-    var characterEquipment = this.props.itemsManager.guardiansInventory[this.props.itemsManager.currentGuardianId].characterEquipment;
+    var characterEquipment = this.props.itemsManager.guardiansInventory[this.props.guardianId].characterEquipment;
     return(
       <View style={styles.guardianOverviewContainer} >
         <View style={styles.guardianOverviewBackground} >
