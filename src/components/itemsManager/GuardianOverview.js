@@ -44,29 +44,42 @@ class GuardianOverview extends React.Component {
         />}
       >
       <View style={[styles.guardianOverviewContainer, {height: this.props.swiperHeight}]} >
-        <View style={styles.guardianOverviewBackground} >
-          <View style={styles.guardianOverviewMenuContainer} >
-            <View style={styles.guardianOverviewWeaponsContainer} >
-              { this.itemTypeIcon(BUNGIE.ORDERED_BUCKETS[0]) /*kineticWeapons*/ }
-              { this.itemTypeIcon(BUNGIE.ORDERED_BUCKETS[1]) /*energyWeapons*/  }
-              { this.itemTypeIcon(BUNGIE.ORDERED_BUCKETS[2]) /*powerWeapons*/   }
-              { this.itemTypeIcon(BUNGIE.ORDERED_BUCKETS[3]) /*ghost*/          }
-            </View>
-            <View style={styles.guardianOverviewSubclassContainer} >
-              {/*<Image style={styles.guardianOverviewSubclassCategoryButton} source={{uri: BUNGIE.HOST + characterEquipment['3284755031'][0].displayProperties.icon}} />*/}
-            </View>
-            <View style={styles.guardianOverviewArmorContainer} >
-              { this.itemTypeIcon(BUNGIE.ORDERED_BUCKETS[4]) /*helmet*/     }
-              { this.itemTypeIcon(BUNGIE.ORDERED_BUCKETS[5]) /*gauntlets*/  }
-              { this.itemTypeIcon(BUNGIE.ORDERED_BUCKETS[6]) /*chestArmor*/ }
-              { this.itemTypeIcon(BUNGIE.ORDERED_BUCKETS[7]) /*legArmor*/   }
-              { this.itemTypeIcon(BUNGIE.ORDERED_BUCKETS[8]) /*classArmor*/ }
-            </View>
+        <View style={styles.guardianOverviewMenuContainer} >
+          <View style={styles.guardianOverviewWeaponsContainer} >
+            { this.itemTypeIcon(BUNGIE.ORDERED_BUCKETS[0]) /*kineticWeapons*/ }
+            { this.itemTypeIcon(BUNGIE.ORDERED_BUCKETS[1]) /*energyWeapons*/  }
+            { this.itemTypeIcon(BUNGIE.ORDERED_BUCKETS[2]) /*powerWeapons*/   }
+            { this.itemTypeIcon(BUNGIE.ORDERED_BUCKETS[3]) /*ghost*/          }
+          </View>
+          <View style={styles.guardianOverviewSubclassContainer} >
+            {/*<Image style={styles.guardianOverviewSubclassCategoryButton} source={{uri: BUNGIE.HOST + characterEquipment['3284755031'][0].displayProperties.icon}} />*/}
+          </View>
+          <View style={styles.guardianOverviewArmorContainer} >
+            { this.itemTypeIcon(BUNGIE.ORDERED_BUCKETS[4]) /*helmet*/     }
+            { this.itemTypeIcon(BUNGIE.ORDERED_BUCKETS[5]) /*gauntlets*/  }
+            { this.itemTypeIcon(BUNGIE.ORDERED_BUCKETS[6]) /*chestArmor*/ }
+            { this.itemTypeIcon(BUNGIE.ORDERED_BUCKETS[7]) /*legArmor*/   }
+            { this.itemTypeIcon(BUNGIE.ORDERED_BUCKETS[8]) /*classArmor*/ }
           </View>
         </View>
       </View>
-      {/*<View style={[styles.guardianOverviewContainer, {height: this.props.swiperHeight}]} >
-      </View>*/}
+
+      <View style={[styles.guardianOverviewContainer, {height: this.props.swiperHeight}]} >
+        <View style={styles.guardianOverviewMenuContainer} >
+          <View style={styles.guardianOverviewWeaponsContainer} >
+            { this.itemTypeIcon(BUNGIE.ORDERED_BUCKETS[9]) /*vehicle*/ }
+            { this.itemTypeIcon(BUNGIE.ORDERED_BUCKETS[10]) /*ship*/  }
+          </View>
+          <View style={styles.guardianOverviewSubclassContainer} >
+            {/*<Image style={styles.guardianOverviewSubclassCategoryButton} source={{uri: BUNGIE.HOST + characterEquipment['3284755031'][0].displayProperties.icon}} />*/}
+          </View>
+          <View style={styles.guardianOverviewArmorContainer} >
+            { this.itemTypeIcon(BUNGIE.ORDERED_BUCKETS[11]) /*emblem*/     }
+            { this.itemTypeIcon(BUNGIE.ORDERED_BUCKETS[12]) /*aura*/  }
+            { this.itemTypeIcon(BUNGIE.ORDERED_BUCKETS[13]) /*emote*/ }
+          </View>
+        </View>
+      </View>
       </ScrollView>
     );
     

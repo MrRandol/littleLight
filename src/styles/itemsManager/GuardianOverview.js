@@ -5,9 +5,6 @@ module.exports = StyleSheet.create({
     flex: 1,
     backgroundColor: 'rgba(0,0,0,0.35)'
   },
-  guardianOverviewBackground: {
-    flex: 1,
-  },
   guardianOverviewMenuContainer: {
     flex: 1,
     flexDirection: 'row',

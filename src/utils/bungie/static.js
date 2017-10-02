@@ -184,10 +184,18 @@ export const ORDERED_BUCKETS = [
   1498876634, /*kineticWeapons*/
   2465295065, /*energyWeapons*/ 
   953998645,  /*powerWeapons*/  
-  4023194814, /*ghost*/         
+  4023194814, /*ghost*/
+
   3448274439, /*helmet*/    
   3551918588, /*gauntlets*/ 
   14239492,   /*chestArmor*/
   20886954,   /*legArmor*/  
   1585787867, /*classArmor*/
+  
+  2025709351, /* vehicle */
+  284967655,  /* ships */
+ 
+  4274335291, /* emblems */
+  1269569095, /* auras */
+  3054419239, /* emotes */
 ]
