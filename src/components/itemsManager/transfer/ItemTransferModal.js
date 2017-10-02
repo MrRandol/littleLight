@@ -48,6 +48,7 @@ class ItemTransferModal extends React.Component {
                   item={this.props.item} 
                   guardians={this.props.guardians}
                   transferItem={this.props.transferItem}
+                  equipItem={this.props.equipItem}
                   itemsManager={this.props.itemsManager}
                   itemAssociatedGuardian={this.props.itemAssociatedGuardian}
                   closeModal={this.closeModal.bind(this)}

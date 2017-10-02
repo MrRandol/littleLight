@@ -24,8 +24,13 @@ class Item extends React.Component {
     }
   }
 
- transferItem(sourceGuardian, destinationGuardian) {
+  transferItem(sourceGuardian, destinationGuardian) {
     this.props.transferItem.call(this, this.props.item, sourceGuardian, destinationGuardian);
+    this.props.closeModal();
+  }
+
+  equipItem(sourceGuardian, destinationGuardian) {
+    this.props.equipItem.call(this, this.props.item, sourceGuardian, destinationGuardian);
     this.props.closeModal();
   }
 
@@ -50,7 +55,6 @@ class Item extends React.Component {
       default:
         style = styles.item;
     }
-
 
     // Complex texts building
     var itemTypeDisplay = "";
@@ -93,38 +97,49 @@ class Item extends React.Component {
           </View>
         </View>
 
-        <View style={styles.buttonsContainer} >
-        {
-          Object.keys(guardians).map(function(guardianId) { 
-            if (guardianId !== itemAssociatedGuardian) {
-              return (
-                <TouchableOpacity onPress={() => self.transferItem(itemAssociatedGuardian, guardianId)} key={"touchStoreTo-"+guardianId} >
-                  <LoadingImage
-                    style={styles.transferButton}
-                    key={"storeTo-"+guardianId}
-                    source={{uri: BUNGIE.HOST+guardians[guardianId].emblemPath}} >
-                    <Text style={styles.transferButtonText}>{T.translate("Transfer.store")}</Text>
-                  </LoadingImage>
-                </TouchableOpacity>
-              )
-            }
-          })
+        { this.props.styleRef !== 'equipped' &&
+          <View style={styles.buttonsContainer} >
+          {
+            Object.keys(guardians).map(function(guardianId) { 
+              var storeButton = null;
+                return (
+                  <View key={"buttonWrapper-"+guardianId} style={{flexDirection:'row'}} >
+                    <TouchableOpacity onPress={() => self.equipItem(itemAssociatedGuardian, guardianId)} key={"touchequipTo-"+guardianId} >
+                      <LoadingImage style={styles.transferButton} key={"equipTo-"+guardianId} source={{uri: BUNGIE.HOST+guardians[guardianId].emblemPath}} >
+                        <View style={styles.transferButtonOverlay} >
+                          <Text style={styles.transferButtonText}>{T.translate("Transfer.equip")}</Text>
+                        </View>
+                      </LoadingImage>
+                    </TouchableOpacity>
+
+                  { (guardianId !== itemAssociatedGuardian) &&
+                    <TouchableOpacity onPress={() => self.transferItem(itemAssociatedGuardian, guardianId)} key={"touchStoreTo-"+guardianId} >
+                      <LoadingImage style={styles.transferButton} key={"storeTo-"+guardianId} source={{uri: BUNGIE.HOST+guardians[guardianId].emblemPath}} >
+                        <View style={styles.transferButtonOverlay} >
+                          <Text style={styles.transferButtonText}>{T.translate("Transfer.store")}</Text>
+                        </View>
+                      </LoadingImage>
+                    </TouchableOpacity>
+                  }
+                </View>
+                );
+            })
+          }
+          {
+            this.props.item.location !== 2 && 
+              <TouchableOpacity onPress={() => self.transferItem(itemAssociatedGuardian, null)} >
+              <LoadingImage style={styles.transferButton} source={{uri : BUNGIE.VAULT_ICON}} >
+                <View style={styles.transferButtonOverlay} >
+                  <Text style={styles.transferButtonText}>{T.translate("Transfer.store")}</Text>
+                </View>
+              </LoadingImage>
+            </TouchableOpacity>
+          }
+          </View>
         }
-        {
-          this.props.item.location !== 2 && 
-            <TouchableOpacity activeOpacity={1} onPress={() => self.transferItem(itemAssociatedGuardian, null)} >
-            <LoadingImage
-              style={styles.transferButton}
-              source={{uri : BUNGIE.VAULT_ICON}} >
-              <Text style={styles.transferButtonText}>{T.translate("Transfer.store")}</Text>
-            </LoadingImage>
-          </TouchableOpacity>
-        }
-        </View>
       </View>
     )
   }
 }
-
 
 export default Item;

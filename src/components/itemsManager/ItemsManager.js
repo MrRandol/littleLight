@@ -53,21 +53,68 @@ class ItemsManager extends React.Component {
       Transfer.transferItem(item, this.props.user.user.destinyMemberships[0].membershipType, sourceGuardian, destGuardian)
       .then(function() {
         Message.debug("Transfer request OK. Refreshing.");
-        self.refreshItems()
-        .then(function () {
-          Message.debug("Transfer refresh OK !");
-        })
-        .catch (function(error) {
-          Message.warn("[ITEMS_MANAGER] Error while transferring item.");
-          Message.warn(error);
-          throw new LLException(200, error, 'itemsManagerException');
-        });
+        return self.refreshItems()
+      })
+      .then(function() {
+        Message.debug("Transfer refresh OK !");
+      })
+      .catch (function(error) {
+        Message.warn("[ITEMS_MANAGER] Error while transferring item.");
+        Message.warn(error);
+        throw new LLException(200, error, 'itemsManagerException');
       });
     } catch (error) {
       Message.warn("[ITEMS_MANAGER] Error while transferring item.");
       Message.warn(error);
       throw new LLException(200, error, 'itemsManagerException');
     }
+  }
+
+  equipItem(item, sourceGuardian, destGuardian) {
+    var self = this;
+    this.setState({refreshing: true});
+    try {
+      if(sourceGuardian === destGuardian) {
+        console.log("Direct equip Item to guardian");
+        Transfer.equipItem(item, this.props.user.user.destinyMemberships[0].membershipType, destGuardian)
+        .then( function() {
+          Message.debug("Equip OK, refreshing");
+          return self.refreshItems();
+        })
+        .then(function () {
+          Message.debug("Equip refresh OK !");
+        })
+        .catch (function(error) {
+          Message.warn("[ITEMS_MANAGER] Error while equipping item.");
+          Message.warn(error);
+          throw new LLException(200, error, 'itemsManagerException');
+        });
+      } else {
+        console.log("Need to transfer first");
+        Transfer.transferItem(item, self.props.user.user.destinyMemberships[0].membershipType, sourceGuardian, destGuardian)
+        .then(function() {
+          Message.debug("Prequip transfer request OK. Now Equipping.");
+          return Transfer.equipItem(item, self.props.user.user.destinyMemberships[0].membershipType, destGuardian)
+        })
+        .then( function() {
+          Message.debug("Equip OK, refreshing");
+          return self.refreshItems();
+        })
+        .then(function () {
+          Message.debug("Equip refresh OK !");
+        })
+        .catch (function(error) {
+          Message.warn("[ITEMS_MANAGER] Error while equipping item.");
+          Message.warn(error);
+          throw new LLException(200, error, 'itemsManagerException');
+        });
+      }
+    } catch (error) {
+      Message.warn("[ITEMS_MANAGER] Error while equipping item.");
+      Message.warn(error);
+      throw new LLException(200, error, 'itemsManagerException');
+    }
+
   }
 
   refreshItems() {
@@ -160,6 +207,7 @@ class ItemsManager extends React.Component {
           itemsManager={this.props.itemsManager}
           guardians={this.props.user.guardians}
           transferItem={this.transferItem.bind(this)}
+          equipItem={this.equipItem.bind(this)}
           closeModal={this.closeTransferModal.bind(this)}
         />
 

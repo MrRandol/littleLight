@@ -76,15 +76,24 @@ module.exports = StyleSheet.create({
     paddingRight:5,
   },
   transferButton: {
-    width: 60, 
-    height: 60, 
-    opacity: 0.6,
-    alignItems: 'center',
+    width: 50, 
+    height: 50, 
+    margin: 5,
+    alignItems: 'stretch',
+    justifyContent: 'flex-end',
+  },
+  transferButtonOverlay: {
+    height: 20,
+    backgroundColor: 'rgba(0, 0, 0, 0.4)',
+    alignItems: 'stretch',
     justifyContent: 'center',
   },
   transferButtonText: {
     flex: 1,
-    color: 'rgba(255, 255, 255, 1)',
+    fontSize: 14,
+    lineHeight: 20,
+    textAlign: 'center',
+    color: '#ffffff',
     fontWeight: 'bold',
   }
 });

@@ -23,6 +23,7 @@ export const VAULT_ICON    = 'https://www.materialui.co/materialIcons/action/loc
 export const MANIFEST                = API_HOST + '/Destiny2/Manifest/';
 export const MEMBERSHIP_CURRENT_USER = API_HOST + '/User/GetMembershipsForCurrentUser/';
 export const TRANSFER_ITEM           = API_HOST + '/Destiny2/Actions/Items/TransferItem/';
+export const EQUIP_ITEM              = API_HOST + '/Destiny2/Actions/Items/EquipItem/';
 
 /************************************************
                       ENUMS

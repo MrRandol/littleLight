@@ -46,7 +46,8 @@
     "warlock_female": "Warlock"
   },
   "Transfer": {
-    "store": "STORE"
+    "store": "STORE",
+    "equip": "EQUIP",
   },
   "Item": {
     "powerLevel": "Power Level",
