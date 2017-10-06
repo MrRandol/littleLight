@@ -8,7 +8,6 @@ import { Modal, View, ScrollView, Text, Image, Button, Dimensions, TouchableOpac
   CUSTOM IMPORTS
 ******************/
 import T from 'i18n-react';
-T.setTexts(require('../../i18n/en.json'));
 var styles = require('../../styles/itemsManager/ItemTransferModal');
 
 import LoadingImage from '../common/LoadingImage'

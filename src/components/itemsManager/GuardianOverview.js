@@ -8,7 +8,6 @@ import { View, ScrollView, RefreshControl, TouchableOpacity } from 'react-native
   CUSTOM IMPORTS
 ******************/
 import T from 'i18n-react';
-T.setTexts(require('../../i18n/en.json'));
 var styles = require('../../styles/itemsManager/GuardianOverview');
 
 import * as BUNGIE from '../../utils/bungie/static';

@@ -17,7 +17,6 @@ import { View, Image } from 'react-native';
   CUSTOM IMPORTS
 ******************/
 import T from 'i18n-react';
-T.setTexts(require('../../i18n/en.json'));
 var styles = require('../../styles/itemsManager/ItemsManager');
 
 import { LLException } from '../../utils/errorHandler';
@@ -194,7 +193,7 @@ class ItemsManager extends React.Component {
     }
 
     var characterEquipment = this.props.itemsManager.guardiansInventory[this.props.itemsManager.currentGuardianId].characterEquipment;
-    var subclass = this.camelize(characterEquipment['3284755031'][0].displayProperties.name);
+    var subclass = characterEquipment['3284755031'][0].inventory.stackUniqueLabel;
     console.log("Rendering background for subclass : " + subclass);
     var backgroundsource = BUNGIE.SUBCLASS_IMAGES[subclass];
 

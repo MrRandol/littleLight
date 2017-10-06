@@ -8,8 +8,6 @@ import { Modal, View, Image, Text, Button, Dimensions, TouchableOpacity, Touchab
   CUSTOM IMPORTS
 ******************/
 import T from 'i18n-react';
-T.setTexts(require('../../../i18n/en.json'));
-
 var styles = require('../../../styles/itemsManager/transfer/ItemTransferModal');
 
 import WeaponContent from './WeaponContent'

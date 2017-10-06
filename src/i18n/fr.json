@@ -1,0 +1,57 @@
+{ 
+  "common": 
+  {
+    "littleLight": "Little Light",
+    "cancel": "Annuler",
+  },
+  "SplashScreen":
+  {
+    "loading": "Chargement",
+    // Manifest
+    "manifest": "Données Destiny",
+    "manifestIsUpToDate": "Les données sont à jour !",
+    "manifestCheckVersion": "Vérification de la version",
+    "manifestFetchContent": "Téléchargement des nouvelles données",
+    "manifestExtractData": "Extraction",
+    "manifestSavedData": "Sauvegarde des données",
+    "manifestSaveVersion": "Sauvegarde de la version",
+    "manifestUpdated": "Les données ont été mises à jour !",
+    // Oauth
+    "oauth": "Authentification",
+    "authCheckTokenValidity": "Vérification du statut de l'authentication",
+    "authValid": "Données valides !",
+    "authRefreshToken": "Rafraîchissement de l'authentication",
+    "authRequestNewToken": "Requête de nouvelles données d'authentication",
+    // Preload data
+    "preloadData": "Ouverture du coffre",
+    "fetchData": "Recherche des données",
+    "dataRetreived": "Données récupérées",
+    // Inventories and stuff
+    "guardiansFetch": "Transmat du loot",
+    "fetchItems": "Téléchargement des inventaires",
+    "matchItemsToDatabase": "Aggrégation des informations",
+    "guardiansItemsFetched": "Inventaires téléchargés avec succès !",
+  },
+  "Guardian": {
+    "human": "Humain",
+    "awoken": "Eveillé",
+    "exo": "Exo",
+    "male": "Homme",
+    "female": "Femme",
+    "titan_male": "Titan",
+    "titan_female": "Titan",
+    "hunter_male": "Chasseur",
+    "hunter_female": "Chasseuse",
+    "warlock_male": "Arcaniste",
+    "warlock_female": "Arcaniste"
+  },
+  "Transfer": {
+    "store": "STOCKER",
+    "equip": "EQUIPER",
+  },
+  "Item": {
+    "powerLevel": "Puissance",
+    "damageType": "Type de dégât"
+  }
+  
+}

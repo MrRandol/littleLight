@@ -20,7 +20,6 @@ import * as ErrorHandler from '../utils/errorHandler';
   CUSTOM IMPORTS
 ******************/
 import T from 'i18n-react';
-T.setTexts(require('../i18n/en.json'));
 var styles = require('../styles/LittleLight');
 
 import SplashScreen from './SplashScreen';
@@ -29,6 +28,19 @@ import ItemsManager from './itemsManager/ItemsManager';
 class LittleLight extends React.Component {
   constructor(props) {
     super(props);
+    this.state = {
+      locale: 'en'
+    }
+    var localeTexts;
+    switch(this.state.locale) {
+      case 'fr':
+        localeTexts = require('../i18n/fr.json')
+      break;
+      case 'en':
+      default:
+        localeTexts = require('../i18n/en.json')
+    }
+    T.setTexts(localeTexts);
   }
 
   //Global backbutton handler.
@@ -58,7 +70,7 @@ class LittleLight extends React.Component {
     var content;
 
     if (this.props.loading !== false) {
-      content = ( <SplashScreen style={{flex: 1}} /> );
+      content = ( <SplashScreen locale={this.state.locale} style={{flex: 1}} /> );
     } else {
       content = ( <ItemsManager style={{flex: 1}} /> );
     }

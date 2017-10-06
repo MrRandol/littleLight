@@ -105,16 +105,18 @@ export const DAMAGE_TYPE_ICONS = {
 }
 
 export const SUBCLASS_IMAGES = {
-  'lostLight': require('../../../assets/guardians/lostLight.png'),
-  'sunbreaker': require('../../../assets/guardians/sunbreaker.png'),
-  'nightstalker': require('../../../assets/guardians/nightstalker.png'),
-  'sentinel': require('../../../assets/guardians/sentinel.png'),
-  'dawnblade': require('../../../assets/guardians/dawnblade.png'),  
-  'gunslinger': require('../../../assets/guardians/gunslinger.png'),
-  'voidwalker': require('../../../assets/guardians/voidwalker.png'),
-  'arcstrider': require('../../../assets/guardians/arcstrider.png'),
-  'stormcaller': require('../../../assets/guardians/stormcaller.png'),
-  'striker': require('../../../assets/guardians/striker.png'),
+  'v300.builds.titan.broken0': require('../../../assets/guardians/lostLight.png'),
+  'v300.builds.warlock.broken0': require('../../../assets/guardians/lostLight.png'),
+  'v300.builds.hunter.broken0': require('../../../assets/guardians/lostLight.png'),
+  'v300.builds.titan.arc0': require('../../../assets/guardians/striker.png'),
+  'v300.builds.titan.thermal0': require('../../../assets/guardians/sunbreaker.png'),
+  'v300.builds.titan.void0': require('../../../assets/guardians/sentinel.png'),
+  'v300.builds.hunter.arc0': require('../../../assets/guardians/arcstrider.png'),
+  'v300.builds.hunter.thermal0': require('../../../assets/guardians/gunslinger.png'),
+  'v300.builds.hunter.void0': require('../../../assets/guardians/nightstalker.png'),
+  'v300.builds.warlock.arc0': require('../../../assets/guardians/stormcaller.png'),
+  'v300.builds.warlock.thermal0': require('../../../assets/guardians/dawnblade.png'),
+  'v300.builds.warlock.void0': require('../../../assets/guardians/voidwalker.png'),
 }
 
 export const TIER_TYPES = {

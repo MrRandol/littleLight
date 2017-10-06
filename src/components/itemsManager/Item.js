@@ -8,7 +8,6 @@ import { View, Image, Text, TouchableOpacity } from 'react-native';
   CUSTOM IMPORTS
 ******************/
 import T from 'i18n-react';
-T.setTexts(require('../../i18n/en.json'));
 var styles = require('../../styles/itemsManager/Item');
 
 import LoadingImage from '../common/LoadingImage'

@@ -8,7 +8,6 @@ import { View, Text, Image, TouchableOpacity } from 'react-native';
   CUSTOM IMPORTS
 ******************/
 import T from 'i18n-react';
-T.setTexts(require('../../../i18n/en.json'));
 var styles = require('../../../styles/itemsManager/transfer/WeaponContent');
 
 import LoadingImage from '../../common/LoadingImage'

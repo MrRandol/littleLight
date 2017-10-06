@@ -25,7 +25,6 @@ function mapDispatchToProps(dispatch) { return bindActionCreators(Actions, dispa
   CUSTOM IMPORTS
 **/
 import T from 'i18n-react';
-T.setTexts(require('../i18n/en.json'));
 var styles = require('../styles/SplashScreen');
 
 // Internal
@@ -55,7 +54,7 @@ class SplashScreen extends React.Component {
   ***************************************/
   getManifest() {
     try {
-      Manifest.checkVersionAndUpdate(this.manifestStatusCallback.bind(this))
+      Manifest.checkVersionAndUpdate(this.manifestStatusCallback.bind(this), this.props.locale)
     } catch (error) {
       Message.error("[LOADING] An error occured while handling manifest data");
       Message.error(error);

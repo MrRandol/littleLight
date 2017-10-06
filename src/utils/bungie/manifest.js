@@ -12,11 +12,11 @@ import * as Store from '../store/manifest';
 import * as Request from './request';
 import * as BUNGIE from './static';
 
-export function checkVersionAndUpdate(statusCallback) {
+export function checkVersionAndUpdate(statusCallback, locale='en') {
   try {
     Store.getManifestVersion()
     .then( function(currentVersion) {
-      return checkManifestVersion(currentVersion, statusCallback);
+      return checkManifestVersion(currentVersion, statusCallback, locale);
     })
     .then(function(manifestCheck) {
       if (manifestCheck && manifestCheck.isUpToDate) {
@@ -34,7 +34,7 @@ export function checkVersionAndUpdate(statusCallback) {
   }
 }
 
-function checkManifestVersion(currentVersion, statusCallback) {
+function checkManifestVersion(currentVersion, statusCallback, locale) {
   try {
     statusCallback.call(this, {status: "IN_PROGRESS", message: "manifestCheckVersion"});
     return Request.doGet(BUNGIE.MANIFEST, false)
@@ -45,7 +45,7 @@ function checkManifestVersion(currentVersion, statusCallback) {
         version: version,
         isUpToDate: version === currentVersion,
         // TODO : dynamic content selection depending on language
-        contentPath: manifest.Response.mobileWorldContentPaths.en
+        contentPath: manifest.Response.mobileWorldContentPaths[locale]
       };
     })
     .catch( function(error) {
@@ -67,10 +67,11 @@ function fetchAndExtractManifest(path, version, statusCallback) {
 
     Message.debug("Fetching new manifest content");
     Message.debug(BUNGIE.HOST + path);
+    var filename;
     
     // 1/ fetch zip and save it locally
     RNFetchBlob
-    .config( { fileCache : true } )
+    .config( { session: 'zipFetch', fileCache : true } )
     .fetch('GET', BUNGIE.HOST+path, {'X-API-Key': BUNGIE.API_KEY})
     // 2/ Unzip it
     .then( function(zipPath) {
@@ -80,15 +81,34 @@ function fetchAndExtractManifest(path, version, statusCallback) {
     // 3/ open prepopulated database 
     .then( function(sqlFilename) {
       Message.debug("Open sqlite db : " + sqlFilename);
+      filename = sqlFilename + '/' + sqlName;
       return SQLite.openDatabase({name : "main", createFromLocation : sqlName});
     })
     .then( function(db) {
-      // Here we have to use callback and not promise 
-      // due to the way the sqlite plugin is constructed.
+    // 4/ Do stuff :)
       Message.debug("SQLite open success");
-      insertDbIntoStore(db, version, statusCallback);
+      return insertDbIntoStore(db, filename, version, statusCallback);
     })
-    //TODO : clean zip and sqlite files
+    //CLEAN
+    .then( function(db) {
+      Message.debug("Deleting fetch temporary files");
+      RNFetchBlob.session('zipFetch').dispose();
+      return RNFS.readDir(dir);
+    })
+    .then(function (result) {
+      Message.debug("Deleting unzipped database");
+      for (var i = 0; i < result.length; i++) {
+        if (result[i].name === sqlName) {
+          return RNFS.unlink(result[i].path);
+        }
+      }
+      return null;
+    })
+    .then(function() {
+      Message.debug("Deleting temporary database");
+      SQLite.deleteDatabase({name: 'main', location: sqlName});
+    })
+    //END CLEAN
     .catch((error) => { 
       throw(error);
     })
@@ -99,10 +119,10 @@ function fetchAndExtractManifest(path, version, statusCallback) {
   }
 }
 
-function insertDbIntoStore(db, version, statusCallback) {
+function insertDbIntoStore(db, filename, version, statusCallback) {
   try {
     statusCallback.call(this, {status: "IN_PROGRESS", message: "manifestExtractData"});
-    callTransaction(db, 'DestinyInventoryItemDefinition', 'item')
+    return callTransaction(db, 'DestinyInventoryItemDefinition', 'item')
     .then(function() {
       return callTransaction(db, 'DestinyItemCategoryDefinition', 'itemCategory');
     })
@@ -113,8 +133,16 @@ function insertDbIntoStore(db, version, statusCallback) {
       return callTransaction(db, 'DestinyStatDefinition', 'stat');
     })
     .then(function() {
+      // close db
+      Message.debug("closing DB");
+      return db.close();
+    })
+    .then(function() {
+      // clean files
+      Message.debug("Cleaning files");
+      Message.debug(filename);
       statusCallback.call(this, {status: "IN_PROGRESS", message: "manifestSavedData"});
-      updateManifestVersion(version, statusCallback);
+      return updateManifestVersion(version, statusCallback);
     });
   } catch (error) {
     Message.error("[MANIFEST] Error in while inserting data from manifest into local sore");
@@ -175,14 +203,14 @@ function updateManifestVersion(_version, statusCallback){
   try {
     statusCallback.call(this, {status: "IN_PROGRESS", message: "manifestSaveVersion"});
     Store.saveManifestVersion(_version)
-    .then( function(version) {
-      if (version) {
-        Message.debug("Successfully saved Manifest version");
-        statusCallback.call(this, {status: "SUCCESS", message: "manifestUpdated", data: version});
-      } else {
-        Message.error("[MANIFEST] Error while inserting manifest version into store");
-        throw new LLException(29, "NoVersionReturned", 'manifestException');
-      }
+    .then( function() {
+      Message.debug("Successfully saved Manifest version");
+      statusCallback.call(this, {status: "SUCCESS", message: "manifestUpdated"});
+    })
+    .catch(function(error) {
+      Message.error("[MANIFEST] Error while inserting manifest version into store");
+      Message.error(error);
+      throw new LLException(29, error, 'manifestException');
     });
   } catch (error) {
     Message.error("[MANIFEST] Error while inserting manifest version into store");
